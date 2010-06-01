@@ -19,14 +19,14 @@ TARGET_FORMAT = u-boot.kwb
 else
 ifeq ($(DEB_HOST_ARCH),i386)
 UBOOT_TARGETS = eNET
-TARGET_FORMAT = u-boot.img
+TARGET_FORMAT = u-boot.bin
 else
 ifeq ($(DEB_HOST_ARCH),mips)
 UBOOT_TARGETS = qemu_mips
 TARGET_FORMAT = u-boot.img
 else
 ifeq ($(DEB_HOST_ARCH),mipsel)
-UBOOT_TARGETS = tb0229
+UBOOT_TARGETS = dbau1100_config
 TARGET_FORMAT = u-boot.img
 else
 ifeq ($(DEB_HOST_ARCH),avr32)
