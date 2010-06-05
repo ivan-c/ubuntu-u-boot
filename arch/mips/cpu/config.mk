@@ -28,6 +28,4 @@ else \
 	echo "-march=4kc -mtune=4kc"; \
 fi)
 
-MIPSFLAGS += $(ENDIANNESS)
-
 PLATFORM_CPPFLAGS += $(MIPSFLAGS)
