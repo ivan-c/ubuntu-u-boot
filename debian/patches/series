@@ -1,2 +1,4 @@
 mipsel-native-endianness.diff
-debian-changes-2010.09~rc1-1
+kerma-sheevaplug-mvsata.diff
+kerma-sheevaplug-mvsdio.diff
+debian-changes-2010.09~rc1-2

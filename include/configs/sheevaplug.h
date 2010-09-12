@@ -25,10 +25,12 @@
 #ifndef _CONFIG_SHEEVAPLUG_H
 #define _CONFIG_SHEEVAPLUG_H
 
+//#define DEBUG 1
+
 /*
  * Version number information
  */
-#define CONFIG_IDENT_STRING	"\nMarvell-Sheevaplug"
+#define CONFIG_IDENT_STRING	"\nMarvell-Sheevaplug - eSATA - SD/MMC"
 
 /*
  * High Level Configuration Options (easy to change)
@@ -94,7 +96,9 @@
 #define CONFIG_CMD_AUTOSCRIPT
 #define CONFIG_CMD_DHCP
 #define CONFIG_CMD_ENV
+#define CONFIG_CMD_IDE
 #define CONFIG_CMD_MII
+#define CONFIG_CMD_MMC
 #define CONFIG_CMD_NAND
 #define CONFIG_CMD_PING
 #define CONFIG_CMD_USB
@@ -132,16 +136,18 @@
  */
 #define CONFIG_BOOTCOMMAND		"${x_bootcmd_kernel}; "	\
 	"setenv bootargs ${x_bootargs} ${x_bootargs_root}; "	\
-	"${x_bootcmd_usb}; bootm 0x6400000;"
+	"${x_bootcmd_usb}; ${x_bootcmd_sata}; bootm 0x6400000;"
 
-#define CONFIG_MTDPARTS		"orion_nand:512k(uboot),"	\
-	"3m@1m(kernel),1m@4m(psm),13m@5m(rootfs) rw\0"
+#define CONFIG_MTDPARTS		"orion_nand:"	\
+	"512k(uboot),4m@1m(kernel),507m@5m(rootfs) rw\0"
 
-#define CONFIG_EXTRA_ENV_SETTINGS	"x_bootargs=console"	\
-	"=ttyS0,115200 mtdparts="CONFIG_MTDPARTS	\
-	"x_bootcmd_kernel=nand read 0x6400000 0x100000 0x300000\0" \
-	"x_bootcmd_usb=usb start\0" \
-	"x_bootargs_root=root=/dev/mtdblock3 rw rootfstype=jffs2\0"
+
+#define CONFIG_EXTRA_ENV_SETTINGS	"x_bootargs=console"		\
+	"=ttyS0,115200 mtdparts="CONFIG_MTDPARTS			\
+	"x_bootcmd_kernel=nand read 0x6400000 0x100000 0x400000\0" 	\
+	"x_bootcmd_usb=usb start;\0" 					\
+	"x_bootcmd_sata=ide reset;\0" 					\
+	"x_bootargs_root=ubi.mtd=2 root=ubi0:rootfs rootfstype=ubifs\0"
 
 /*
  * Size of malloc() pool
@@ -183,6 +189,14 @@
 #endif /* CONFIG_CMD_NET */
 
 /*
+ * SDIO/MMC Card Configuration
+ */
+#ifdef CONFIG_CMD_MMC
+#define CONFIG_MMC
+#define CONFIG_MV_SDIO
+#endif /* CONFIG_CMD_MMC */
+
+/*
  * USB/EHCI
  */
 #ifdef CONFIG_CMD_USB
@@ -194,6 +208,34 @@
 #define CONFIG_ISO_PARTITION
 #define CONFIG_SUPPORT_VFAT
 #endif /* CONFIG_CMD_USB */
+
+/*
+ * IDE Support on SATA port0
+ */
+#ifdef CONFIG_CMD_IDE
+#define __io
+#define CONFIG_CMD_EXT2
+#define CONFIG_MVSATA_IDE
+#define CONFIG_IDE_PREINIT
+#define CONFIG_MVSATA_IDE_USE_PORT0
+/* Needs byte-swapping for ATA data register */
+#define CONFIG_IDE_SWAP_IO
+/* Data, registers and alternate blocks are at the same offset */
+#define CONFIG_SYS_ATA_DATA_OFFSET	(0x0100)
+#define CONFIG_SYS_ATA_REG_OFFSET	(0x0100)
+#define CONFIG_SYS_ATA_ALT_OFFSET	(0x0100)
+/* Each 8-bit ATA register is aligned to a 4-bytes address */
+#define CONFIG_SYS_ATA_STRIDE		4
+/* Controller supports 48-bits LBA addressing */
+#define CONFIG_LBA48
+/* CONFIG_CMD_IDE requires some #defines for ATA registers */
+#define CONFIG_SYS_IDE_MAXBUS		1
+#define CONFIG_SYS_IDE_MAXDEVICE	1
+/* ATA registers base is at SATA controller base */
+#define CONFIG_SYS_ATA_BASE_ADDR	KW_SATA_BASE
+/* ATA bus 0 is Kirkwood port 1 on sheevaplug */
+#define CONFIG_SYS_ATA_IDE0_OFFSET	KW_SATA_PORT1_OFFSET
+#endif /* CONFIG_CMD_IDE */
 
 /*
  * File system

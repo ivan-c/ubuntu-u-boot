@@ -1,15 +1,12 @@
-Description: Upstream changes introduced in version 2010.09~rc1-1
+Description: Upstream changes introduced in version 2010.09~rc1-2
  This patch has been created by dpkg-source during the package build.
  Here's the last changelog entry, hopefully it gives details on why
  those changes were made:
  .
- u-boot (2010.09~rc1-1) unstable; urgency=low
+ u-boot (2010.09~rc1-2) unstable; urgency=low
  .
-   * New upstream release candidate.
-     - Drop guruplug-miiphy_reset.diff.
-     - Update mipsel-native-endianness.diff.
-     - Drop sh4-native-compile.diff.
-   * Bump to Standards-Version 3.9.1.
+   * Add patch from Gérald Kerma to add Sheevaplug mvsata support.
+   * Add patch from Gérald Kerma to add Sheevaplug mvsdio support.
  .
  The person named in the Author field signed this changelog entry.
 Author: Clint Adams <schizo@debian.org>
