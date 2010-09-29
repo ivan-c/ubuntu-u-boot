@@ -25,10 +25,12 @@
 #ifndef _CONFIG_SHEEVAPLUG_H
 #define _CONFIG_SHEEVAPLUG_H
 
+//#define DEBUG 1
+
 /*
  * Version number information
  */
-#define CONFIG_IDENT_STRING	"\nMarvell-Sheevaplug"
+#define CONFIG_IDENT_STRING	"\nMarvell-Sheevaplug - eSATA - SD/MMC"
 
 /*
  * High Level Configuration Options (easy to change)
@@ -96,6 +98,7 @@
 #define CONFIG_CMD_ENV
 #define CONFIG_CMD_IDE
 #define CONFIG_CMD_MII
+#define CONFIG_CMD_MMC
 #define CONFIG_CMD_NAND
 #define CONFIG_CMD_PING
 #define CONFIG_CMD_USB
@@ -133,16 +136,18 @@
  */
 #define CONFIG_BOOTCOMMAND		"${x_bootcmd_kernel}; "	\
 	"setenv bootargs ${x_bootargs} ${x_bootargs_root}; "	\
-	"${x_bootcmd_usb}; bootm 0x6400000;"
+	"${x_bootcmd_usb}; ${x_bootcmd_sata}; bootm 0x6400000;"
 
-#define CONFIG_MTDPARTS		"orion_nand:512k(uboot),"	\
-	"3m@1m(kernel),1m@4m(psm),13m@5m(rootfs) rw\0"
+#define CONFIG_MTDPARTS		"orion_nand:"	\
+	"512k(uboot),4m@1m(kernel),507m@5m(rootfs) rw\0"
 
-#define CONFIG_EXTRA_ENV_SETTINGS	"x_bootargs=console"	\
-	"=ttyS0,115200 mtdparts="CONFIG_MTDPARTS	\
-	"x_bootcmd_kernel=nand read 0x6400000 0x100000 0x300000\0" \
-	"x_bootcmd_usb=usb start\0" \
-	"x_bootargs_root=root=/dev/mtdblock3 rw rootfstype=jffs2\0"
+
+#define CONFIG_EXTRA_ENV_SETTINGS	"x_bootargs=console"		\
+	"=ttyS0,115200 mtdparts="CONFIG_MTDPARTS			\
+	"x_bootcmd_kernel=nand read 0x6400000 0x100000 0x400000\0" 	\
+	"x_bootcmd_usb=usb start;\0" 					\
+	"x_bootcmd_sata=ide reset;\0" 					\
+	"x_bootargs_root=ubi.mtd=2 root=ubi0:rootfs rootfstype=ubifs\0"
 
 /*
  * Size of malloc() pool
@@ -182,6 +187,14 @@
 #define CONFIG_ENV_OVERWRITE	/* ethaddr can be reprogrammed */
 #define CONFIG_RESET_PHY_R	/* use reset_phy() to init mv8831116 PHY */
 #endif /* CONFIG_CMD_NET */
+
+/*
+ * SDIO/MMC Card Configuration
+ */
+#ifdef CONFIG_CMD_MMC
+#define CONFIG_MMC
+#define CONFIG_MV_SDIO
+#endif /* CONFIG_CMD_MMC */
 
 /*
  * USB/EHCI
