@@ -1,4 +1,5 @@
 mipsel-native-endianness.diff
 kerma-sheevaplug-mvsata.diff
 kerma-sheevaplug-mvsdio.diff
-debian-changes-2010.09-1
+guruplug-ext2.diff
+debian-changes-2010.09-2

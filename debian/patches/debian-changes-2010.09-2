@@ -1,14 +1,15 @@
-Description: Upstream changes introduced in version 2010.09-1
+Description: Upstream changes introduced in version 2010.09-2
  This patch has been created by dpkg-source during the package build.
  Here's the last changelog entry, hopefully it gives details on why
  those changes were made:
  .
- u-boot (2010.09-1) unstable; urgency=low
+ u-boot (2010.09-2) unstable; urgency=low
  .
-   * New upstream release.
+   * Enable ext2 commands on GuruPlug.
+   * Ship ELF files (for loading into RAM with OpenOCD).
  .
  The person named in the Author field signed this changelog entry.
-Author: Clint Adams <schizo@debian.org>
+Author: Clint Adams <clint@gnu.org>
 
 ---
 The information above should follow the Patch Tagging Guidelines, please
