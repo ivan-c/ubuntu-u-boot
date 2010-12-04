@@ -23,7 +23,7 @@
 
 include $(TOPDIR)/config.mk
 
-LIB	:= $(obj)libmmc.a
+LIB	:= $(obj)libmmc.o
 
 COBJS-$(CONFIG_ATMEL_MCI) += atmel_mci.o
 COBJS-$(CONFIG_BFIN_SDH) += bfin_sdh.o
@@ -33,6 +33,7 @@ COBJS-$(CONFIG_GENERIC_ATMEL_MCI) += gen_atmel_mci.o
 COBJS-$(CONFIG_MXC_MMC) += mxcmmc.o
 COBJS-$(CONFIG_MV_SDIO) += mv_sdio.o
 COBJS-$(CONFIG_OMAP3_MMC) += omap3_mmc.o
+COBJS-$(CONFIG_OMAP_HSMMC) += omap_hsmmc.o
 COBJS-$(CONFIG_PXA_MMC) += pxa_mmc.o
 COBJS-$(CONFIG_S5P_MMC) += s5p_mmc.o
 
@@ -43,7 +44,7 @@ OBJS	:= $(addprefix $(obj),$(COBJS))
 all:	$(LIB)
 
 $(LIB): $(obj).depend $(OBJS)
-	$(AR) $(ARFLAGS) $@ $(OBJS)
+	$(call cmd_link_o_target, $(OBJS))
 
 #########################################################################
 
