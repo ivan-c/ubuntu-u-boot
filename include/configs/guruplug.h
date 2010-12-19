@@ -46,7 +46,6 @@
 #include <config_cmd_default.h>
 #define CONFIG_CMD_DHCP
 #define CONFIG_CMD_ENV
-#define CONFIG_CMD_EXT2
 #define CONFIG_CMD_FAT
 #define CONFIG_CMD_NAND
 #define CONFIG_CMD_PING
