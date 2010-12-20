@@ -9,6 +9,12 @@ package=u-boot
 
 DEB_HOST_ARCH := $(shell dpkg-architecture -qDEB_HOST_ARCH)
 
+# the upstream build passes LDFLAGS directly to ld instead of calling gcc for
+# linking; so instead of passing -Wl,foo in LDFLAGS as in automake builds, one
+# should set LDFLAGS to foo directly
+comma := ,
+LDFLAGS := $(patsubst -Wl$(comma)%,%,$(LDFLAGS))
+
 ifeq ($(DEB_HOST_ARCH),powerpc)
 UBOOT_TARGETS = ZUMA
 TARGET_FORMAT = u-boot.img
