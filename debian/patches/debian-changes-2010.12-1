@@ -1,12 +1,13 @@
-Description: Upstream changes introduced in version 2010.12~rc3-1
+Description: Upstream changes introduced in version 2010.12-1
  This patch has been created by dpkg-source during the package build.
  Here's the last changelog entry, hopefully it gives details on why
  those changes were made:
  .
- u-boot (2010.12~rc3-1) unstable; urgency=low
+ u-boot (2010.12-1) unstable; urgency=low
  .
-   * New upstream release candidate.
-   * Add dockstar target.
+   * New upstream version.
+   * Install more tools in preparation for splitting off a
+     u-boot-tools binary package.
  .
  The person named in the Author field signed this changelog entry.
 Author: Clint Adams <clint@gnu.org>
@@ -24,8 +25,8 @@ Forwarded: <no|not-needed|url proving that it has been forwarded>
 Reviewed-By: <name and email of someone who approved the patch>
 Last-Update: <YYYY-MM-DD>
 
---- u-boot-2010.12~rc3.orig/snapshot.commit
-+++ u-boot-2010.12~rc3/snapshot.commit
+--- u-boot-2010.12.orig/snapshot.commit
++++ u-boot-2010.12/snapshot.commit
 @@ -1 +1 @@
--3ac45988ab1605baaf83bd3acb80a197c9a208c2  Fri, 17 Dec 2010 10:15:38 +0100
+-250ef029844be2cb98635f265359396866d1749f  Wed, 22 Dec 2010 20:22:14 +0100
 +$Format:%H  %cD$
