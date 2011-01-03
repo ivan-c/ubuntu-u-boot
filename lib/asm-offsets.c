@@ -23,7 +23,7 @@ int main(void)
 {
 	/* Round up to make sure size gives nice stack alignment */
 	DEFINE(GENERATED_GBL_DATA_SIZE,
-		(sizeof(struct global_data)+15) & ~15);
+		(sizeof(gd_t)+15) & ~15);
 
 	return 0;
 }

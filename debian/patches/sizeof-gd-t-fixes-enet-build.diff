@@ -1,0 +1,35 @@
+From e8c5ca62988a692559ad1efd74a4bfc4537dcf29 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Lo=C3=AFc=20Minier?= <loic.minier@linaro.org>
+Date: Mon, 3 Jan 2011 16:39:36 +0100
+Subject: [PATCH] Use sizeof(gd_t), not sizeof(struct global_data)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The eNET (x86) build fails with "invalid application of 'sizeof' to
+incomplete type 'struct global_data'" because x86 doesn't define
+struct global_data.  Change sizeof(struct global_data) to sizeof(gd_t)
+which is always available.
+
+Cc: Graeme Russ <graeme.russ@gmail.com>
+Signed-off-by: Loïc Minier <loic.minier@linaro.org>
+---
+ lib/asm-offsets.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/lib/asm-offsets.c b/lib/asm-offsets.c
+index 2209561..6a4084e 100644
+--- a/lib/asm-offsets.c
++++ b/lib/asm-offsets.c
+@@ -23,7 +23,7 @@ int main(void)
+ {
+ 	/* Round up to make sure size gives nice stack alignment */
+ 	DEFINE(GENERATED_GBL_DATA_SIZE,
+-		(sizeof(struct global_data)+15) & ~15);
++		(sizeof(gd_t)+15) & ~15);
+ 
+ 	return 0;
+ }
+-- 
+1.7.2.3
+

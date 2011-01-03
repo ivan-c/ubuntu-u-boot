@@ -1,3 +1,10 @@
+u-boot (2010.12~rc2-1ubuntu2) natty; urgency=low
+
+  * New patch, sizeof-gd-t-fixes-enet-build, use sizeof(gd_t) in
+    lib/asm-offsets.c and not sizeof(struct global_data); fixes build on i386.
+
+ -- Loïc Minier <loic.minier@linaro.org>  Mon, 03 Jan 2011 16:47:00 +0100
+
 u-boot (2010.12~rc2-1ubuntu1) natty; urgency=low
 
   * rules: the upstream build passes LDFLAGS directly to ld instead of calling
