@@ -3,3 +3,4 @@ kerma-sheevaplug-mvsata.diff
 kerma-sheevaplug-mvsdio.diff
 guruplug-ext2.diff
 debian-changes-2010.12~rc2-1
+sizeof-gd-t-fixes-enet-build.diff
