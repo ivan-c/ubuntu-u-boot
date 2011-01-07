@@ -1,3 +1,36 @@
+u-boot (2010.12-1ubuntu1) natty; urgency=low
+
+  [ Oliver Grawert ]
+  * Package Loïcs debian changes ahead of time since ubuntu-arm image builds
+    are blocked on the missing mkimage tool
+
+  [ Loïc Minier ]
+  * Split tools in u-boot-tools package
+  * Build more tools in board-independent section
+  * Add myself to Uploaders
+  * Don't include debian-changes in the diff
+  * Don't ignore debian/patches
+  * Don't repeat Section: in binary package
+  * Cleanup include/asm/proc and /arch
+  * Add patch to fix build on i386; closes: #608801.
+  * Add a dummy uboot-mkimage package for upgrades from squeeze; based on a
+    patch by Marcin Juszkiewicz; closes: #607618. 
+  * Install and compress upstream mkimage manpage; based on a patch by
+    Marcin Juszkiewicz.
+  * Fix handling of -Wl,foo LDFLAGS; closes: #607613.
+  * Misc refactoring of debian/rules
+  * Split per architecture list of platform and targets into
+    debian/targets
+  * Actually use INSTALL_FILE/INSTALL_DIR/INSTALL_PROGRAM
+  * Add support for cross-builds; these will currently lack board-specific
+    tools
+  * Build board-specific u-boot files in a separate build dir from the
+    generic tools
+  * Avoid dpkg-architecture if DEB_HOST_ARCH is set
+  * Ignore /.pc/
+
+ -- Oliver Grawert <ogra@ubuntu.com>  Fri, 07 Jan 2011 10:43:01 +0100
+
 u-boot (2010.12-1) unstable; urgency=low
 
   * New upstream version.
