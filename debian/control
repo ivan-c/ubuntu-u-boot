@@ -1,7 +1,7 @@
 Source: u-boot
 Section: admin
 Priority: optional
-Maintainer: Clint Adams <clint@gnu.org>
+Maintainer: Clint Adams <clint@debian.org>
 Uploaders: Loïc Minier <lool@debian.org>
 Standards-Version: 3.9.1
 Homepage: http://www.denx.de/wiki/U-Boot/
@@ -20,11 +20,28 @@ Description: A boot loader for embedded systems
 Package: u-boot-tools
 Architecture: any
 Depends: ${shlibs:Depends}
-Breaks: uboot-mkimage (<= 0.4build1), u-boot (<< 2010.12-2)
-Replaces: uboot-mkimage (<= 0.4build1), u-boot (<< 2010.12-2)
+Breaks: uboot-envtools (<< 20081215-3~),
+        uboot-mkimage (<= 0.4build1),
+        u-boot (<< 2010.12-2)
+Replaces: uboot-envtools (<< 20081215-3~),
+          uboot-mkimage (<= 0.4build1),
+          u-boot (<< 2010.12-2)
 Description: companion tools for Das U-Boot
  Collection of tools useful along the U-Boot bootloader found in the u-boot
  package.
+ .
+ This package includes the mkimage program, which allows generation of U-Boot
+ images in various formats, and the fw_printenv and fw_setenv programs to read
+ and modify U-Boot's environment.
+
+Package: uboot-envtools
+Section: utils
+Architecture: all
+Depends: u-boot-tools
+Description: read/modify the environment for the U-Boot boot loader (transitional package)
+ Package to ease upgrading from uboot-envtools to u-boot-tools.
+ .
+ This package may safely be removed.
 
 Package: uboot-mkimage
 Section: utils
