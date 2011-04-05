@@ -50,3 +50,29 @@ PLATFORM_CPPFLAGS += -DCONFIG_MIPS -D__MIPS__
 PLATFORM_CPPFLAGS		+= -G 0 -mabicalls -fpic
 PLATFORM_CPPFLAGS		+= -msoft-float
 PLATFORM_LDFLAGS		+= -G 0 -static -n -nostdlib
+
+#
+# A toolchain has its default endianness, so in principle, we don't
+# need any endianness specifier as long as we compile U-Boot for that
+# endianness.  Furthermore, it's not a good practice to add it without
+# giving it much thought.  Here's hints from Linux' Makefile:
+#
+# We explicitly add the endianness specifier if needed, (snip)  We
+# carefully avoid to add it redundantly because gcc 3.3/3.4 complains
+# when fed the toolchain default!
+#
+# Certain gcc versions upto gcc 4.1.1 (probably 4.2-subversion as of
+# 2006-10-10 don't properly change the predefined symbols if -EB / -EL
+# are used, so we kludge that here.  A bug has been filed at
+# <A HREF="http://gcc.gnu.org/bugzilla/show_bug.cgi?id=29413.">http://gcc.gnu.org/bugzilla/show_bug.cgi?id=29413.</A>
+#
+# Well, we've added the endianness specifier for years when compiling
+# with ELDK.  For this historical reason, and maintaining backward
+# compatibility, we leave it as far as ELDK is used.
+#
+ifneq ($(findstring mips_4KC-,$(CROSS_COMPILE)),)
+PLATFORM_CPPFLAGS += -EB
+endif
+ifneq ($(findstring mips_4KCle-,$(CROSS_COMPILE)),)
+PLATFORM_CPPFLAGS += -EL
+endif
