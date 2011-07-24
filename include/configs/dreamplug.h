@@ -109,6 +109,14 @@
 #define CONFIG_SYS_ATA_IDE0_OFFSET	MV_SATA_PORT0_OFFSET
 #endif /*CONFIG_MVSATA_IDE*/
 
+/*
+ * RTC driver configuration
+ */
+#ifdef CONFIG_CMD_DATE
+#define CONFIG_RTC_MVINTEG
+#endif /* CONFIG_CMD_DATE */
+
+
 #define CONFIG_SYS_ALT_MEMTEST
 
 #endif /* _CONFIG_DREAMPLUG_H */
