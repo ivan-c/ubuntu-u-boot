@@ -335,6 +335,7 @@ LIST_ARM9="			\
 	cp966			\
 	da830evm		\
 	da850evm		\
+	dreamplug		\
 	edb9301			\
 	edb9302			\
 	edb9302a		\
