@@ -1,3 +1,12 @@
+u-boot (2011.06-3ubuntu1) oneiric; urgency=low
+
+  * Fix build on amd64 by reverting 7a46b9f3c11b977f466c554c2fedd38f2ea43518
+    from the Debian git packaging repo "use the first target for each arch to
+    build the tools".  This also avoids the risk of building board-specific
+    versions of the tools; LP: #829597.
+
+ -- Loïc Minier <loic.minier@linaro.org>  Fri, 19 Aug 2011 19:30:05 +0200
+
 u-boot (2011.06-3) unstable; urgency=low
 
   * Add DreamPlug support.
