@@ -53,7 +53,7 @@ int board_early_init_f(void)
 		MPP4_GPIO,
 		MPP5_GPO,
 		MPP6_SYSRST_OUTn,
-		MPP7_GP0,
+		MPP7_GPO,
 		MPP8_TW_SDA,
 		MPP9_TW_SCK,
 		MPP10_UART0_TXD,	/* Serial */
