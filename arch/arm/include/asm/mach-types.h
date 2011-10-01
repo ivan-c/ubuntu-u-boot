@@ -2640,7 +2640,6 @@ extern unsigned int __machine_arch_type;
 #define MACH_TYPE_CTPXA                2657
 #define MACH_TYPE_EPB_ARM9_A           2658
 #define MACH_TYPE_GURUPLUG             2659
-#define MACH_TYPE_DREAMPLUG            3550
 #define MACH_TYPE_SPEAR310             2660
 #define MACH_TYPE_SPEAR320             2661
 #define MACH_TYPE_ROBOTX               2662

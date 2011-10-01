@@ -50,8 +50,8 @@ int board_early_init_f(void)
 		MPP1_SPI_MOSI,
 		MPP2_SPI_SCK,
 		MPP3_SPI_MISO,
-		MPP4_GPIO,
-		MPP5_GPO,
+		MPP4_NF_IO6,
+		MPP5_NF_IO7,
 		MPP6_SYSRST_OUTn,
 		MPP7_GPO,
 		MPP8_TW_SDA,
@@ -64,8 +64,8 @@ int board_early_init_f(void)
 		MPP15_SD_D1,
 		MPP16_SD_D2,
 		MPP17_SD_D3,
-		MPP18_GPO,
-		MPP19_GPO,
+		MPP18_NF_IO0,
+		MPP19_NF_IO1,
 		MPP20_GE1_0,		/* Gigabit Ethernet */
 		MPP21_GE1_1,
 		MPP22_GE1_2,
@@ -82,7 +82,7 @@ int board_early_init_f(void)
 		MPP33_GE1_13,
 		MPP34_GE1_14,
 		MPP35_GE1_15,
-		MPP36_GPIO,
+		MPP36_GPIO,		/* 7 external GPIO pins (36 - 45) */
 		MPP37_GPIO,
 		MPP38_GPIO,
 		MPP39_GPIO,
@@ -92,10 +92,10 @@ int board_early_init_f(void)
 		MPP43_GPIO,
 		MPP44_GPIO,
 		MPP45_GPIO,
-		MPP46_GPIO,		/* M_RLED */
-		MPP47_GPIO,		/* M_GLED */
-		MPP48_GPIO,		/* B_RLED */
-		MPP49_GPIO,		/* B_GLED */
+		MPP46_GPIO,
+		MPP47_GPIO,		/* Bluetooth LED */
+		MPP48_GPIO,		/* Wifi LED */
+		MPP49_GPIO,		/* Wifi AP LED */
 		0
 	};
 	kirkwood_mpp_conf(kwmpp_config);
@@ -104,12 +104,6 @@ int board_early_init_f(void)
 
 int board_init(void)
 {
-	/*
-	 * arch number of board
-	 * XXX: change to MACH_TYPE_DREAMPLUG once in Linux mainline.
-	 */
-	gd->bd->bi_arch_number = MACH_TYPE_DREAMPLUG;
-
 	/* adress of boot parameters */
 	gd->bd->bi_boot_params = kw_sdram_bar(0) + 0x100;
 
@@ -117,7 +111,7 @@ int board_init(void)
 }
 
 #ifdef CONFIG_RESET_PHY_R
-void mv_phy_88e1121_init(char *name)
+void mv_phy_88e1116_init(char *name)
 {
 	u16 reg;
 	u16 devadr;
@@ -128,7 +122,7 @@ void mv_phy_88e1121_init(char *name)
 	/* command to read PHY dev address */
 	if (miiphy_read(name, 0xEE, 0xEE, (u16 *) &devadr)) {
 		printf("Err..%s could not read PHY dev address\n",
-			__FUNCTION__);
+			__func__);
 		return;
 	}
 
@@ -136,22 +130,22 @@ void mv_phy_88e1121_init(char *name)
 	 * Enable RGMII delay on Tx and Rx for CPU port
 	 * Ref: sec 4.7.2 of chip datasheet
 	 */
-	miiphy_write(name, devadr, MV88E1121_PGADR_REG, 2);
-	miiphy_read(name, devadr, MV88E1121_MAC_CTRL2_REG, &reg);
-	reg |= (MV88E1121_RGMII_RXTM_CTRL | MV88E1121_RGMII_TXTM_CTRL);
-	miiphy_write(name, devadr, MV88E1121_MAC_CTRL2_REG, reg);
-	miiphy_write(name, devadr, MV88E1121_PGADR_REG, 0);
+	miiphy_write(name, devadr, MV88E1116_PGADR_REG, 2);
+	miiphy_read(name, devadr, MV88E1116_MAC_CTRL2_REG, &reg);
+	reg |= (MV88E1116_RGMII_RXTM_CTRL | MV88E1116_RGMII_TXTM_CTRL);
+	miiphy_write(name, devadr, MV88E1116_MAC_CTRL2_REG, reg);
+	miiphy_write(name, devadr, MV88E1116_PGADR_REG, 0);
 
 	/* reset the phy */
 	miiphy_reset(name, devadr);
 
-	printf("88E1121 Initialized on %s\n", name);
+	printf("88E1116 Initialized on %s\n", name);
 }
 
 void reset_phy(void)
 {
 	/* configure and initialize both PHY's */
-	mv_phy_88e1121_init("egiga0");
-	mv_phy_88e1121_init("egiga1");
+	mv_phy_88e1116_init("egiga0");
+	mv_phy_88e1116_init("egiga1");
 }
 #endif /* CONFIG_RESET_PHY_R */

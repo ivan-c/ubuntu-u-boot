@@ -34,9 +34,9 @@
 #define DREAMPLUG_OE_VAL_HIGH	(0xf << 16) /* 4 LED Pins high */
 
 /* PHY related */
-#define MV88E1121_MAC_CTRL2_REG		21
-#define MV88E1121_PGADR_REG		22
-#define MV88E1121_RGMII_TXTM_CTRL	(1 << 4)
-#define MV88E1121_RGMII_RXTM_CTRL	(1 << 5)
+#define MV88E1116_MAC_CTRL2_REG		21
+#define MV88E1116_PGADR_REG		22
+#define MV88E1116_RGMII_TXTM_CTRL	(1 << 4)
+#define MV88E1116_RGMII_RXTM_CTRL	(1 << 5)
 
 #endif /* __DREAMPLUG_H */
