@@ -1,3 +1,22 @@
+u-boot (2011.09-1) unstable; urgency=low
+
+  [ Hector Oron ]
+  * Enable MX53LOCO platform.
+  * Update lintian overrides.
+
+  [ Loïc Minier ]
+  * Fix FTBFS on amd64 and allow `make tools` to succeed without
+    config.
+
+  [ Clint Adams ]
+  * New upstream version.
+    - Update kerma-sheevaplug-mvsdio.diff.
+    - Drop panda-default-console.diff (refactored).
+    - Replace dreamplug patches with Jason's v8.
+  * Add Buffalo Linkstation Mini env config from Benjamin Cama.
+
+ -- Clint Adams <clint@debian.org>  Fri, 30 Sep 2011 21:22:23 -0400
+
 u-boot (2011.06-4) unstable; urgency=low
 
   * Increase the USB non-bulk timeout by an order of magnitude.
