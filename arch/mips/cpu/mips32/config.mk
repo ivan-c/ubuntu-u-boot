@@ -29,12 +29,4 @@
 #
 MIPSFLAGS = -march=mips32r2
 
-ifneq (,$(findstring 4KCle,$(CROSS_COMPILE)))
-ENDIANNESS = -EL
-else
-ENDIANNESS = -EB
-endif
-
-MIPSFLAGS += $(ENDIANNESS)
-
 PLATFORM_CPPFLAGS += $(MIPSFLAGS)
