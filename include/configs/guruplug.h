@@ -110,4 +110,9 @@
 
 #define CONFIG_SYS_ALT_MEMTEST
 
+#ifdef CONFIG_CMD_MMC
+#define CONFIG_MMC
+#define CONFIG_MV_SDIO
+#endif /* CONFIG_CMD_MMC */
+
 #endif /* _CONFIG_GURUPLUG_H */
