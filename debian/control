@@ -2,14 +2,14 @@ Source: u-boot
 Section: admin
 Priority: optional
 Maintainer: Clint Adams <clint@debian.org>
-Uploaders: Loïc Minier <lool@debian.org>, Micah Anderson <micah@debian.org>
+Uploaders: Loïc Minier <lool@debian.org>, Micah Anderson <micah@debian.org>, Vagrant Cascadian <vagrant@debian.org>
 Standards-Version: 3.9.4
 Homepage: http://www.denx.de/wiki/U-Boot/
 Vcs-Git: git://git.debian.org/collab-maint/u-boot.git
 Vcs-Browser: http://git.debian.org/?p=collab-maint/u-boot.git;a=summary
 
 Package: u-boot
-Architecture: any
+Architecture: armel armhf avr32 mips mipsel powerpc sh4
 Description: A boot loader for embedded systems
  Das U-Boot is a cross-platform bootloader for embedded systems,
  used as the default boot loader by several board vendors.  It is
