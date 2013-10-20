@@ -14,8 +14,17 @@ DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
 DEB_HOST_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
 
+ifeq ($(DEB_HOST_ARCH),$(findstring $(DEB_HOST_ARCH), armel armhf avr32 mips mipsel powerpc sh4))
+u_boot_package := true
+endif
+
 ifneq ($(DEB_BUILD_GNU_TYPE),$(DEB_HOST_GNU_TYPE))
 export CROSS_COMPILE ?= $(DEB_HOST_GNU_TYPE)-
+endif
+
+# support parallel build using DEB_BUILD_OPTIONS=parallel=N
+ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+  MAKEFLAGS += -j$(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
 endif
 
 # the upstream build passes LDFLAGS directly to ld instead of calling gcc for
@@ -36,19 +45,24 @@ build: build-arch build-indep
 build-arch:
 	$(checkdir)
 
-	set -e; sed -n 's/^$(DEB_HOST_ARCH)[[:space:]]\+//p' debian/targets \
+ifeq (true,$(u_boot_package))
+	set -e; set -x; sed -n 's/^$(DEB_HOST_ARCH)[[:space:]]\+//p' debian/targets \
 	    | while read platform target; do \
 	        builddir=`pwd`/debian/build/$$platform; \
 	        installdir=debian/$(package)/usr/lib/$(package)/$$platform; \
 	        mkdir -p $$builddir; \
 	        $(MAKE) O=$$builddir $${platform}_config; \
-	        $(MAKE) O=$$builddir $$builddir/$$target; \
+	        $(MAKE) O=$$builddir $${platform}; \
 	        $(INSTALL_DIR) $$installdir; \
 	        $(INSTALL_FILE) $$builddir/$$target $$installdir; \
 	        $(INSTALL_FILE) $$builddir/u-boot $$installdir/uboot.elf; \
 	        $(CROSS_COMPILE)strip --remove-section=.comment \
 	            $$installdir/uboot.elf; \
+	        if [ -f $$builddir/MLO ]; then \
+	            $(INSTALL_FILE) $$builddir/MLO $$installdir/MLO; \
+	        fi ; \
 	done
+endif
 
 ifeq ($(CROSS_COMPILE),)
 	# board-independent tools
@@ -75,6 +89,7 @@ clean:
 	rm -f build-arch
 	$(MAKE) distclean
 	rm -rf arch/arm/include/asm/arch arch/arm/include/asm/proc
+	rm -rf tools/mkimage tools/mkenvimage tools/env/fw_printenv
 	rm -rf debian/build
 	rm -f `find . -name "*~"`
 
@@ -84,6 +99,7 @@ binary-indep:	checkroot
 binary-arch:	checkroot build
 	$(checkdir)
 
+ifeq (true,$(u_boot_package))
 	$(INSTALL_DIR) debian/$(package)/DEBIAN
 
 	$(INSTALL_DIR) debian/$(package)/usr/share/doc/$(package)/
@@ -106,6 +122,7 @@ binary-arch:	checkroot build
 	chmod -R go=rX debian/$(package)
 
 	dpkg --build debian/$(package) ..
+endif
 
 
 	$(INSTALL_DIR) debian/$(tools_package)/DEBIAN
@@ -119,6 +136,10 @@ binary-arch:	checkroot build
 	$(INSTALL_FILE) doc/mkimage.1                 debian/$(tools_package)/usr/share/man/man1/
 	$(INSTALL_FILE) debian/manpages/fw_printenv.8 debian/$(tools_package)/usr/share/man/man8/
 	$(INSTALL_FILE) debian/manpages/fw_setenv.8   debian/$(tools_package)/usr/share/man/man8/
+	$(INSTALL_DIR) debian/$(tools_package)/usr/share/doc/$(tools_package)/examples/
+	set -e ; for env_config in debian/env-configs/*.config ; do \
+		$(INSTALL_FILE) $${env_config} debian/$(tools_package)/usr/share/doc/$(tools_package)/examples/; \
+	done; \
 
 	gzip -9f `find debian/$(tools_package)/usr/share/doc -type f ! -name "copyright"`
 	gzip -9f `find debian/$(tools_package)/usr/share/man -type f`
