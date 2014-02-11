@@ -1,8 +1,0 @@
-debian/targets: Move build of dbau1100 from mipsel to mips, which fixes FTBFS on mipsel, due to dbau1100 being big-endian.
-Disable mipsel builds of u-boot, as it no longer has any targets.
-Add patch to support raw initrds on ti armv7 builds.
-Add patch to specify default mmc partition to use when loading uEnv.txt.
-Mark u-boot-tools as Multi-Arch: foreign.
-Mark u-boot as Multi-Arch: same.
-Update lintian overrides with list of current platforms.
-Add lintian override for arch-dependent-file-not-in-arch-specific-directory: There are no file conflicts across architectures for u-boot, as each target is only installed on a single architecture. In theory, some targets could be built on multiple architectures, but could instead install the package for the architecture needed.

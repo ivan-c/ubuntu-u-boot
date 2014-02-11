@@ -9,6 +9,7 @@
 #ifndef __CONFIG_H
 #define __CONFIG_H
 
+#include "mx6_common.h"
 #include <asm/arch/imx-regs.h>
 #include <asm/imx-common/gpio.h>
 #include <asm/sizes.h>
@@ -109,13 +110,13 @@
 
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	"script=boot.scr\0" \
-	"uimage=uImage\0" \
+	"image=zImage\0" \
 	"console=ttymxc0\0" \
 	"splashpos=m,m\0" \
 	"fdt_high=0xffffffff\0" \
 	"initrd_high=0xffffffff\0" \
 	"fdt_file=" CONFIG_DEFAULT_FDT_FILE "\0" \
-	"fdt_addr=0x11000000\0" \
+	"fdt_addr=0x18000000\0" \
 	"boot_fdt=try\0" \
 	"ip_dyn=yes\0" \
 	"optargs=\0" \
@@ -150,11 +151,13 @@
 		"fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${script};\0" \
 	"bootscript=echo Running bootscript from mmc ...; " \
 		"source\0" \
-	"loaduimage=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${uimage}\0" \
+	"loadimage=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
 	"loadzimage=load mmc ${mmcdev}:${mmcpart} ${loadaddr} zImage\0" \
 	"loadfdt=load mmc ${mmcdev}:${mmcpart} ${fdt_addr} /dtbs/${fdt_file}\0" \
 	"mmcboot=echo Booting from mmc ...; " \
 		"run mmcargs; " \
+		"bootz ${loadaddr} - ${fdt_addr};\0" \
+	"mmcbootdefault=echo Booting from mmc ...; " \
 		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
 			"if run loadfdt; then " \
 				"bootz ${loadaddr} - ${fdt_addr}; " \
@@ -178,19 +181,19 @@
 		"else " \
 			"setenv get_cmd tftp; " \
 		"fi; " \
-		"${get_cmd} zImage; " \
+		"${get_cmd} ${image}; " \
 		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
 			"if ${get_cmd} ${fdt_addr} ${fdt_file}; then " \
 				"bootz ${loadaddr} - ${fdt_addr}; " \
 			"else " \
 				"if test ${boot_fdt} = try; then " \
-					"bootz ${loadaddr}; " \
+					"bootz; " \
 				"else " \
 					"echo WARN: Cannot load the DT; " \
 				"fi; " \
 			"fi; " \
 		"else " \
-			"bootz ${loadaddr}; " \
+			"bootz; " \
 		"fi;\0"
 
 #define CONFIG_BOOTCOMMAND \
@@ -207,6 +210,7 @@
 		"fi;" \
 		"echo Running default loadzimage ...;" \
 		"if run loadzimage; then " \
+			"run loadfdt;" \
 			"run mmcboot;" \
 		"fi;" \
 	"fi;"
@@ -214,7 +218,6 @@
 /* Miscellaneous configurable options */
 #define CONFIG_SYS_LONGHELP
 #define CONFIG_SYS_HUSH_PARSER
-#define CONFIG_SYS_PROMPT	       "=> "
 #define CONFIG_AUTO_COMPLETE
 #define CONFIG_SYS_CBSIZE		256
 
@@ -224,7 +227,6 @@
 #define CONFIG_SYS_BARGSIZE CONFIG_SYS_CBSIZE
 
 #define CONFIG_SYS_LOAD_ADDR		CONFIG_LOADADDR
-#define CONFIG_SYS_HZ			1000
 
 #define CONFIG_CMDLINE_EDITING
 
