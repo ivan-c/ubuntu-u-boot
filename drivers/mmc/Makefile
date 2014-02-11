@@ -15,6 +15,7 @@ obj-$(CONFIG_GENERIC_ATMEL_MCI) += gen_atmel_mci.o
 obj-$(CONFIG_MMC_SPI) += mmc_spi.o
 obj-$(CONFIG_ARM_PL180_MMCI) += arm_pl180_mmci.o
 obj-$(CONFIG_MV_SDHCI) += mv_sdhci.o
+obj-$(CONFIG_MV_SDIO) += mv_sdio.o
 obj-$(CONFIG_MXC_MMC) += mxcmmc.o
 obj-$(CONFIG_MXS_MMC) += mxsmmc.o
 obj-$(CONFIG_OMAP_HSMMC) += omap_hsmmc.o
