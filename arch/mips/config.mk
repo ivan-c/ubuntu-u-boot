@@ -5,7 +5,7 @@
 # SPDX-License-Identifier:	GPL-2.0+
 #
 
-CROSS_COMPILE ?= mips_4KC-
+#CROSS_COMPILE ?= mips_4KC-
 
 # Handle special prefix in ELDK 4.0 toolchain
 ifneq (,$(findstring 4KCle,$(CROSS_COMPILE)))
