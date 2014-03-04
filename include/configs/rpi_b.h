@@ -164,7 +164,8 @@
 #define CONFIG_CMD_PART
 #define CONFIG_CMD_FS_GENERIC
 #define CONFIG_CMD_FAT
-#define CONFIG_CMD_EXT
+#define CONFIG_CMD_EXT2
+#define CONFIG_CMD_EXT4
 /* Some things don't make sense on this HW or yet */
 #undef CONFIG_CMD_FPGA
 #undef CONFIG_CMD_NET
@@ -178,5 +179,6 @@
 #define CONFIG_SETUP_MEMORY_TAGS
 #define CONFIG_CMDLINE_TAG
 #define CONFIG_INITRD_TAG
+#define CONFIG_SUPPORT_RAW_INITRD
 
 #endif
