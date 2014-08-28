@@ -14,7 +14,7 @@ armhf			igep0020	u-boot.bin spl/u-boot-spl.bin MLO
 armhf			mx51_efikamx	u-boot.imx
 armhf			mx51_efikasb	u-boot.imx
 armhf			mx53loco	u-boot.imx
-armhf			mx6_cubox-i	u-boot.img spl/u-boot-spl.bin SPL
+#armhf			mx6_cubox-i	u-boot.img spl/u-boot-spl.bin SPL
 armhf			nokia_rx51	u-boot.bin
 armhf			omap3_beagle	u-boot.bin spl/u-boot-spl.bin MLO
 armhf			omap4_panda	u-boot.bin spl/u-boot-spl.bin MLO
@@ -25,6 +25,5 @@ armhf			wandboard_solo	u-boot.imx
 avr32			hammerhead	u-boot.img
 mips			dbau1100	u-boot.img
 mips			qemu_mips	u-boot.img
-powerpc			ZUMA		u-boot.img
 sh4			r2dplus		u-boot.img
 sh4			sh7785lcr_32bit	u-boot.img
