@@ -53,7 +53,7 @@ ifeq (true,$(u_boot_package))
 	        installdir=debian/$(package)/usr/lib/$(package)/$$platform; \
 	        mkdir -p $$builddir; \
 		for target in $$targets ; do \
-	        $(MAKE) O=$$builddir $${platform}_config; \
+	        $(MAKE) O=$$builddir $${platform}_defconfig; \
 		$(MAKE) O=$$builddir $$target; \
 	        $(INSTALL_DIR) $$installdir; \
 	        $(INSTALL_FILE) $$builddir/$$target $$installdir; \
@@ -63,13 +63,17 @@ ifeq (true,$(u_boot_package))
 	            $$installdir/uboot.elf; \
 		$(MAKE) O=$$builddir HOSTCC=$(CROSS_COMPILE)gcc HOSTSTRIP=$(CROSS_COMPILE)strip env ; \
 		$(CROSS_COMPILE)strip --remove-section=.comment $$builddir/tools/env/fw_printenv ; \
-	        $(INSTALL_DIR) debian/$(tools_package)/usr/bin/; \
-		$(INSTALL_PROGRAM) $$builddir/tools/env/fw_printenv debian/$(tools_package)/usr/bin/ ; \
-		ln -sf fw_printenv debian/$(tools_package)/usr/bin/fw_setenv ; \
+		installdir_tools=debian/$(tools_package)/usr/lib/$(package)/$$platform; \
+		$(INSTALL_DIR) $$installdir_tools; \
+		$(INSTALL_PROGRAM) $$builddir/tools/env/fw_printenv $$installdir_tools ; \
+		ln -sf fw_printenv $$installdir_tools/fw_setenv ; \
 	done
 endif
 
 ifeq ($(CROSS_COMPILE),)
+	# Avoid requirement for .config
+	mkdir -p include/config
+	touch include/config/auto.conf
 	# board-independent tools
 	$(INSTALL_DIR) debian/$(tools_package)/usr/bin/
 	$(MAKE) HOSTCC=$(CROSS_COMPILE)gcc HOSTSTRIP=$(CROSS_COMPILE)strip \
@@ -87,7 +91,7 @@ clean:
 	rm -f build-arch
 	$(MAKE) distclean
 	rm -rf arch/arm/include/asm/arch arch/arm/include/asm/proc
-	rm -rf tools/mkimage tools/mkenvimage tools/env/fw_printenv
+	rm -rf tools/mkimage tools/mkenvimage tools/env/fw_printenv include/config/
 	rm -rf debian/build
 	rm -f `find . -name "*~"`
 
