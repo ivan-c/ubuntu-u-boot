@@ -1,4 +1,4 @@
-# DEB_HOST_ARCH		platform	target
+# ARCH	subarch		platform	target
 # --------------------------------------------
 armel	-		dockstar	u-boot.kwb
 
@@ -34,13 +34,11 @@ armhf	sunxi		Cubieboard	u-boot-sunxi-with-spl.bin
 # Ian Campbell <ijc@hellion.org.uk>
 # Karsten Merker <merker@debian.org>
 armhf	sunxi		Cubieboard2	u-boot-sunxi-with-spl.bin
-armhf	sunxi		Cubieboard2_FEL	u-boot.bin spl/u-boot-spl.bin
 
 # Ian Campbell <ijc@hellion.org.uk>
 # Robert Nelson <robertcnelson@gmail.com>
 # Karsten Merker <merker@debian.org>
 armhf	sunxi		Cubietruck	u-boot-sunxi-with-spl.bin
-armhf	sunxi		Cubietruck_FEL	u-boot.bin spl/u-boot-spl.bin
 
 # Vagrant Cascadian <vagrant@debian.org>
 # Andrew M.A. Cater <amacater@galactic.demon.co.uk>
@@ -55,7 +53,7 @@ armhf	imx		mx53loco	u-boot.imx
 # Steve Langasek <vorlon@debian.org>, CuBox-i4
 # Vagrant Cascadian <vagrant@debian.org>, CuBox-i4
 # Rainer Dorsch <ml@bokomoko.de>, CuBox-i2u (i2u-300-d)
-#armhf	imx		mx6_cubox-i	u-boot.img spl/u-boot-spl.bin SPL
+armhf	imx		mx6_cubox-i	u-boot.img spl/u-boot-spl.bin SPL
 
 armhf	omap		nokia_rx51	u-boot.bin
 
@@ -77,11 +75,12 @@ armhf	imx		wandboard_quad	u-boot.imx
 # Robert Nelson <robertcnelson@gmail.com>
 armhf	imx		wandboard_solo	u-boot.imx
 
+# Hector Oron <zumbi@debian.org>
+armhf	imx		nitrogen6q	u-boot.imx
+
 avr32	-		hammerhead	u-boot.img
 
-mips	-		dbau1100	u-boot.img
-
-mips	-		qemu_mips	u-boot.img
+mips	-		qemu_mips	u-boot.bin
 
 sh4	-		r2dplus		u-boot.img
 

@@ -1,3 +1,4 @@
+add-debian-revision-to-u-boot-version
 mipsel-native-endianness.diff
 kerma-sheevaplug-mvsata.diff
 openrd-mmc.diff
@@ -7,11 +8,13 @@ guruplug_mvfs_and_mmc.diff
 0001-wandboard-uEnv.txt-bootz-n-fixes.patch
 ti_armv7_common-support_raw_initrd.diff
 am335x-uenv.txt.diff
-#spl-sata-support.diff
-#imx6-spl-support.diff
-#cubox-support.diff
+cubox-i/spl-sata-support.diff
+cubox-i/imx6-spl-support.diff
+cubox-i/cubox-i-support.diff
+cubox-i/cubox-i-raw-initrd.diff
+cubox-i/Switch-mx6_cubox-i-to-Kconfig.patch
+cubox-i/steal-board-eth-init-from-hummingboard.diff
 n900-bootz-raw-initrd.diff
-#cubox-i-raw-initrd.diff
 no-force-CROSS_COMPILE-powerpc.diff
 am335x-bootscript.diff
 am335x-try-boot-from-first-partition.diff
@@ -20,3 +23,10 @@ mx53loco
 workaround-env-ftbfs
 
 sunxi/0001-sun7i-Add-support-for-Olimex-A20-OLinuXino-LIME.patch
+tools-generic-builds.patch
+
+bootcmd-scsi-scan-before-scsi.patch
+
+Makefile-add-kwb-target-to-all.patch
+
+0001-Set-DCDC1-DDR3-to-1.35V-for-Beaglebone-Black.patch
