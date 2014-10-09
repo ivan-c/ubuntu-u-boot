@@ -1,0 +1,90 @@
+From d44e22ee97f0f9641b589049d1793f7f081f72fc Mon Sep 17 00:00:00 2001
+From: Ian Campbell <ijc@debian.org>
+Date: Fri, 3 Oct 2014 07:44:45 +0100
+Subject: [PATCH 3/3] Move arndale to its own subarch pacakge.
+
+---
+ debian/control                         | 17 ++++++++++++++++-
+ debian/targets                         |  2 +-
+ debian/u-boot-exynos.install           |  2 ++
+ debian/u-boot-exynos.lintian-overrides | 11 +++++++++++
+ 4 files changed, 30 insertions(+), 2 deletions(-)
+ create mode 100755 debian/u-boot-exynos.install
+ create mode 100644 debian/u-boot-exynos.lintian-overrides
+
+diff --git a/debian/control b/debian/control
+index f0b18b2..6052f48 100644
+--- a/debian/control
++++ b/debian/control
+@@ -13,7 +13,7 @@ Package: u-boot
+ Architecture: armel armhf avr32 mips sh4
+ Multi-Arch: same
+ Depends: ${misc:Depends},
+- u-boot-imx [armhf], u-boot-omap [armhf], u-boot-sunxi [armhf], 
++ u-boot-imx [armhf], u-boot-omap [armhf], u-boot-sunxi [armhf], u-boot-exynos [armhf]
+ Description: A boot loader for embedded systems
+  Das U-Boot is a cross-platform bootloader for embedded systems,
+  used as the default boot loader by several board vendors.  It is
+@@ -68,6 +68,21 @@ Description: A boot loader for sunxi systems
+  This package includes boot loaders for various Allwinner/sunxi
+  platforms.
+ 
++Package: u-boot-exynos
++Architecture: armhf
++Multi-Arch: same
++Depends: ${misc:Depends}
++Breaks: u-boot (<< 2014.10~rc2+dfsg1-2~)
++Replaces: u-boot (<< 2014.10~rc2+dfsg1-2~)
++Description: A boot loader for exynos systems
++ Das U-Boot is a cross-platform bootloader for embedded systems,
++ used as the default boot loader by several board vendors.  It is
++ intended to be easy to port and to debug, and runs on many
++ supported architectures, including PPC, ARM, MIPS, x86, m68k,
++ NIOS, and Microblaze.
++ .
++ This package includes boot loaders for various Exynos platforms.
++
+ Package: u-boot-tools
+ Architecture: linux-any
+ Multi-Arch: foreign
+diff --git a/debian/targets b/debian/targets
+index 8b6d825..70bca8c 100644
+--- a/debian/targets
++++ b/debian/targets
+@@ -79,7 +79,7 @@ armhf	imx		wandboard_solo	u-boot.imx
+ armhf	imx		nitrogen6q	u-boot.imx
+ 
+ # Ian Campbell <ijc@hellion.org.uk>
+-armhf	-		arndale		u-boot-dtb.bin spl/arndale-spl.bin
++armhf	exynos		arndale		u-boot-dtb.bin spl/arndale-spl.bin
+ 
+ avr32	-		hammerhead	u-boot.img
+ 
+diff --git a/debian/u-boot-exynos.install b/debian/u-boot-exynos.install
+new file mode 100755
+index 0000000..e4408cf
+--- /dev/null
++++ b/debian/u-boot-exynos.install
+@@ -0,0 +1,2 @@
++#!/bin/sh
++debian/bin/u-boot-install-targets exynos
+diff --git a/debian/u-boot-exynos.lintian-overrides b/debian/u-boot-exynos.lintian-overrides
+new file mode 100644
+index 0000000..b10b971
+--- /dev/null
++++ b/debian/u-boot-exynos.lintian-overrides
+@@ -0,0 +1,11 @@
++
++# There are no file conflicts across architectures for u-boot, as each
++# target is only installed on a single architecture. In theory, some
++# targets could be built on multiple architectures, but could instead install
++# the package for the architecture needed.
++u-boot-arndale [armhf]: arch-dependent-file-not-in-arch-specific-directory usr/lib/u-boot/arndale/uboot.elf
++
++# These bootloaders need to be statically linked.
++u-boot-arndale [armhf]: statically-linked-binary usr/lib/u-boot/arndale/uboot.elf
++
++u-boot-arndale: description-synopsis-starts-with-article
+-- 
+2.1.0
+

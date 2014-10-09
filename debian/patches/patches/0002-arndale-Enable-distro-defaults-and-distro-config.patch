@@ -1,0 +1,214 @@
+From c9aee7bc95b412b706f20125c52b6facbb9cc36e Mon Sep 17 00:00:00 2001
+From: Ian Campbell <ijc@debian.org>
+Date: Thu, 2 Oct 2014 08:08:15 +0100
+Subject: [PATCH 2/3] arndale: Enable distro defaults and distro config.
+
+Patches have been submitted upstream
+---
+ ...-Boot-arndale-Use-config_distro_bootcmd.h.patch | 81 +++++++++++++++++++
+ ...t-arndale-Enable-config_distro_defaults.h.patch | 94 ++++++++++++++++++++++
+ debian/patches/series                              |  2 +
+ 3 files changed, 177 insertions(+)
+ create mode 100644 debian/patches/U-Boot-arndale-Use-config_distro_bootcmd.h.patch
+ create mode 100644 debian/patches/U-Boot-for-next-arndale-Enable-config_distro_defaults.h.patch
+
+diff --git a/debian/patches/U-Boot-arndale-Use-config_distro_bootcmd.h.patch b/debian/patches/U-Boot-arndale-Use-config_distro_bootcmd.h.patch
+new file mode 100644
+index 0000000..189e5e1
+--- /dev/null
++++ b/debian/patches/U-Boot-arndale-Use-config_distro_bootcmd.h.patch
+@@ -0,0 +1,81 @@
++Content-Type: text/plain; charset="utf-8"
++MIME-Version: 1.0
++Content-Transfer-Encoding: 7bit
++Subject: [U-Boot] arndale: Use config_distro_bootcmd.h
++From: Ian Campbell <ijc@hellion.org.uk>
++X-Patchwork-Id: 394344
++Message-Id: <1411986272-30809-1-git-send-email-ijc@hellion.org.uk>
++To: <u-boot@lists.denx.de>, Minkyu Kang <mk7.kang@samsung.com>
++Cc: Ian Campbell <ian.campbell@citrix.com>
++Date: Mon, 29 Sep 2014 11:24:32 +0100
++
++From: Ian Campbell <ian.campbell@citrix.com>
++
++Signed-off-by: Ian Campbell <ian.campbell@citrix.com>
++---
++ include/configs/arndale.h | 38 +++++++++++++++++++++++++++++---------
++ 1 file changed, 29 insertions(+), 9 deletions(-)
++
++diff --git a/include/configs/arndale.h b/include/configs/arndale.h
++index db7623d..a6630fd 100644
++--- a/include/configs/arndale.h
+++++ b/include/configs/arndale.h
++@@ -66,13 +66,6 @@
++ /* Console configuration */
++ #define CONFIG_CONSOLE_MUX
++ #define CONFIG_SYS_CONSOLE_IS_IN_ENV
++-#define EXYNOS_DEVICE_SETTINGS \
++-		"stdin=serial\0" \
++-		"stdout=serial\0" \
++-		"stderr=serial\0"
++-
++-#define CONFIG_EXTRA_ENV_SETTINGS \
++-	EXYNOS_DEVICE_SETTINGS
++ 
++ /* SD/MMC configuration */
++ #define CONFIG_GENERIC_MMC
++@@ -123,8 +116,6 @@
++ #define CONFIG_SPL_TEXT_BASE	0x02023400
++ #define CONFIG_SPL_MAX_FOOTPRINT	(14 * 1024)
++ 
++-#define CONFIG_BOOTCOMMAND	"mmc read 40007000 451 2000; bootm 40007000"
++-
++ /* Miscellaneous configurable options */
++ #define CONFIG_SYS_PROMPT		"ARNDALE # "
++ #define CONFIG_SYS_CBSIZE		256	/* Console I/O Buffer Size */
++@@ -212,6 +203,35 @@
++ 
++ #include <config_distro_defaults.h>
++ 
+++#define BOOT_TARGET_DEVICES(func) \
+++	func(MMC, mmc, 1) \
+++	func(MMC, mmc, 0) \
+++	func(PXE, pxe, na) \
+++	func(DHCP, dhcp, na)
+++
+++#include <config_distro_bootcmd.h>
+++
+++
+++/* 2GB RAM, bootm size of 256M, load scripts after that */
+++#define MEM_LAYOUT_ENV_SETTINGS \
+++	"bootm_size=0x10000000\0" \
+++	"kernel_addr_r=0x42000000\0" \
+++	"fdt_addr_r=0x43000000\0" \
+++	"ramdisk_addr_r=0x43300000\0" \
+++	"scriptaddr=0x50000000\0" \
+++	"pxefile_addr_r=0x51000000\0"
+++
+++#define EXYNOS_DEVICE_SETTINGS \
+++	"stdin=serial\0" \
+++	"stdout=serial\0" \
+++	"stderr=serial\0" \
+++	"fdtfile=exynos5250-arndale.dtb\0"
+++
+++#define CONFIG_EXTRA_ENV_SETTINGS \
+++	EXYNOS_DEVICE_SETTINGS \
+++	MEM_LAYOUT_ENV_SETTINGS \
+++	BOOTENV
+++
++ /* PMIC */
++ #define CONFIG_PMIC
++ #define CONFIG_POWER_I2C
+diff --git a/debian/patches/U-Boot-for-next-arndale-Enable-config_distro_defaults.h.patch b/debian/patches/U-Boot-for-next-arndale-Enable-config_distro_defaults.h.patch
+new file mode 100644
+index 0000000..dd3e5d3
+--- /dev/null
++++ b/debian/patches/U-Boot-for-next-arndale-Enable-config_distro_defaults.h.patch
+@@ -0,0 +1,94 @@
++Content-Type: text/plain; charset="utf-8"
++MIME-Version: 1.0
++Content-Transfer-Encoding: 7bit
++Subject: [U-Boot,for-next] arndale: Enable config_distro_defaults.h
++From: Ian Campbell <ijc@hellion.org.uk>
++X-Patchwork-Id: 393793
++Message-Id: <1411741537-29691-1-git-send-email-ijc@hellion.org.uk>
++To: <u-boot@lists.denx.de>, Minkyu Kang <mk7.kang@samsung.com>,
++ Inderpal Singh <inderpal.singh@linaro.org>
++Cc: Ian Campbell <ian.campbell@citrix.com>
++Date: Fri, 26 Sep 2014 15:25:37 +0100
++
++From: Ian Campbell <ian.campbell@citrix.com>
++
++...and remove explicit setting of things which this implies.
++
++I'm mainly interested in CONFIG_CMD_BOOTZ and CONFIG_SUPPORT_RAW_INITRD
++
++Signed-off-by: Ian Campbell <ian.campbell@citrix.com>
++---
++ include/configs/arndale.h | 22 ++--------------------
++ 1 file changed, 2 insertions(+), 20 deletions(-)
++
++diff --git a/include/configs/arndale.h b/include/configs/arndale.h
++index 75f9933..197d0fc 100644
++--- a/include/configs/arndale.h
+++++ b/include/configs/arndale.h
++@@ -45,7 +45,6 @@
++ #define CONFIG_SETUP_MEMORY_TAGS
++ #define CONFIG_CMDLINE_TAG
++ #define CONFIG_INITRD_TAG
++-#define CONFIG_CMDLINE_EDITING
++ 
++ /* Power Down Modes */
++ #define S5P_CHECK_SLEEP			0x00000BAD
++@@ -98,15 +97,9 @@
++ /* Command definition*/
++ #include <config_cmd_default.h>
++ 
++-#define CONFIG_CMD_PING
++-#define CONFIG_CMD_ELF
++ #define CONFIG_CMD_MMC
++-#define CONFIG_CMD_EXT2
++-#define CONFIG_CMD_FAT
++-#define CONFIG_CMD_NET
++ #define CONFIG_CMD_HASH
++ 
++-#define CONFIG_BOOTDELAY		3
++ #define CONFIG_ZERO_BOOTDELAY_CHECK
++ 
++ /* USB */
++@@ -133,8 +126,6 @@
++ #define CONFIG_BOOTCOMMAND	"mmc read 40007000 451 2000; bootm 40007000"
++ 
++ /* Miscellaneous configurable options */
++-#define CONFIG_SYS_LONGHELP		/* undef to save memory */
++-#define CONFIG_SYS_HUSH_PARSER		/* use "hush" command parser	*/
++ #define CONFIG_SYS_PROMPT		"ARNDALE # "
++ #define CONFIG_SYS_CBSIZE		256	/* Console I/O Buffer Size */
++ #define CONFIG_SYS_PBSIZE		384	/* Print Buffer Size */
++@@ -201,8 +192,6 @@
++ #define BL2_START_OFFSET	(CONFIG_BL2_OFFSET/512)
++ #define BL2_SIZE_BLOC_COUNT	(CONFIG_BL2_SIZE/512)
++ 
++-#define CONFIG_DOS_PARTITION
++-#define CONFIG_EFI_PARTITION
++ #define CONFIG_CMD_PART
++ #define CONFIG_PARTITION_UUIDS
++ 
++@@ -221,6 +210,8 @@
++ #define CONFIG_SYS_I2C_S3C24X0_SLAVE    0x0
++ #define CONFIG_I2C_EDID
++ 
+++#include <config_distro_defaults.h>
+++
++ /* PMIC */
++ #define CONFIG_PMIC
++ #define CONFIG_POWER_I2C
++@@ -238,15 +229,6 @@
++ #define CONFIG_ENV_SROM_BANK		1
++ #endif /*CONFIG_CMD_NET*/
++ 
++-/* Enable PXE Support */
++-#ifdef CONFIG_CMD_NET
++-#define CONFIG_CMD_PXE
++-#define CONFIG_MENU
++-#endif
++-
++-/* Enable devicetree support */
++-#define CONFIG_OF_LIBFDT
++-
++ /* Enable Time Command */
++ #define CONFIG_CMD_TIME
++ 
+diff --git a/debian/patches/series b/debian/patches/series
+index ff5e2a6..afe2864 100644
+--- a/debian/patches/series
++++ b/debian/patches/series
+@@ -23,3 +23,5 @@ workaround-env-ftbfs
+ sunxi/0001-sun7i-Add-support-for-Olimex-A20-OLinuXino-LIME.patch
+ tools-generic-builds.patch
+ board-spl-rule.diff
++U-Boot-for-next-arndale-Enable-config_distro_defaults.h.patch
++U-Boot-arndale-Use-config_distro_bootcmd.h.patch
+-- 
+2.1.0
+
