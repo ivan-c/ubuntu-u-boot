@@ -1,6 +1,5 @@
 add-debian-revision-to-u-boot-version
 mipsel-native-endianness.diff
-kerma-sheevaplug-mvsata.diff
 openrd-mmc.diff
 no-error-on-set-but-unused-variables.diff
 hurd.diff
@@ -14,6 +13,7 @@ cubox-i/cubox-i-support.diff
 cubox-i/cubox-i-raw-initrd.diff
 cubox-i/Switch-mx6_cubox-i-to-Kconfig.patch
 cubox-i/steal-board-eth-init-from-hummingboard.diff
+cubox-i/generic-board.diff
 n900-bootz-raw-initrd.diff
 no-force-CROSS_COMPILE-powerpc.diff
 am335x-bootscript.diff
@@ -23,11 +23,12 @@ mx53loco
 workaround-env-ftbfs
 
 tools-generic-builds.patch
+tools-only-in-no-dot-config-targets.diff
 
 Makefile-add-kwb-target-to-all.patch
 
 0001-Set-DCDC1-DDR3-to-1.35V-for-Beaglebone-Black.patch
 
 arndale/board-spl-rule.diff
-arndale/U-Boot-for-next-arndale-Enable-config_distro_defaults.h.patch
-arndale/U-Boot-arndale-Use-config_distro_bootcmd.h.patch
+arndale/exynos-Enable-config_distro_defaults.h.patch
+arndale/exynos5-Use-config_distro_bootcmd.h.patch
