@@ -18,10 +18,17 @@ PLATFORM_LDFLAGS :=
 LDFLAGS :=
 LDFLAGS_FINAL :=
 OBJCOPYFLAGS :=
+# clear VENDOR for tcsh
+VENDOR :=
 #########################################################################
 
 ARCH := $(CONFIG_SYS_ARCH:"%"=%)
 CPU := $(CONFIG_SYS_CPU:"%"=%)
+ifdef CONFIG_SPL_BUILD
+ifdef CONFIG_TEGRA
+CPU := arm720t
+endif
+endif
 BOARD := $(CONFIG_SYS_BOARD:"%"=%)
 ifneq ($(CONFIG_SYS_VENDOR),)
 VENDOR := $(CONFIG_SYS_VENDOR:"%"=%)
@@ -55,6 +62,11 @@ endif
 
 ifdef FTRACE
 PLATFORM_CPPFLAGS += -finstrument-functions -DFTRACE
+endif
+
+# Allow use of stdint.h if available
+ifneq ($(USE_STDINT),)
+PLATFORM_CPPFLAGS += -DCONFIG_USE_STDINT
 endif
 
 #########################################################################

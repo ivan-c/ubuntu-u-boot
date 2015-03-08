@@ -31,6 +31,8 @@
 #include <linux/backing-dev.h>
 #include "ubifs-media.h"
 #else
+#include <asm/atomic.h>
+#include <asm-generic/atomic-long.h>
 #include <ubi_uboot.h>
 
 #include <linux/ctype.h>
@@ -62,16 +64,6 @@ struct page {
 };
 
 void iput(struct inode *inode);
-
-/*
- * The atomic operations are used for budgeting etc which is not
- * needed for the read-only U-Boot implementation:
- */
-#define atomic_long_inc(a)
-#define atomic_long_dec(a)
-#define	atomic_long_sub(a, b)
-
-typedef unsigned long atomic_long_t;
 
 /* linux/include/time.h */
 #define NSEC_PER_SEC	1000000000L
@@ -475,10 +467,6 @@ struct file {
 #elif BITS_PER_LONG==64
 #define MAX_LFS_FILESIZE 	0x7fffffffffffffffUL
 #endif
-
-#define INT_MAX		((int)(~0U>>1))
-#define INT_MIN		(-INT_MAX - 1)
-#define LLONG_MAX	((long long)(~0ULL>>1))
 
 /*
  * These are the fs-independent mount-flags: up to 32 flags are supported

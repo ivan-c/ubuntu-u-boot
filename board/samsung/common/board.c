@@ -13,10 +13,10 @@
 #include <tmu.h>
 #include <netdev.h>
 #include <asm/io.h>
+#include <asm/gpio.h>
 #include <asm/arch/board.h>
 #include <asm/arch/cpu.h>
 #include <asm/arch/dwmmc.h>
-#include <asm/arch/gpio.h>
 #include <asm/arch/mmc.h>
 #include <asm/arch/pinmux.h>
 #include <asm/arch/power.h>
@@ -28,19 +28,15 @@
 
 DECLARE_GLOBAL_DATA_PTR;
 
-int __exynos_early_init_f(void)
+__weak int exynos_early_init_f(void)
 {
 	return 0;
 }
-int exynos_early_init_f(void)
-	__attribute__((weak, alias("__exynos_early_init_f")));
 
-int __exynos_power_init(void)
+__weak int exynos_power_init(void)
 {
 	return 0;
 }
-int exynos_power_init(void)
-	__attribute__((weak, alias("__exynos_power_init")));
 
 #if defined CONFIG_EXYNOS_TMU
 /* Boot Time Thermal Analysis for SoC temperature threshold breach */
@@ -87,9 +83,6 @@ int board_init(void)
 	boot_temp_check();
 #endif
 
-#ifdef CONFIG_EXYNOS_SPI
-	spi_init();
-#endif
 	return exynos_init();
 }
 
@@ -345,9 +338,6 @@ int arch_early_init_r(void)
 #ifdef CONFIG_MISC_INIT_R
 int misc_init_r(void)
 {
-#ifdef CONFIG_SET_DFU_ALT_INFO
-	set_dfu_alt_info();
-#endif
 #ifdef CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
 	set_board_info();
 #endif
@@ -362,3 +352,31 @@ int misc_init_r(void)
 	return 0;
 }
 #endif
+
+void reset_misc(void)
+{
+	struct gpio_desc gpio = {};
+	int node;
+
+	node = fdt_node_offset_by_compatible(gd->fdt_blob, 0,
+			"samsung,emmc-reset");
+	if (node < 0)
+		return;
+
+	gpio_request_by_name_nodev(gd->fdt_blob, node, "reset-gpio", 0, &gpio,
+				   GPIOD_IS_OUT);
+
+	if (dm_gpio_is_valid(&gpio)) {
+		/*
+		 * Reset eMMC
+		 *
+		 * FIXME: Need to optimize delay time. Minimum 1usec pulse is
+		 *	  required by 'JEDEC Standard No.84-A441' (eMMC)
+		 *	  document but real delay time is expected to greater
+		 *	  than 1usec.
+		 */
+		dm_gpio_set_value(&gpio, 0);
+		mdelay(10);
+		dm_gpio_set_value(&gpio, 1);
+	}
+}

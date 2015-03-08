@@ -111,7 +111,7 @@ static int init_func_watchdog_init(void)
 {
 # if defined(CONFIG_HW_WATCHDOG) && (defined(CONFIG_BLACKFIN) || \
 	defined(CONFIG_M68K) || defined(CONFIG_MICROBLAZE) || \
-	defined(CONFIG_SH))
+	defined(CONFIG_SH) || defined(CONFIG_AT91SAM9_WATCHDOG))
 	hw_watchdog_init();
 # endif
 	puts("       Watchdog enabled\n");
@@ -128,13 +128,10 @@ int init_func_watchdog_reset(void)
 }
 #endif /* CONFIG_WATCHDOG */
 
-void __board_add_ram_info(int use_default)
+__weak void board_add_ram_info(int use_default)
 {
 	/* please define platform specific board_add_ram_info() */
 }
-
-void board_add_ram_info(int)
-	__attribute__ ((weak, alias("__board_add_ram_info")));
 
 static int init_baud_rate(void)
 {
@@ -145,17 +142,19 @@ static int init_baud_rate(void)
 static int display_text_info(void)
 {
 #ifndef CONFIG_SANDBOX
-	ulong bss_start, bss_end;
+	ulong bss_start, bss_end, text_base;
 
 	bss_start = (ulong)&__bss_start;
 	bss_end = (ulong)&__bss_end;
 
-	debug("U-Boot code: %08X -> %08lX  BSS: -> %08lX\n",
 #ifdef CONFIG_SYS_TEXT_BASE
-	      CONFIG_SYS_TEXT_BASE, bss_start, bss_end);
+	text_base = CONFIG_SYS_TEXT_BASE;
 #else
-	      CONFIG_SYS_MONITOR_BASE, bss_start, bss_end);
+	text_base = CONFIG_SYS_MONITOR_BASE;
 #endif
+
+	debug("U-Boot code: %08lX -> %08lX  BSS: -> %08lX\n",
+		text_base, bss_start, bss_end);
 #endif
 
 #ifdef CONFIG_MODEM_SUPPORT
@@ -221,16 +220,13 @@ static int show_dram_config(void)
 	return 0;
 }
 
-void __dram_init_banksize(void)
+__weak void dram_init_banksize(void)
 {
 #if defined(CONFIG_NR_DRAM_BANKS) && defined(CONFIG_SYS_SDRAM_BASE)
 	gd->bd->bi_dram[0].start = CONFIG_SYS_SDRAM_BASE;
 	gd->bd->bi_dram[0].size = get_effective_memsize();
 #endif
 }
-
-void dram_init_banksize(void)
-	__attribute__((weak, alias("__dram_init_banksize")));
 
 #if defined(CONFIG_HARD_I2C) || defined(CONFIG_SYS_I2C)
 static int init_func_i2c(void)
@@ -266,7 +262,7 @@ static int zero_global_data(void)
 
 static int setup_mon_len(void)
 {
-#ifdef __ARM__
+#if defined(__ARM__) || defined(__MICROBLAZE__)
 	gd->mon_len = (ulong)&__bss_end - (ulong)_start;
 #elif defined(CONFIG_SANDBOX)
 	gd->mon_len = (ulong)&_end - (ulong)_init;
@@ -291,7 +287,7 @@ static int read_fdt_from_file(void)
 	struct sandbox_state *state = state_get_current();
 	const char *fname = state->fdt_fname;
 	void *blob;
-	ssize_t size;
+	loff_t size;
 	int err;
 	int fd;
 
@@ -304,10 +300,10 @@ static int read_fdt_from_file(void)
 		return -EINVAL;
 	}
 
-	size = os_get_filesize(fname);
-	if (size < 0) {
+	err = os_get_filesize(fname, &size);
+	if (err < 0) {
 		printf("Failed to file FDT file '%s'\n", fname);
-		return -ENOENT;
+		return err;
 	}
 	fd = os_open(fname, OS_O_RDONLY);
 	if (fd < 0) {
@@ -577,48 +573,22 @@ static int reserve_fdt(void)
 	return 0;
 }
 
+int arch_reserve_stacks(void)
+{
+	return 0;
+}
+
 static int reserve_stacks(void)
 {
-#ifdef CONFIG_SPL_BUILD
-# ifdef CONFIG_ARM
-	gd->start_addr_sp -= 128;	/* leave 32 words for abort-stack */
-	gd->irq_sp = gd->start_addr_sp;
-# endif
-#else
-# ifdef CONFIG_PPC
-	ulong *s;
-# endif
-
-	/* setup stack pointer for exceptions */
+	/* make stack pointer 16-byte aligned */
 	gd->start_addr_sp -= 16;
 	gd->start_addr_sp &= ~0xf;
-	gd->irq_sp = gd->start_addr_sp;
 
 	/*
-	 * Handle architecture-specific things here
-	 * TODO(sjg@chromium.org): Perhaps create arch_reserve_stack()
-	 * to handle this and put in arch/xxx/lib/stack.c
+	 * let the architecture specific code tailor gd->start_addr_sp and
+	 * gd->irq_sp
 	 */
-# if defined(CONFIG_ARM) && !defined(CONFIG_ARM64)
-#  ifdef CONFIG_USE_IRQ
-	gd->start_addr_sp -= (CONFIG_STACKSIZE_IRQ + CONFIG_STACKSIZE_FIQ);
-	debug("Reserving %zu Bytes for IRQ stack at: %08lx\n",
-		CONFIG_STACKSIZE_IRQ + CONFIG_STACKSIZE_FIQ, gd->start_addr_sp);
-
-	/* 8-byte alignment for ARM ABI compliance */
-	gd->start_addr_sp &= ~0x07;
-#  endif
-	/* leave 3 words for abort-stack, plus 1 for alignment */
-	gd->start_addr_sp -= 16;
-# elif defined(CONFIG_PPC)
-	/* Clear initial stack frame */
-	s = (ulong *) gd->start_addr_sp;
-	*s = 0; /* Terminate back chain */
-	*++s = 0; /* NULL return address */
-# endif /* Architecture specific code */
-
-	return 0;
-#endif
+	return arch_reserve_stacks();
 }
 
 static int display_new_sp(void)
@@ -811,29 +781,31 @@ static int initf_dm(void)
 	return 0;
 }
 
+/* Architecture-specific memory reservation */
+__weak int reserve_arch(void)
+{
+	return 0;
+}
+
 static init_fnc_t init_sequence_f[] = {
 #ifdef CONFIG_SANDBOX
 	setup_ram_buf,
 #endif
 	setup_mon_len,
 	setup_fdt,
+#ifdef CONFIG_TRACE
 	trace_early_init,
+#endif
+	initf_malloc,
 #if defined(CONFIG_MPC85xx) || defined(CONFIG_MPC86xx)
 	/* TODO: can this go into arch_cpu_init()? */
 	probecpu,
 #endif
 	arch_cpu_init,		/* basic arch cpu dependent setup */
-#ifdef CONFIG_X86
-	cpu_init_f,		/* TODO(sjg@chromium.org): remove */
-# ifdef CONFIG_OF_CONTROL
-	find_fdt,		/* TODO(sjg@chromium.org): remove */
-# endif
-#endif
 	mark_bootstage,
 #ifdef CONFIG_OF_CONTROL
 	fdtdec_check_fdt,
 #endif
-	initf_malloc,
 	initf_dm,
 #if defined(CONFIG_BOARD_EARLY_INIT_F)
 	board_early_init_f,
@@ -896,7 +868,7 @@ static init_fnc_t init_sequence_f[] = {
 	prt_mpc5xxx_clks,
 #endif /* CONFIG_MPC5xxx */
 #if defined(CONFIG_DISPLAY_BOARDINFO)
-	checkboard,		/* display board info */
+	show_board_info,
 #endif
 	INIT_FUNC_WATCHDOG_INIT
 #if defined(CONFIG_MISC_INIT_F)
@@ -909,13 +881,9 @@ static init_fnc_t init_sequence_f[] = {
 #if defined(CONFIG_HARD_SPI)
 	init_func_spi,
 #endif
-#ifdef CONFIG_X86
-	dram_init_f,		/* configure available RAM banks */
-	calculate_relocation_address,
-#endif
 	announce_dram_init,
 	/* TODO: unify all these dram functions? */
-#ifdef CONFIG_ARM
+#if defined(CONFIG_ARM) || defined(CONFIG_X86) || defined(CONFIG_MICROBLAZE) || defined(CONFIG_AVR32)
 	dram_init,		/* configure available RAM banks */
 #endif
 #if defined(CONFIG_MIPS) || defined(CONFIG_PPC)
@@ -982,6 +950,7 @@ static init_fnc_t init_sequence_f[] = {
 	setup_machine,
 	reserve_global_data,
 	reserve_fdt,
+	reserve_arch,
 	reserve_stacks,
 	setup_dram_config,
 	show_dram_config,
@@ -997,6 +966,11 @@ static init_fnc_t init_sequence_f[] = {
 	INIT_FUNC_WATCHDOG_RESET
 	reloc_fdt,
 	setup_reloc,
+#ifdef CONFIG_X86
+	copy_uboot_to_ram,
+	clear_bss,
+	do_elf_reloc_fixups,
+#endif
 #if !defined(CONFIG_ARM) && !defined(CONFIG_SANDBOX)
 	jump_to_copy,
 #endif
@@ -1056,9 +1030,6 @@ void board_init_f(ulong boot_flags)
  */
 static init_fnc_t init_sequence_f_r[] = {
 	init_cache_f_r,
-	copy_uboot_to_ram,
-	clear_bss,
-	do_elf_reloc_fixups,
 
 	NULL,
 };
@@ -1077,5 +1048,23 @@ void board_init_f_r(void)
 
 	/* NOTREACHED - board_init_r() does not return */
 	hang();
+}
+#else
+ulong board_init_f_mem(ulong top)
+{
+	/* Leave space for the stack we are running with now */
+	top -= 0x40;
+
+	top -= sizeof(struct global_data);
+	top = ALIGN(top, 16);
+	gd = (struct global_data *)top;
+	memset((void *)gd, '\0', sizeof(*gd));
+
+#ifdef CONFIG_SYS_MALLOC_F_LEN
+	top -= CONFIG_SYS_MALLOC_F_LEN;
+	gd->malloc_base = top;
+#endif
+
+	return top;
 }
 #endif /* CONFIG_X86 */

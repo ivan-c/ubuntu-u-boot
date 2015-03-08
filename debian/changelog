@@ -1,3 +1,38 @@
+u-boot (2015.04~rc3+dfsg1-1) experimental; urgency=medium
+
+  * New upstream release candidate.
+  * Remove patches applied upstream:
+    - ti_armv7_common-support_raw_initrd.diff
+  * Refresh patches:
+    - cubox-i/cubox-i-support.diff
+    - mipsel-native-endianness.diff
+    - mx53loco
+    - openrd-mmc.diff
+    - series
+    - wandboard/wandboard-uEnv.txt-bootz-n-fixes.patch
+    - guruplug_mvfs_and_mmc.diff
+  * Add patch to enable USB mass-storage support for the BeagleBone Black:
+    - beagleboneblack/usb-mass-storage.patch
+  * debian/rules: Add get-orig-source target.
+
+  * Disable patches that fail to apply:
+    - cubox-i/imx6-spl-support.diff
+    - arndale/exynos-Enable-config_distro_defaults.h.patch
+    - arndale/exynos5-Use-config_distro_bootcmd.h.patch
+  * Disable cubox-i build target and patches, as it fails to build.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Sun, 08 Mar 2015 12:15:59 -0700
+
+u-boot (2014.10+dfsg1-4) unstable; urgency=medium
+
+  [ Karsten Merker ]
+  * Backport support for the LeMaker Banana Pro board (Closes: #779908).
+
+  [ Vagrant Cascadian ]
+  * Update lintian rules for BananaPro and A20-OlinuXino-LIME2.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Sun, 08 Mar 2015 11:13:07 -0700
+
 u-boot (2014.10+dfsg1-3) unstable; urgency=medium
 
   * cubox-i-support.diff: Refresh patch, dropping solidrun.bmp, which

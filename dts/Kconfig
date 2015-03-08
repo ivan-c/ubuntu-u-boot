@@ -9,7 +9,6 @@ config SUPPORT_OF_CONTROL
 	bool
 
 menu "Device Tree Control"
-	depends on !SPL_BUILD
 	depends on SUPPORT_OF_CONTROL
 
 config OF_CONTROL
@@ -49,7 +48,7 @@ config DEFAULT_DEVICE_TREE
 	string "Default Device Tree for DT control"
 	help
 	  This option specifies the default Device Tree used for DT control.
-	  It can be overrided from the command line:
+	  It can be overridden from the command line:
 	  $ make DEVICE_TREE=<device-tree-name>
 
 endmenu

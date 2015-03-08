@@ -36,9 +36,9 @@ How to try it
 
 Build U-Boot sandbox and run it:
 
-   make sandbox_config
+   make sandbox_defconfig
    make
-   ./u-boot
+   ./u-boot -d u-boot.dtb
 
    (type 'reset' to exit U-Boot)
 
@@ -95,7 +95,7 @@ are provided in test/dm. To run them, try:
 You should see something like this:
 
     <...U-Boot banner...>
-    Running 21 driver model tests
+    Running 29 driver model tests
     Test: dm_test_autobind
     Test: dm_test_autoprobe
     Test: dm_test_bus_children
@@ -103,6 +103,7 @@ You should see something like this:
     Device 'c-test@0': seq 0 is in use by 'a-test'
     Device 'c-test@1': seq 1 is in use by 'd-test'
     Test: dm_test_bus_children_funcs
+    Test: dm_test_bus_children_iterators
     Test: dm_test_bus_parent_data
     Test: dm_test_bus_parent_ops
     Test: dm_test_children
@@ -114,7 +115,12 @@ You should see something like this:
     Device 'd-test': seq 3 is in use by 'b-test'
     Device 'a-test': seq 0 is in use by 'd-test'
     Test: dm_test_gpio
-    sandbox_gpio: sb_gpio_get_value: error: offset 4 not reserved
+    extra-gpios: get_value: error: gpio b5 not reserved
+    Test: dm_test_gpio_anon
+    Test: dm_test_gpio_copy
+    Test: dm_test_gpio_leak
+    extra-gpios: get_value: error: gpio b5 not reserved
+    Test: dm_test_gpio_requestf
     Test: dm_test_leak
     Test: dm_test_lifecycle
     Test: dm_test_operations
@@ -122,6 +128,26 @@ You should see something like this:
     Test: dm_test_platdata
     Test: dm_test_pre_reloc
     Test: dm_test_remove
+    Test: dm_test_spi_find
+    Invalid chip select 0:0 (err=-19)
+    SF: Failed to get idcodes
+    Device 'name-emul': seq 0 is in use by 'name-emul'
+    SF: Detected M25P16 with page size 256 Bytes, erase size 64 KiB, total 2 MiB
+    Test: dm_test_spi_flash
+    2097152 bytes written in 0 ms
+    SF: Detected M25P16 with page size 256 Bytes, erase size 64 KiB, total 2 MiB
+    SPI flash test:
+    0 erase: 0 ticks, 65536000 KiB/s 524288.000 Mbps
+    1 check: 0 ticks, 65536000 KiB/s 524288.000 Mbps
+    2 write: 0 ticks, 65536000 KiB/s 524288.000 Mbps
+    3 read: 0 ticks, 65536000 KiB/s 524288.000 Mbps
+    Test passed
+    0 erase: 0 ticks, 65536000 KiB/s 524288.000 Mbps
+    1 check: 0 ticks, 65536000 KiB/s 524288.000 Mbps
+    2 write: 0 ticks, 65536000 KiB/s 524288.000 Mbps
+    3 read: 0 ticks, 65536000 KiB/s 524288.000 Mbps
+    Test: dm_test_spi_xfer
+    SF: Detected M25P16 with page size 256 Bytes, erase size 64 KiB, total 2 MiB
     Test: dm_test_uclass
     Test: dm_test_uclass_before_ready
     Failures: 0
@@ -337,6 +363,10 @@ can leave out platdata_auto_alloc_size. In this case you can use malloc
 in your ofdata_to_platdata (or probe) method to allocate the required memory,
 and you should free it in the remove method.
 
+The driver model tree is intended to mirror that of the device tree. The
+root driver is at device tree offset 0 (the root node, '/'), and its
+children are the children of the root node.
+
 
 Declaring Uclasses
 ------------------
@@ -358,10 +388,12 @@ Device Sequence Numbers
 U-Boot numbers devices from 0 in many situations, such as in the command
 line for I2C and SPI buses, and the device names for serial ports (serial0,
 serial1, ...). Driver model supports this numbering and permits devices
-to be locating by their 'sequence'.
+to be locating by their 'sequence'. This numbering uniquely identifies a
+device in its uclass, so no two devices within a particular uclass can have
+the same sequence number.
 
 Sequence numbers start from 0 but gaps are permitted. For example, a board
-may have I2C buses 0, 1, 4, 5 but no 2 or 3. The choice of how devices are
+may have I2C buses 1, 4, 5 but no 0, 2 or 3. The choice of how devices are
 numbered is up to a particular board, and may be set by the SoC in some
 cases. While it might be tempting to automatically renumber the devices
 where there are gaps in the sequence, this can lead to confusion and is
@@ -371,7 +403,7 @@ Each device can request a sequence number. If none is required then the
 device will be automatically allocated the next available sequence number.
 
 To specify the sequence number in the device tree an alias is typically
-used.
+used. Make sure that the uclass has the DM_UC_FLAG_SEQ_ALIAS flag set.
 
 aliases {
 	serial2 = "/serial@22230000";
@@ -381,43 +413,18 @@ This indicates that in the uclass called "serial", the named node
 ("/serial@22230000") will be given sequence number 2. Any command or driver
 which requests serial device 2 will obtain this device.
 
-Some devices represent buses where the devices on the bus are numbered or
-addressed. For example, SPI typically numbers its slaves from 0, and I2C
-uses a 7-bit address. In these cases the 'reg' property of the subnode is
-used, for example:
+More commonly you can use node references, which expand to the full path:
 
-{
-	aliases {
-		spi2 = "/spi@22300000";
-	};
+aliases {
+	serial2 = &serial_2;
+};
+...
+serial_2: serial@22230000 {
+...
+};
 
-	spi@22300000 {
-		#address-cells = <1>;
-		#size-cells = <1>;
-		spi-flash@0 {
-			reg = <0>;
-			...
-		}
-		eeprom@1 {
-			reg = <1>;
-		};
-	};
-
-In this case we have a SPI bus with two slaves at 0 and 1. The SPI bus
-itself is numbered 2. So we might access the SPI flash with:
-
-	sf probe 2:0
-
-and the eeprom with
-
-	sspi 2:1 32 ef
-
-These commands simply need to look up the 2nd device in the SPI uclass to
-find the right SPI bus. Then, they look at the children of that bus for the
-right sequence number (0 or 1 in this case).
-
-Typically the alias method is used for top-level nodes and the 'reg' method
-is used only for buses.
+The alias resolves to the same string in this case, but this version is
+easier to read.
 
 Device sequence numbers are resolved when a device is probed. Before then
 the sequence number is only a request which may or may not be honoured,
@@ -434,11 +441,18 @@ access to other devices. Example of buses include SPI and I2C. Typically
 the bus provides some sort of transport or translation that makes it
 possible to talk to the devices on the bus.
 
-Driver model provides a few useful features to help with implementing
-buses. Firstly, a bus can request that its children store some 'parent
-data' which can be used to keep track of child state. Secondly, the bus can
-define methods which are called when a child is probed or removed. This is
-similar to the methods the uclass driver provides.
+Driver model provides some useful features to help with implementing buses.
+Firstly, a bus can request that its children store some 'parent data' which
+can be used to keep track of child state. Secondly, the bus can define
+methods which are called when a child is probed or removed. This is similar
+to the methods the uclass driver provides. Thirdly, per-child platform data
+can be provided to specify things like the child's address on the bus. This
+persists across child probe()/remove() cycles.
+
+For consistency and ease of implementation, the bus uclass can specify the
+per-child platform data, so that it can be the same for all children of buses
+in that uclass. There are also uclass methods which can be called when
+children are bound and probed.
 
 Here an explanation of how a bus fits with a uclass may be useful. Consider
 a USB bus with several devices attached to it, each from a different (made
@@ -453,14 +467,22 @@ Each of the devices is connected to a different address on the USB bus.
 The bus device wants to store this address and some other information such
 as the bus speed for each device.
 
-To achieve this, the bus device can use dev->parent_priv in each of its
-three children. This can be auto-allocated if the bus driver has a non-zero
-value for per_child_auto_alloc_size. If not, then the bus device can
-allocate the space itself before the child device is probed.
+To achieve this, the bus device can use dev->parent_platdata in each of its
+three children. This can be auto-allocated if the bus driver (or bus uclass)
+has a non-zero value for per_child_platdata_auto_alloc_size. If not, then
+the bus device or uclass can allocate the space itself before the child
+device is probed.
 
 Also the bus driver can define the child_pre_probe() and child_post_remove()
 methods to allow it to do some processing before the child is activated or
 after it is deactivated.
+
+Similarly the bus uclass can define the child_post_bind() method to obtain
+the per-child platform data from the device tree and set it up for the child.
+The bus uclass can also provide a child_pre_probe() method. Very often it is
+the bus uclass that controls these features, since it avoids each driver
+having to do the same processing. Of course the driver can still tweak and
+override these activities.
 
 Note that the information that controls this behaviour is in the bus's
 driver, not the child's. In fact it is possible that child has no knowledge
@@ -488,7 +510,8 @@ bus device, regardless of its own views on the matter.
 The uclass for the device can also contain data private to that uclass.
 But note that each device on the bus may be a memeber of a different
 uclass, and this data has nothing to do with the child data for each child
-on the bus.
+on the bus. It is the bus' uclass that controls the child with respect to
+the bus.
 
 
 Driver Lifecycle
@@ -722,19 +745,43 @@ device pointers, but this is not currently implemented (the root device
 pointer is saved but not made available through the driver model API).
 
 
+SPL Support
+-----------
+
+Driver model can operate in SPL. Its efficient implementation and small code
+size provide for a small overhead which is acceptable for all but the most
+constrained systems.
+
+To enable driver model in SPL, define CONFIG_SPL_DM. You might want to
+consider the following option also. See the main README for more details.
+
+   - CONFIG_SYS_MALLOC_SIMPLE
+   - CONFIG_DM_WARN
+   - CONFIG_DM_DEVICE_REMOVE
+   - CONFIG_DM_STDIO
+
+
+Enabling Driver Model
+---------------------
+
+Driver model is being brought into U-Boot gradually. As each subsystems gets
+support, a uclass is created and a CONFIG to enable use of driver model for
+that subsystem.
+
+For example CONFIG_DM_SERIAL enables driver model for serial. With that
+defined, the old serial support is not enabled, and your serial driver must
+conform to driver model. With that undefined, the old serial support is
+enabled and driver model is not available for serial. This means that when
+you convert a driver, you must either convert all its boards, or provide for
+the driver to be compiled both with and without driver model (generally this
+is not very hard).
+
+See the main README for full details of the available driver model CONFIG
+options.
+
+
 Things to punt for later
 ------------------------
-
-- SPL support - this will have to be present before many drivers can be
-converted, but it seems like we can add it once we are happy with the
-core implementation.
-
-That is not to say that no thinking has gone into this - in fact there
-is quite a lot there. However, getting these right is non-trivial and
-there is a high cost associated with going down the wrong path.
-
-For SPL, it may be possible to fit in a simplified driver model with only
-bind and probe methods, to reduce size.
 
 Uclasses are statically numbered at compile time. It would be possible to
 change this to dynamic numbering, but then we would require some sort of

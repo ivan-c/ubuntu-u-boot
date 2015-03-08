@@ -106,7 +106,8 @@ static void __get_spd(generic_spd_eeprom_t *spd, u8 i2c_address)
 		i2c_write(SPD_SPA1_ADDRESS, 0, 1, &dummy, 1);
 		ret = i2c_read(i2c_address, 0, 1,
 			       (uchar *)((ulong)spd + 256),
-			       min(256, sizeof(generic_spd_eeprom_t) - 256));
+			       min(256,
+				   (int)sizeof(generic_spd_eeprom_t) - 256));
 	}
 #else
 	ret = i2c_read(i2c_address, 0, 1, (uchar *)spd,
@@ -449,7 +450,8 @@ fsl_ddr_compute(fsl_ddr_info_t *pinfo, unsigned int start_step,
 					&(pinfo->spd_installed_dimms[i][j]);
 				dimm_params_t *pdimm =
 					&(pinfo->dimm_params[i][j]);
-				retval = compute_dimm_parameters(spd, pdimm, i);
+				retval = compute_dimm_parameters(
+							i, spd, pdimm, j);
 #ifdef CONFIG_SYS_DDR_RAW_TIMING
 				if (!i && !j && retval) {
 					printf("SPD error on controller %d! "
@@ -506,10 +508,11 @@ fsl_ddr_compute(fsl_ddr_info_t *pinfo, unsigned int start_step,
 		for (i = first_ctrl; i <= last_ctrl; i++) {
 			debug("Computing lowest common DIMM"
 				" parameters for memctl=%u\n", i);
-			compute_lowest_common_dimm_parameters(
-				pinfo->dimm_params[i],
-				&timing_params[i],
-				CONFIG_DIMM_SLOTS_PER_CTLR);
+			compute_lowest_common_dimm_parameters
+				(i,
+				 pinfo->dimm_params[i],
+				 &timing_params[i],
+				 CONFIG_DIMM_SLOTS_PER_CTLR);
 		}
 
 	case STEP_GATHER_OPTS:
@@ -561,12 +564,13 @@ fsl_ddr_compute(fsl_ddr_info_t *pinfo, unsigned int start_step,
 				continue;
 			}
 
-			compute_fsl_memctl_config_regs(
-					&pinfo->memctl_opts[i],
-					&ddr_reg[i], &timing_params[i],
-					pinfo->dimm_params[i],
-					dbw_capacity_adjust[i],
-					size_only);
+			compute_fsl_memctl_config_regs
+				(i,
+				 &pinfo->memctl_opts[i],
+				 &ddr_reg[i], &timing_params[i],
+				 pinfo->dimm_params[i],
+				 dbw_capacity_adjust[i],
+				 size_only);
 		}
 
 	default:
@@ -687,6 +691,10 @@ phys_size_t __fsl_ddr_sdram(fsl_ddr_info_t *pinfo)
 						i, 2);
 		}
 	}
+
+#ifdef CONFIG_FSL_DDR_SYNC_REFRESH
+	fsl_ddr_sync_memctl_refresh(first_ctrl, last_ctrl);
+#endif
 
 #ifdef CONFIG_PPC
 	/* program LAWs */

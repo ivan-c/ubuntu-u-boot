@@ -230,6 +230,12 @@ static iomux_v3_cfg_t const backlight_pads[] = {
 	MX6_PAD_GPIO_2__GPIO1_IO02 | MUX_PAD_CTRL(NO_PAD_CTRL),
 };
 
+int board_spi_cs_gpio(unsigned bus, unsigned cs)
+{
+	return (bus == CONFIG_SF_DEFAULT_BUS && cs == CONFIG_SF_DEFAULT_CS)
+		? (IMX_GPIO_NR(3, 20)) : -1;
+}
+
 static void setup_spi(void)
 {
 	int i;
@@ -295,7 +301,7 @@ int board_eth_init(bd_t *bis)
 	/* clear gpr1[14], gpr1[18:17] to select anatop clock */
 	clrsetbits_le32(&iomuxc_regs->gpr[1], IOMUX_GPR1_FEC_MASK, 0);
 
-	ret = enable_fec_anatop_clock(ENET_50MHz);
+	ret = enable_fec_anatop_clock(ENET_50MHZ);
 	if (ret)
 		return ret;
 
@@ -315,8 +321,8 @@ static void enable_lvds(struct display_info_t const *dev)
 	/* enable backlight PWM 3 */
 	if (pwm_init(2, 0, 0))
 		goto error;
-	/* duty cycle 200ns, period: 3000ns */
-	if (pwm_config(2, 200, 3000))
+	/* duty cycle 500ns, period: 3000ns */
+	if (pwm_config(2, 500, 3000))
 		goto error;
 	if (pwm_enable(2))
 		goto error;
@@ -344,8 +350,8 @@ struct display_info_t const displays[] = {
 			.right_margin   = 88,
 			.upper_margin   = 10,
 			.lower_margin   = 10,
-			.hsync_len      = 25,
-			.vsync_len      = 1,
+			.hsync_len      = 80,
+			.vsync_len      = 25,
 			.sync           = 0,
 			.vmode          = FB_VMODE_NONINTERLACED
 		}

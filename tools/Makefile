@@ -60,7 +60,8 @@ FIT_SIG_OBJS-$(CONFIG_FIT_SIGNATURE) := common/image-sig.o
 LIBFDT_OBJS := $(addprefix lib/libfdt/, \
 			fdt.o fdt_ro.o fdt_rw.o fdt_strerror.o fdt_wip.o)
 RSA_OBJS-$(CONFIG_FIT_SIGNATURE) := $(addprefix lib/rsa/, \
-					rsa-sign.o rsa-verify.o rsa-checksum.o)
+					rsa-sign.o rsa-verify.o rsa-checksum.o \
+					rsa-mod-exp.o)
 
 # common objs for dumpimage and mkimage
 dumpimage-mkimage-objs := aisimage.o \
@@ -90,6 +91,7 @@ dumpimage-mkimage-objs := aisimage.o \
 			socfpgaimage.o \
 			lib/sha1.o \
 			lib/sha256.o \
+			common/hash.o \
 			ublimage.o \
 			$(LIBFDT_OBJS) \
 			$(RSA_OBJS-y)
@@ -113,6 +115,10 @@ ifdef CONFIG_FIT_SIGNATURE
 HOST_EXTRACFLAGS	+= -DCONFIG_FIT_SIGNATURE
 endif
 
+ifdef CONFIG_SYS_SPI_U_BOOT_OFFS
+HOSTCFLAGS_kwbimage.o += -DCONFIG_SYS_SPI_U_BOOT_OFFS=$(CONFIG_SYS_SPI_U_BOOT_OFFS)
+endif
+
 # MXSImage needs LibSSL
 ifneq ($(CONFIG_MX23)$(CONFIG_MX28)$(CONFIG_FIT_SIGNATURE),)
 HOSTLOADLIBES_mkimage += -lssl -lcrypto
@@ -125,6 +131,9 @@ HOSTLOADLIBES_fit_check_sign := $(HOSTLOADLIBES_mkimage)
 hostprogs-$(CONFIG_EXYNOS5250) += mkexynosspl
 hostprogs-$(CONFIG_EXYNOS5420) += mkexynosspl
 HOSTCFLAGS_mkexynosspl.o := -pedantic
+
+ifdtool-objs := $(LIBFDT_OBJS) ifdtool.o
+hostprogs-$(CONFIG_X86) += ifdtool
 
 hostprogs-$(CONFIG_MX23) += mxsboot
 hostprogs-$(CONFIG_MX28) += mxsboot
@@ -140,6 +149,7 @@ ubsha1-objs := os_support.o ubsha1.o lib/sha1.o
 HOSTCFLAGS_ubsha1.o := -pedantic
 
 hostprogs-$(CONFIG_KIRKWOOD) += kwboot
+hostprogs-$(CONFIG_ARMADA_XP) += kwboot
 hostprogs-y += proftool
 hostprogs-$(CONFIG_STATIC_RELA) += relocate-rela
 
@@ -156,7 +166,7 @@ HOSTCFLAGS_sha256.o := -pedantic
 #HOSTCFLAGS_mpc86x_clk.o := -pedantic
 
 quiet_cmd_wrap = WRAP    $@
-cmd_wrap = echo "\#include <$(srctree)/$(patsubst $(obj)/%,%,$@)>" >$@
+cmd_wrap = echo "\#include <../$(patsubst $(obj)/%,%,$@)>" >$@
 
 $(obj)/lib/%.c $(obj)/common/%.c:
 	$(call cmd,wrap)

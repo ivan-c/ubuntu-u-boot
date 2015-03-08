@@ -20,6 +20,8 @@
 #ifndef _CONFIG_KM_ARM_H
 #define _CONFIG_KM_ARM_H
 
+#define CONFIG_SYS_GENERIC_BOARD
+
 /* We got removed from Linux mach-types.h */
 #define MACH_TYPE_KM_KIRKWOOD          2255
 
@@ -193,7 +195,7 @@
 				}
 
 #ifndef __ASSEMBLY__
-#include <asm/arch-kirkwood/gpio.h>
+#include <asm/arch/gpio.h>
 extern void __set_direction(unsigned pin, int high);
 void set_sda(int state);
 void set_scl(int state);
