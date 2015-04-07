@@ -168,7 +168,7 @@ enum fdt_compat_id {
 	COMPAT_AMS_AS3722,		/* AMS AS3722 PMIC */
 	COMPAT_INTEL_ICH_SPI,		/* Intel ICH7/9 SPI controller */
 	COMPAT_INTEL_QRK_MRC,		/* Intel Quark MRC */
-	COMPAT_PANASONIC_XHCI,		/* Panasonic UniPhier xHCI */
+	COMPAT_SOCIONEXT_XHCI,		/* Socionext UniPhier xHCI */
 
 	COMPAT_COUNT,
 };
@@ -347,7 +347,10 @@ int fdtdec_get_pci_vendev(const void *blob, int node,
 
 /**
  * Look at the pci address of a device node that represents a PCI device
- * and parse the bus, device and function number from it.
+ * and parse the bus, device and function number from it. For some cases
+ * like the bus number encoded in reg property is not correct after pci
+ * enumeration, this function looks through the node's compatible strings
+ * to get these numbers extracted instead.
  *
  * @param blob		FDT blob
  * @param node		node to examine

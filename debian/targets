@@ -8,10 +8,8 @@ armel	-		dreamplug	u-boot.kwb
 # drEagle <drEagle@doukki.net>
 armel	-		guruplug	u-boot.kwb
 
-armel	-		openrd_ultimate	u-boot.kwb
-
 # Vagrant Cascadian <vagrant@debian.org>, rpi B 256M
-armel	-		rpi_b		u-boot.bin
+armel	-		rpi		u-boot.bin
 
 # drEagle <drEagle@doukki.net>
 armel	-		sheevaplug	u-boot.kwb
@@ -25,6 +23,9 @@ armhf	sunxi		A20-OLinuXino-Lime	u-boot-sunxi-with-spl.bin
 
 # Karsten Merker <merker@debian.org>
 armhf	sunxi		A20-OLinuXino-Lime2	u-boot-sunxi-with-spl.bin
+
+# Arne Ploese <aploese@gmx.de>
+armhf  sunxi		A20-OLinuXino_MICRO	u-boot-sunxi-with-spl.bin
 
 # Ian Campbell <ijc@hellion.org.uk>
 # Vagrant Cascadian <vagrant@debian.org>
@@ -45,6 +46,9 @@ armhf	sunxi		Cubieboard2	u-boot-sunxi-with-spl.bin
 # Robert Nelson <robertcnelson@gmail.com>
 # Karsten Merker <merker@debian.org>
 armhf	sunxi		Cubietruck	u-boot-sunxi-with-spl.bin
+
+# Patrice Go <patgsiosisr@gmail.com>
+armhf	sunxi		Linksprite_pcDuino3	u-boot-sunxi-with-spl.bin
 
 # Vagrant Cascadian <vagrant@debian.org>
 # Andrew M.A. Cater <amacater@galactic.demon.co.uk>
@@ -91,6 +95,6 @@ avr32	-		hammerhead	u-boot.img
 
 mips	-		qemu_mips	u-boot.bin
 
-sh4	-		r2dplus		u-boot.img
+sh4	-		r2dplus		u-boot.bin
 
-sh4	-		sh7785lcr_32bit	u-boot.img
+sh4	-		sh7785lcr_32bit	u-boot.bin

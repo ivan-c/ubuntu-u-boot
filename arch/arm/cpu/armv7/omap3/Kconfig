@@ -91,6 +91,10 @@ config TARGET_TWISTER
 	bool "Twister"
 	select SUPPORT_SPL
 
+config TARGET_OMAP3_CAIRO
+	bool "QUIPOS CAIRO"
+	select SUPPORT_SPL
+
 endchoice
 
 config DM
@@ -101,12 +105,6 @@ config DM_GPIO
 
 config DM_SERIAL
 	default y if DM
-
-config SYS_MALLOC_F
-	default y if DM
-
-config SYS_MALLOC_F_LEN
-	default 0x400 if DM
 
 config SYS_SOC
 	default "omap3"
@@ -133,5 +131,6 @@ source "board/matrix_vision/mvblx/Kconfig"
 source "board/nokia/rx51/Kconfig"
 source "board/technexion/tao3530/Kconfig"
 source "board/technexion/twister/Kconfig"
+source "board/quipos/cairo/Kconfig"
 
 endif
