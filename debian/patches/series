@@ -7,30 +7,25 @@ tools-only-in-no-dot-config-targets.diff
 Makefile-add-kwb-target-to-all.patch
 hurd.diff
 
-wandboard/wandboard-uEnv.txt-bootz-n-fixes.patch
-wandboard/wandboard-standardized-variables
-wandboard/emulate-config_distro_bootcmd-standardization.diff
+wandboard/config_distro_bootcmd.patch
 
 udoo/udoo_quad-support.patch
 udoo/udoo-standardized-variables
 
 mx53loco
 
-#cubox-i/spl-sata-support.diff
-#cubox-i/imx6-spl-support.diff
-#cubox-i/cubox-i-support.diff
-#cubox-i/cubox-i-raw-initrd.diff
-#cubox-i/steal-board-eth-init-from-hummingboard.diff
-#cubox-i/generic-board.diff
-#cubox-i/cubox-i-standardize-variables.diff
-#cubox-i/emulate-config_distro_bootcmd-standardization.diff
+mx6cuboxi/0001-mx6-Add-initial-SPL-support-for-HummingBoard-i2eX.patch
+mx6cuboxi/0042-mx6cuboxi-Fix-the-defconfig-name.patch
+mx6cuboxi/0043-mx6cuboxi-Prepare-for-multi-SoC-support.patch
+mx6cuboxi/0044-mx6cuboxi-Introduce-multi-SoC-support.patch
+mx6cuboxi/0045-mx6cuboxi-Differentiate-Cubox-i-and-Hummingboard.patch
+mx6cuboxi/0046-mx6cuboxi-Use-more-standard-namings-for-fdt-variable.patch
+mx6cuboxi/0047-mx6cuboxi-Load-the-correct-fdtfile-variable.patch
+mx6cuboxi/config_distro_bootcmd.patch
 
 n900-bootz-raw-initrd.diff
 
-beagleboneblack/am335x-uenv.txt.diff
-beagleboneblack/am335x-bootscript.diff
-beagleboneblack/am335x-try-boot-from-first-partition.diff
-beagleboneblack/0001-Set-DCDC1-DDR3-to-1.35V-for-Beaglebone-Black.patch
+beagleboneblack/config_distro_bootcmd.patch
 beagleboneblack/usb-mass-storage.patch
 
 arndale/board-spl-rule.diff
