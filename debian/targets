@@ -17,6 +17,9 @@ armel	-		sheevaplug	u-boot.kwb
 # Ian Campbell <ijc@hellion.org.uk>
 armhf	exynos		arndale		u-boot-dtb.bin spl/arndale-spl.bin
 
+# Joost van Zwieten <joostvanzwieten@gmail.com>, Odroid-U3
+armhf	exynos		odroid		u-boot-dtb.bin
+
 # Robert Nelson <robertcnelson@gmail.com>
 armhf	imx		mx53loco	u-boot.imx
 
@@ -37,29 +40,24 @@ armhf	imx		udoo_quad	u-boot.imx
 # Vagrant Cascadian <vagrant@debian.org>
 armhf	imx		usbarmory	u-boot.imx
 
-# Robert Nelson <robertcnelson@gmail.com>
-armhf	imx		wandboard_dl	u-boot.imx
-
 # Vagrant Cascadian <vagrant@debian.org>
-armhf	imx		wandboard_quad	u-boot.imx
-
 # Robert Nelson <robertcnelson@gmail.com>
-armhf	imx		wandboard_solo	u-boot.imx
+armhf	imx		wandboard	u-boot.img spl/u-boot-spl.bin SPL
 
 # Vagrant Cascadian <vagrant@debian.org>
 # Andrew M.A. Cater <amacater@galactic.demon.co.uk>
 armhf	omap		am335x_boneblack u-boot.img spl/u-boot-spl.bin MLO
 
 # Robert Nelson <robertcnelson@gmail.com>
-armhf	omap		igep0020	u-boot.bin spl/u-boot-spl.bin MLO
+armhf	omap		igep0020	u-boot.img spl/u-boot-spl.bin MLO
 
 armhf	omap		nokia_rx51	u-boot.bin
 
 # Robert Nelson <robertcnelson@gmail.com>
-armhf	omap		omap3_beagle	u-boot.bin spl/u-boot-spl.bin MLO
+armhf	omap		omap3_beagle	u-boot.img spl/u-boot-spl.bin MLO
 
 # Robert Nelson <robertcnelson@gmail.com>
-armhf	omap		omap4_panda	u-boot.bin spl/u-boot-spl.bin MLO
+armhf	omap		omap4_panda	u-boot.img spl/u-boot-spl.bin MLO
 
 # Joey Hess <joeyh@debian.org>
 # Christian Kastner <debian@kvr.at>
