@@ -1,3 +1,9 @@
+u-boot (2015.04+dfsg1-2ubuntu1) wily; urgency=medium
+
+  * add mkenvimage to u-boot-tools
+
+ -- Michael Vogt <michael.vogt@ubuntu.com>  Thu, 16 Jul 2015 11:24:26 +0200
+
 u-boot (2015.04+dfsg1-2) unstable; urgency=medium
 
   [ Joost van Zwieten ]
