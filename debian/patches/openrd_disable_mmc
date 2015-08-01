@@ -1,0 +1,12 @@
+Index: u-boot/include/configs/openrd.h
+===================================================================
+--- u-boot.orig/include/configs/openrd.h
++++ u-boot/include/configs/openrd.h
+@@ -48,7 +48,6 @@
+ #define CONFIG_CMD_DHCP
+ #define CONFIG_CMD_ENV
+ #define CONFIG_CMD_MII
+-#define CONFIG_CMD_MMC
+ #define CONFIG_CMD_NAND
+ #define CONFIG_CMD_PING
+ #define CONFIG_CMD_USB
