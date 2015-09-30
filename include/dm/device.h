@@ -122,11 +122,11 @@ struct udevice_id {
 	ulong data;
 };
 
-#ifdef CONFIG_OF_CONTROL
+#if CONFIG_IS_ENABLED(OF_CONTROL)
 #define of_match_ptr(_ptr)	(_ptr)
 #else
 #define of_match_ptr(_ptr)	NULL
-#endif /* CONFIG_OF_CONTROL */
+#endif /* CONFIG_IS_ENABLED(OF_CONTROL) */
 
 /**
  * struct driver - A driver for a feature or peripheral
@@ -484,6 +484,17 @@ bool device_is_last_sibling(struct udevice *dev);
  * string
  */
 int device_set_name(struct udevice *dev, const char *name);
+
+/**
+ * device_is_on_pci_bus - Test if a device is on a PCI bus
+ *
+ * @dev:	device to test
+ * @return:	true if it is on a PCI bus, false otherwise
+ */
+static inline bool device_is_on_pci_bus(struct udevice *dev)
+{
+	return device_get_uclass_id(dev->parent) == UCLASS_PCI;
+}
 
 /* device resource management */
 typedef void (*dr_release_t)(struct udevice *dev, void *res);

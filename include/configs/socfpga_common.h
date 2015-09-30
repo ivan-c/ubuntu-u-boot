@@ -73,7 +73,6 @@
 /*
  * Cache
  */
-#define CONFIG_SYS_ARM_CACHE_WRITEALLOC
 #define CONFIG_SYS_CACHELINE_SIZE 32
 #define CONFIG_SYS_L2_PL310
 #define CONFIG_SYS_PL310_BASE		SOCFPGA_MPUL2_ADDRESS
@@ -192,7 +191,6 @@ unsigned int cm_get_l4_sp_clk_hz(void);
 /*
  * QSPI support
  */
-#ifdef CONFIG_OF_CONTROL	/* QSPI is controlled via DT */
 #define CONFIG_CADENCE_QSPI
 /* Enable multiple SPI NOR flash manufacturers */
 #define CONFIG_SPI_FLASH_STMICRO	/* Micron/Numonyx flash */
@@ -212,12 +210,12 @@ unsigned int cm_get_qspi_controller_clk_hz(void);
 #define CONFIG_CQSPI_DECODER		0
 #define CONFIG_CMD_SF
 #define CONFIG_SPI_FLASH_BAR
-#endif
 
-#ifdef CONFIG_OF_CONTROL	/* DW SPI is controlled via DT */
+/*
+ * Designware SPI support
+ */
 #define CONFIG_DESIGNWARE_SPI
 #define CONFIG_CMD_SPI
-#endif
 
 /*
  * Serial Driver
@@ -283,7 +281,6 @@ unsigned int cm_get_qspi_controller_clk_hz(void);
 #define CONFIG_SYS_CONSOLE_IS_IN_ENV
 #define CONFIG_SYS_CONSOLE_OVERWRITE_ROUTINE
 #define CONFIG_SYS_CONSOLE_ENV_OVERWRITE
-#define CONFIG_ENV_IS_NOWHERE
 #define CONFIG_ENV_SIZE			4096
 
 /*
