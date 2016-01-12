@@ -161,7 +161,7 @@ M:	Masahiro Yamada <yamada.masahiro@socionext.com>
 S:	Maintained
 T:	git git://git.denx.de/u-boot-uniphier.git
 F:	arch/arm/mach-uniphier/
-F:	configs/ph1_*_defconfig
+F:	configs/uniphier_*_defconfig
 N:	uniphier
 
 ARM ZYNQ
@@ -239,7 +239,7 @@ S:	Maintained
 T:	git git://git.denx.de/u-boot-freebsd.git
 
 FREESCALE QORIQ
-M:	York Sun <yorksun@freescale.com>
+M:	York Sun <york.sun@nxp.com>
 S:	Maintained
 T:	git git://git.denx.de/u-boot-fsl-qoriq.git
 
@@ -308,13 +308,13 @@ F:	arch/powerpc/cpu/mpc83xx/
 F:	arch/powerpc/include/asm/arch-mpc83xx/
 
 POWERPC MPC85XX
-M:	York Sun <yorksun@freescale.com>
+M:	York Sun <york.sun@nxp.com>
 S:	Maintained
 T:	git git://git.denx.de/u-boot-mpc85xx.git
 F:	arch/powerpc/cpu/mpc85xx/
 
 POWERPC MPC86XX
-M:	York Sun <yorksun@freescale.com>
+M:	York Sun <york.sun@nxp.com>
 S:	Maintained
 T:	git git://git.denx.de/u-boot-mpc86xx.git
 F:	arch/powerpc/cpu/mpc86xx/
