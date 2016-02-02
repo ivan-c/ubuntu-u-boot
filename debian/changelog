@@ -1,3 +1,10 @@
+u-boot (2016.01+dfsg1-1ubuntu1) xenial; urgency=medium
+
+  * debian/patches/rpi2-config-tweaks.patch: configuration adjustments
+    to the RPi2 config.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Tue, 02 Feb 2016 11:43:50 -0800
+
 u-boot (2016.01+dfsg1-1) unstable; urgency=medium
 
   * u-boot-sunxi: Enable orangepi_plus target.

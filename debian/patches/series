@@ -25,3 +25,4 @@ mksunxiboot-spl.patch
 mx6cuboxi/serial_console_speed.patch
 
 upstream/submitted/am335x-bootdelay/0001-am335x_evm-Don-t-undef-CONFIG_BOOTDELAY.patch
+rpi2-config-tweaks.patch
