@@ -25,7 +25,6 @@ mksunxiboot-spl.patch
 mx6cuboxi/serial_console_speed.patch
 
 upstream/submitted/am335x-bootdelay/0001-am335x_evm-Don-t-undef-CONFIG_BOOTDELAY.patch
-
 am57xx/0001-Makefile-Include-vendor-common-library-in-include-se.patch
 am57xx/0003-ti-common-Add-standard-access-for-board-description-.patch
 am57xx/0004-ti-common-board_detect-Add-ability-to-setup-board-in.patch
@@ -44,3 +43,4 @@ upstream/openrd-fixes/0001-Fix-board-init-code-to-respect-the-C-runtime-environ.
 upstream/openrd-fixes/0002-arm-move-gd-handling-outside-of-C-code.patch
 
 upstream/wandboard/0001-wandboard-fix-variable-name-so-PXE-boot-works.patch
+rpi2-config-tweaks.patch

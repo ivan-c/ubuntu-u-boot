@@ -1,3 +1,11 @@
+u-boot (2016.01+dfsg1-2ubuntu1) xenial; urgency=low
+
+  * Merge from Debian unstable.  Remaining changes:
+    - debian/patches/rpi2-config-tweaks.patch: configuration adjustments
+      to the RPi2 config.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Thu, 11 Feb 2016 21:55:38 -0800
+
 u-boot (2016.01+dfsg1-2) unstable; urgency=medium
 
   * u-boot-omap:
@@ -10,6 +18,13 @@ u-boot (2016.01+dfsg1-2) unstable; urgency=medium
     works" from upstream.
 
  -- Vagrant Cascadian <vagrant@debian.org>  Mon, 08 Feb 2016 20:14:04 -0800
+
+u-boot (2016.01+dfsg1-1ubuntu1) xenial; urgency=medium
+
+  * debian/patches/rpi2-config-tweaks.patch: configuration adjustments
+    to the RPi2 config.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Tue, 02 Feb 2016 11:43:50 -0800
 
 u-boot (2016.01+dfsg1-1) unstable; urgency=medium
 
@@ -1073,3 +1088,4 @@ u-boot (2010.03-1) unstable; urgency=low
   * Initial packaging.  closes: #583605.
 
  -- Clint Adams <schizo@debian.org>  Fri, 28 May 2010 16:20:39 -0400
+

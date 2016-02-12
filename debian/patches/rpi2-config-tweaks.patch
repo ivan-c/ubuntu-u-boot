@@ -1,0 +1,48 @@
+Author: Steve Langasek <steve.langasek@ubuntu.com>
+Description: configuration adjustments to the RPi2 config
+ ogra@ubuntu.com tells me that the uboot used for rpi2 on snappy includes
+ some tweaks to the config vs. upstream.  Port the patch of these tweaks so
+ that they apply only to the rpi2 build, avoiding any side effects for the
+ rpi1 binary package already in the archive.
+
+Index: u-boot-2016.01+dfsg1/include/configs/rpi-common.h
+===================================================================
+--- u-boot-2016.01+dfsg1.orig/include/configs/rpi-common.h
++++ u-boot-2016.01+dfsg1/include/configs/rpi-common.h
+@@ -101,7 +101,6 @@
+ 					 sizeof(CONFIG_SYS_PROMPT) + 16)
+ 
+ /* Environment */
+-#define CONFIG_ENV_SIZE			SZ_16K
+ #define CONFIG_ENV_IS_IN_FAT
+ #define FAT_ENV_INTERFACE		"mmc"
+ #define FAT_ENV_DEVICE_AND_PART		"0:1"
+Index: u-boot-2016.01+dfsg1/include/configs/rpi.h
+===================================================================
+--- u-boot-2016.01+dfsg1.orig/include/configs/rpi.h
++++ u-boot-2016.01+dfsg1/include/configs/rpi.h
+@@ -8,6 +8,7 @@
+ #define __CONFIG_H
+ 
+ #define CONFIG_SYS_CACHELINE_SIZE		32
++#define CONFIG_ENV_SIZE				SZ_16K
+ 
+ #include "rpi-common.h"
+ 
+Index: u-boot-2016.01+dfsg1/include/configs/rpi_2.h
+===================================================================
+--- u-boot-2016.01+dfsg1.orig/include/configs/rpi_2.h
++++ u-boot-2016.01+dfsg1/include/configs/rpi_2.h
+@@ -12,6 +12,12 @@
+ #define CONFIG_SYS_CACHELINE_SIZE		64
+ #define CONFIG_SYS_DCACHE_OFF
+ 
++#define CONFIG_ENV_SIZE				SZ_16K
++#define CONFIG_SYS_REDUNDAND_ENVIRONMENT
++
++/* support raw initrd */
++#define CONFIG_SUPPORT_RAW_INITRD
++
+ #include "rpi-common.h"
+ 
+ #endif
