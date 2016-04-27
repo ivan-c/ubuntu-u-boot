@@ -32,3 +32,4 @@ fix-typo-transferred
 upstream/sunxi/0001-sunxi-Fix-gmac-not-working-due-to-cpu_eth_init-no-lo.patch
 
 firefly/0001-Revert-rockchip-rk3288-correct-sdram-setting.patch
+rpi2-config-tweaks.patch
