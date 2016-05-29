@@ -32,6 +32,9 @@ armhf	exynos		arndale		u-boot-dtb.bin spl/arndale-spl.bin
 # Joost van Zwieten <joostvanzwieten@gmail.com>, Odroid-U3
 armhf	exynos		odroid		u-boot-dtb.bin
 
+# Vagrant Cascadian <vagrant@debian.org>, Odroid-XU4
+armhf	exynos		odroid-xu3	u-boot-dtb.bin
+
 # Robert Nelson <robertcnelson@gmail.com>
 armhf	imx		mx53loco	u-boot.imx
 
@@ -65,6 +68,9 @@ armhf	omap		am335x_boneblack u-boot.img spl/u-boot-spl.bin MLO
 
 # Vagrant Cascadian <vagrant@debian.org>
 armhf	omap		am57xx_evm	u-boot-dtb.img spl/u-boot-spl.bin MLO
+
+# Ben Hutchings <ben.hutchings@codethink.co.uk>
+armhf 	omap		dra74_evm	u-boot.img spl/u-boot-spl.bin MLO
 
 # Robert Nelson <robertcnelson@gmail.com>
 armhf	omap		igep0020	u-boot.img spl/u-boot-spl.bin MLO
@@ -137,6 +143,9 @@ armhf	sunxi		Mini-X	u-boot-sunxi-with-spl.bin
 
 # Vagrant Cascadian <vagrant@debian.org>, Orange PI Plus2
 armhf	sunxi		orangepi_plus	u-boot-sunxi-with-spl.bin
+
+# Martin Michlmayr <tbm@cyrius.com>
+arm64	tegra		p2371-2180	u-boot-dtb.bin
 
 avr32	-		hammerhead	u-boot.img
 
