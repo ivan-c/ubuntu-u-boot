@@ -28,5 +28,5 @@ am57xx/omap5_distro_bootcmd
 
 odroid/0001-Convert-odroid-to-use-distro_bootcmd.patch
 
-upstream/submitted/reproducible/0001-Use-C-locale-when-setting-CC_VERSION_STRING-and-LD_V.patch
-upstream/submitted/reproducible/0001-Respect-SOURCE_DATE_EPOCH-when-building-FIT-images.patch
+upstream/submitted/qcom/dragonboard410c-adding-missing-default-addr-for-scri.patch
+upstream/submitted/qcom/dragonboard410c-prefer-sdcard-boot-over-emmc.patch
