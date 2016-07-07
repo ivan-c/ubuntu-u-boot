@@ -32,6 +32,7 @@ fix-typo-transferred
 upstream/sunxi/0001-sunxi-Fix-gmac-not-working-due-to-cpu_eth_init-no-lo.patch
 
 firefly/0001-Revert-rockchip-rk3288-correct-sdram-setting.patch
+rpi2-config-tweaks.patch
 
 upstream/ti-common/0001-ARM-omap-common-Add-standard-access-for-board-descri.patch
 upstream/ti-common/0002-ti-common-dra7-Add-standard-access-for-board-descrip.patch
