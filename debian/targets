@@ -26,7 +26,6 @@ armel	rpi		rpi		u-boot.bin
 # Rick Thomas <rbthomas@rcthomas.org>
 armel	-		sheevaplug	u-boot.kwb
 
-# Ian Campbell <ijc@debian.org>
 armhf	exynos		arndale		u-boot.bin spl/arndale-spl.bin
 
 # Joost van Zwieten <joostvanzwieten@gmail.com>, Odroid-U3
@@ -96,7 +95,6 @@ armhf	rpi		rpi_2		u-boot.bin
 # Ryan Finnie <ryan@finnie.org>
 armhf	rpi		rpi_3_32b	u-boot.bin
 
-# Joey Hess <joeyh@debian.org>
 # Christian Kastner <debian@kvr.at>
 armhf	sunxi		A10-OLinuXino-Lime	u-boot-sunxi-with-spl.bin
 
@@ -121,6 +119,9 @@ armhf	sunxi		Bananapi	u-boot-sunxi-with-spl.bin
 
 # Karsten Merker <merker@debian.org>
 armhf	sunxi		Bananapro	u-boot-sunxi-with-spl.bin
+
+# Vagrant Cascadian <vagrant@debian.org>
+armhf	sunxi		CHIP		u-boot-sunxi-with-spl.bin
 
 # Vagrant Cascadian <vagrant@debian.org>
 armhf	sunxi		Cubieboard	u-boot-sunxi-with-spl.bin
