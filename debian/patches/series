@@ -44,3 +44,5 @@ upstream/openrd-fixes/0002-arm-move-gd-handling-outside-of-C-code.patch
 
 upstream/wandboard/0001-wandboard-fix-variable-name-so-PXE-boot-works.patch
 rpi2-config-tweaks.patch
+serial-pl01x-Add-support-for-devices-with-the-rate-p.patch
+rpi-import-mkknlimg.patch

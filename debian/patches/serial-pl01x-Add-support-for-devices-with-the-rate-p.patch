@@ -1,0 +1,76 @@
+From cd0fa5bff8052b19bde6967c2734f323c9848568 Mon Sep 17 00:00:00 2001
+From: Eric Anholt <eric@anholt.net>
+Date: Sun, 13 Mar 2016 18:16:54 -0700
+Subject: [PATCH] serial: pl01x: Add support for devices with the rate
+ pre-configured.
+
+For Raspberry Pi, we had the input clock rate to the pl011 fixed in
+the rpi.c file, but it may be changed by firmware due to user changes
+to config.txt.  Since the firmware always sets up the uart (default
+115200 output unless the user changes it), we can just skip our own
+uart init to simplify the boot process and more reliably get serial
+output.
+
+Signed-off-by: Eric Anholt <eric@anholt.net>
+Reviewed-by: Tom Rini <trini@konsulko.com>
+Tested-by: Stephen Warren <swarren@wwwdotorg.org>
+---
+ board/raspberrypi/rpi/rpi.c             |  2 +-
+ drivers/serial/serial_pl01x.c           | 10 ++++++++--
+ include/dm/platform_data/serial_pl01x.h |  3 +++
+ 3 files changed, 12 insertions(+), 3 deletions(-)
+
+--- a/board/raspberrypi/rpi/rpi.c
++++ b/board/raspberrypi/rpi/rpi.c
+@@ -36,7 +36,7 @@
+ 	.base = 0x20201000,
+ #endif
+ 	.type = TYPE_PL011,
+-	.clock = 3000000,
++	.skip_init = true,
+ };
+ 
+ U_BOOT_DEVICE(bcm2835_serials) = {
+--- a/drivers/serial/serial_pl01x.c
++++ b/drivers/serial/serial_pl01x.c
+@@ -284,7 +284,10 @@
+ 	struct pl01x_serial_platdata *plat = dev_get_platdata(dev);
+ 	struct pl01x_priv *priv = dev_get_priv(dev);
+ 
+-	pl01x_generic_setbrg(priv->regs, priv->type, plat->clock, baudrate);
++	if (!plat->skip_init) {
++		pl01x_generic_setbrg(priv->regs, priv->type, plat->clock,
++				     baudrate);
++	}
+ 
+ 	return 0;
+ }
+@@ -296,7 +299,10 @@
+ 
+ 	priv->regs = (struct pl01x_regs *)plat->base;
+ 	priv->type = plat->type;
+-	return pl01x_generic_serial_init(priv->regs, priv->type);
++	if (!plat->skip_init)
++		return pl01x_generic_serial_init(priv->regs, priv->type);
++	else
++		return 0;
+ }
+ 
+ static int pl01x_serial_getc(struct udevice *dev)
+--- a/include/dm/platform_data/serial_pl01x.h
++++ b/include/dm/platform_data/serial_pl01x.h
+@@ -17,11 +17,14 @@
+  * @base: Register base address
+  * @type: Port type
+  * @clock: Input clock rate, used for calculating the baud rate divisor
++ * @skip_init: Don't attempt to change port configuration (also means @clock
++ * is ignored)
+  */
+ struct pl01x_serial_platdata {
+ 	unsigned long base;
+ 	enum pl01x_type type;
+ 	unsigned int clock;
++	bool skip_init;
+ };
+ 
+ #endif
