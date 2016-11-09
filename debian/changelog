@@ -1,3 +1,15 @@
+u-boot (2016.03+dfsg1-6ubuntu2~1.1) yakkety; urgency=medium
+
+  * From upstream u-boot: (LP: #1636838)
+    - debian/patches/rpi-import-mkknlimg.patch: import tools/mkknlimg from
+      Xenial/raspi2 - scripts/mkknlimg @ 83a3ebb
+    - debian/u-boot-rpi.postinst: pass u-boot.bin through mkknlimg before
+      installing it as /boot/firmware/uboot.bin
+    - debian/patches/serial-pl01x-Add-support-for-devices-with-the-rate-p.patch:
+      Skip serial clock initialization when it's done by the firmware.
+
+ -- Paolo Pisati <paolo.pisati@canonical.com>  Wed, 09 Nov 2016 17:09:29 +0200
+
 u-boot (2016.03+dfsg1-6ubuntu1) yakkety; urgency=low
 
   * Merge from Debian unstable.  Remaining changes:

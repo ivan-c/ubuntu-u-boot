@@ -14,33 +14,27 @@ Signed-off-by: Hans de Goede <hdegoede@redhat.com>
  configs/A20-OLinuXino-Lime_defconfig  | 2 ++
  3 files changed, 6 insertions(+)
 
-Index: u-boot/configs/A10-OLinuXino-Lime_defconfig
-===================================================================
---- u-boot.orig/configs/A10-OLinuXino-Lime_defconfig
-+++ u-boot/configs/A10-OLinuXino-Lime_defconfig
-@@ -13,4 +13,6 @@ CONFIG_SYS_EXTRA_OPTIONS="SUNXI_EMAC,AHC
+--- a/configs/A10-OLinuXino-Lime_defconfig
++++ b/configs/A10-OLinuXino-Lime_defconfig
+@@ -13,4 +13,6 @@
  # CONFIG_CMD_FLASH is not set
  # CONFIG_CMD_FPGA is not set
  CONFIG_CMD_GPIO=y
 +CONFIG_AXP_ALDO3_VOLT=2800
 +CONFIG_AXP_ALDO4_VOLT=2800
  CONFIG_USB_EHCI_HCD=y
-Index: u-boot/configs/A20-OLinuXino-Lime2_defconfig
-===================================================================
---- u-boot.orig/configs/A20-OLinuXino-Lime2_defconfig
-+++ u-boot/configs/A20-OLinuXino-Lime2_defconfig
-@@ -14,4 +14,6 @@ CONFIG_SYS_EXTRA_OPTIONS="SUNXI_GMAC,RGM
+--- a/configs/A20-OLinuXino-Lime2_defconfig
++++ b/configs/A20-OLinuXino-Lime2_defconfig
+@@ -14,4 +14,6 @@
  # CONFIG_CMD_FPGA is not set
  CONFIG_CMD_GPIO=y
  CONFIG_ETH_DESIGNWARE=y
 +CONFIG_AXP_ALDO3_VOLT=2800
 +CONFIG_AXP_ALDO4_VOLT=2800
  CONFIG_USB_EHCI_HCD=y
-Index: u-boot/configs/A20-OLinuXino-Lime_defconfig
-===================================================================
---- u-boot.orig/configs/A20-OLinuXino-Lime_defconfig
-+++ u-boot/configs/A20-OLinuXino-Lime_defconfig
-@@ -12,4 +12,6 @@ CONFIG_SYS_EXTRA_OPTIONS="SUNXI_GMAC,AHC
+--- a/configs/A20-OLinuXino-Lime_defconfig
++++ b/configs/A20-OLinuXino-Lime_defconfig
+@@ -12,4 +12,6 @@
  # CONFIG_CMD_FPGA is not set
  CONFIG_CMD_GPIO=y
  CONFIG_ETH_DESIGNWARE=y
