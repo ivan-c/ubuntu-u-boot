@@ -41,3 +41,5 @@ odroid/0001-Convert-odroid-to-use-distro_bootcmd.patch
 
 upstream/submitted/reproducible/0001-Use-C-locale-when-setting-CC_VERSION_STRING-and-LD_V.patch
 upstream/sunxi/0002-sunxi-Enable-LDO3-and-LDO4-at-2.8V-on-OLinuxIno-Lime.patch
+rpi-import-mkknlimg.patch
+serial-pl01x-Add-support-for-devices-with-the-rate-p.patch

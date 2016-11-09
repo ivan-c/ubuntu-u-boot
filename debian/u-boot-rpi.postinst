@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -e
+
+case "$1" in
+  configure)
+    if ! ischroot; then
+      if ! mountpoint -q /boot/firmware; then
+        echo "Error: missing /boot/firmware, did you forget to mount it?" >&2
+        exit 1
+      fi
+    fi
+    mkknlimg --dtok --270x --283x /usr/lib/u-boot/rpi_2/u-boot.bin /boot/firmware/uboot.bin
+    ;;
+esac
+
+exit 0
+
+#DEBHELPER#
