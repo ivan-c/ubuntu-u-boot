@@ -1,3 +1,10 @@
+u-boot (2016.01+dfsg1-2ubuntu3) xenial-security; urgency=medium
+
+  * No-change rebuild to get last set of changes into the security
+    pocket for the linux-raspi2 kernel (LP: #1657395).
+
+ -- Steve Beattie <sbeattie@ubuntu.com>  Mon, 23 Jan 2017 08:31:11 -0800
+
 u-boot (2016.01+dfsg1-2ubuntu2) xenial; urgency=medium
 
   * From upstream u-boot: (LP: #1636838)
