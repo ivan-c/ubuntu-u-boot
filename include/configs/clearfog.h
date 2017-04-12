@@ -24,7 +24,6 @@
 /*
  * Commands configuration
  */
-#define CONFIG_SYS_NO_FLASH		/* Declare no flash (NOR/SPI) */
 #define CONFIG_CMD_ENV
 #define CONFIG_CMD_PCI
 
@@ -43,16 +42,9 @@
 /*
  * SDIO/MMC Card Configuration
  */
-#define CONFIG_MMC
-#define CONFIG_MMC_SDMA
-#define CONFIG_GENERIC_MMC
-#define CONFIG_SDHCI
-#define CONFIG_MV_SDHCI
 #define CONFIG_SYS_MMC_BASE		MVEBU_SDIO_BASE
 
 /* Partition support */
-#define CONFIG_DOS_PARTITION
-#define CONFIG_EFI_PARTITION
 
 /* Additional FS support/configuration */
 #define CONFIG_SUPPORT_VFAT
@@ -131,9 +123,6 @@
 /* SPL related MMC defines */
 #define CONFIG_SYS_MMC_U_BOOT_OFFS		(160 << 10)
 #define CONFIG_SYS_U_BOOT_OFFS			CONFIG_SYS_MMC_U_BOOT_OFFS
-#define CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR	((CONFIG_SYS_U_BOOT_OFFS / 512)\
-						 + 1)
-#define CONFIG_SYS_U_BOOT_MAX_SIZE_SECTORS	((512 << 10) / 512) /* 512KiB */
 #ifdef CONFIG_SPL_BUILD
 #define CONFIG_FIXED_SDHCI_ALIGNED_BUFFER	0x00180000	/* in SDRAM */
 #endif

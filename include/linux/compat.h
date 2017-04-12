@@ -15,8 +15,6 @@ struct p_current{
 
 extern struct p_current *current;
 
-#define ndelay(x)	udelay(1)
-
 #define dev_dbg(dev, fmt, args...)		\
 	debug(fmt, ##args)
 #define dev_vdbg(dev, fmt, args...)		\

@@ -12,9 +12,7 @@
 
 #define CONFIG_TI81XX
 #define CONFIG_TI816X
-#define CONFIG_SYS_NO_FLASH
 #define CONFIG_OMAP
-#define CONFIG_OMAP_COMMON
 
 #define CONFIG_ARCH_CPU_INIT
 
@@ -53,10 +51,6 @@
 
 #define CONFIG_CMD_ASKEN
 #define CONFIG_OMAP_GPIO
-#define CONFIG_MMC
-#define CONFIG_GENERIC_MMC
-#define CONFIG_OMAP_HSMMC
-#define CONFIG_DOS_PARTITION
 
 #define CONFIG_FS_FAT
 
@@ -103,8 +97,6 @@
 #define CONFIG_SYS_NS16550_CLK      (48000000)
 #define CONFIG_SYS_NS16550_COM1     0x48024000  /* Base EVM has UART2 */
 
-#define CONFIG_BAUDRATE     115200
-
 /* allow overwriting serial config and ethaddr */
 #define CONFIG_ENV_OVERWRITE
 
@@ -125,14 +117,12 @@
 #define CONFIG_SPL_BSS_START_ADDR   0x80000000
 #define CONFIG_SPL_BSS_MAX_SIZE     0x80000     /* 512 KB */
 
-#define CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR 0x300 /* address 0x60000 */
-#define CONFIG_SYS_U_BOOT_MAX_SIZE_SECTORS      0x200 /* 256 KB */
 #define CONFIG_SYS_MMCSD_FS_BOOT_PARTITION     1
 #define CONFIG_SPL_FS_LOAD_PAYLOAD_NAME        "u-boot.img"
 
 #define CONFIG_SYS_SPI_U_BOOT_OFFS  0x20000
 #define CONFIG_SYS_SPI_U_BOOT_SIZE  0x40000
-#define CONFIG_SPL_LDSCRIPT     "$(CPUDIR)/omap-common/u-boot-spl.lds"
+#define CONFIG_SPL_LDSCRIPT     "arch/arm/mach-omap2/u-boot-spl.lds"
 
 #define CONFIG_SPL_BOARD_INIT
 

@@ -311,7 +311,7 @@ l2_disabled:
 #endif
 	mtspr	HID0,r0
 
-#if !defined(CONFIG_E500MC) && !defined(CONFIG_QEMU_E500)
+#if !defined(CONFIG_E500MC) && !defined(CONFIG_ARCH_QEMU_E500)
 	li	r0,(HID1_ASTME|HID1_ABE)@l	/* Addr streaming & broadcast */
 	mfspr	r3,PVR
 	andi.	r3,r3, 0xff
@@ -345,7 +345,7 @@ l2_disabled:
 	mtspr	DBCR0,r0
 #endif
 
-#ifdef CONFIG_MPC8569
+#ifdef CONFIG_ARCH_MPC8569
 #define CONFIG_SYS_LBC_ADDR (CONFIG_SYS_CCSRBAR_DEFAULT + 0x5000)
 #define CONFIG_SYS_LBCR_ADDR (CONFIG_SYS_LBC_ADDR + 0xd0)
 
@@ -376,7 +376,7 @@ l2_disabled:
 	tlbivax	0,r4
 	isync
 
-#endif /* CONFIG_MPC8569 */
+#endif /* CONFIG_ARCH_MPC8569 */
 
 /*
  * Search for the TLB that covers the code we're executing, and shrink it
@@ -1373,8 +1373,8 @@ icache_enable:
 	mtlr	r8
 	isync
 	mfspr	r4,L1CSR1
-	ori	r4,r4,0x0001
-	oris	r4,r4,0x0001
+	ori	r4,r4,(L1CSR1_CPE | L1CSR1_ICE)@l
+	oris	r4,r4,(L1CSR1_CPE | L1CSR1_ICE)@h
 	mtspr	L1CSR1,r4
 	isync
 	blr
@@ -1402,8 +1402,8 @@ dcache_enable:
 	mtlr	r8
 	isync
 	mfspr	r0,L1CSR0
-	ori	r0,r0,0x0001
-	oris	r0,r0,0x0001
+	ori	r0,r0,(L1CSR0_CPE |  L1CSR0_DCE)@l
+	oris	r0,r0,(L1CSR0_CPE |  L1CSR0_DCE)@h
 	msync
 	isync
 	mtspr	L1CSR0,r0

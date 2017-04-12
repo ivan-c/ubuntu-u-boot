@@ -131,8 +131,10 @@ enum {
 
 /* Keep divisors as low as possible to reduce jitter and power usage */
 static const struct pll_div apll_init_cfg = PLL_DIVISORS(APLL_HZ, 1, 1);
+#ifdef CONFIG_SPL_BUILD
 static const struct pll_div gpll_init_cfg = PLL_DIVISORS(GPLL_HZ, 2, 2);
 static const struct pll_div cpll_init_cfg = PLL_DIVISORS(CPLL_HZ, 1, 2);
+#endif
 
 static int rkclk_set_pll(struct rk3288_cru *cru, enum rk_clk_id clk_id,
 			 const struct pll_div *div)
@@ -691,6 +693,13 @@ static ulong rk3288_clk_set_rate(struct clk *clk, ulong rate)
 
 	gclk_rate = rkclk_pll_get_rate(priv->cru, CLK_GENERAL);
 	switch (clk->id) {
+	case PLL_APLL:
+		/* We only support a fixed rate here */
+		if (rate != 1800000000)
+			return -EINVAL;
+		rk3288_clk_configure_cpu(priv->cru, priv->grf);
+		new_rate = rate;
+		break;
 	case CLK_DDR:
 		new_rate = rkclk_configure_ddr(priv->cru, priv->grf, rate);
 		break;

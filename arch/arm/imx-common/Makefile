@@ -31,12 +31,18 @@ obj-$(CONFIG_IMX_RDC) += rdc-sema.o
 obj-$(CONFIG_IMX_BOOTAUX) += imx_bootaux.o
 obj-$(CONFIG_SECURE_BOOT)    += hab.o
 endif
+ifeq ($(SOC),$(filter $(SOC),mx7ulp))
+obj-y  += cache.o
+obj-$(CONFIG_SECURE_BOOT) += hab.o
+endif
 ifeq ($(SOC),$(filter $(SOC),vf610))
 obj-y += ddrmc-vf610.o
 endif
+ifneq ($(CONFIG_SPL_BUILD),y)
 obj-$(CONFIG_CMD_BMODE) += cmd_bmode.o
 obj-$(CONFIG_CMD_HDMIDETECT) += cmd_hdmidet.o
 obj-$(CONFIG_CMD_DEKBLOB) += cmd_dek.o
+endif
 
 PLUGIN = board/$(BOARDDIR)/plugin
 
@@ -66,6 +72,7 @@ $(IMX_CONFIG): %.cfgtmp: % FORCE
 
 MKIMAGEFLAGS_u-boot.imx = -n $(filter-out $(PLUGIN).bin $< $(PHONY),$^) -T imximage \
 	-e $(CONFIG_SYS_TEXT_BASE)
+u-boot.imx: MKIMAGEOUTPUT = u-boot.imx.log
 
 u-boot.imx: u-boot.bin $(IMX_CONFIG) $(PLUGIN).bin FORCE
 	$(call if_changed,mkimage)
@@ -73,6 +80,7 @@ u-boot.imx: u-boot.bin $(IMX_CONFIG) $(PLUGIN).bin FORCE
 ifeq ($(CONFIG_OF_SEPARATE),y)
 MKIMAGEFLAGS_u-boot-dtb.imx = -n $(filter-out $(PLUGIN).bin $< $(PHONY),$^) -T imximage \
 	-e $(CONFIG_SYS_TEXT_BASE)
+u-boot-dtb.imx: MKIMAGEOUTPUT = u-boot-dtb.imx.log
 
 u-boot-dtb.imx: u-boot-dtb.bin $(IMX_CONFIG) $(PLUGIN).bin FORCE
 	$(call if_changed,mkimage)
@@ -80,6 +88,8 @@ endif
 
 MKIMAGEFLAGS_SPL = -n $(filter-out $(PLUGIN).bin $< $(PHONY),$^) -T imximage \
 	-e $(CONFIG_SPL_TEXT_BASE)
+
+SPL: MKIMAGEOUTPUT = SPL.log
 
 SPL: spl/u-boot-spl.bin $(IMX_CONFIG) $(PLUGIN).bin FORCE
 	$(call if_changed,mkimage)

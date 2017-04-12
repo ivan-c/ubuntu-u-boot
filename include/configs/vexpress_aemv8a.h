@@ -115,7 +115,6 @@
 #endif
 
 /* PL011 Serial Configuration */
-#define CONFIG_BAUDRATE			115200
 #define CONFIG_CONS_INDEX		0
 #define CONFIG_PL01X_SERIAL
 #define CONFIG_PL011_SERIAL
@@ -125,13 +124,8 @@
 #define CONFIG_PL011_CLOCK		24000000
 #endif
 
-/* Command line configuration */
-#define CONFIG_MENU
 /*#define CONFIG_MENU_SHOW*/
-#define CONFIG_CMD_UNZIP
-#define CONFIG_CMD_PXE
 #define CONFIG_CMD_ENV
-#define CONFIG_DOS_PARTITION
 
 /* BOOTP options */
 #define CONFIG_BOOTP_BOOTFILESIZE

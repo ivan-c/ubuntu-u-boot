@@ -6,12 +6,15 @@
 #
 
 ifndef CONFIG_STANDALONE_LOAD_ADDR
-ifneq ($(CONFIG_OMAP_COMMON),)
+ifneq ($(CONFIG_ARCH_OMAP2),)
 CONFIG_STANDALONE_LOAD_ADDR = 0x80300000
 else
 CONFIG_STANDALONE_LOAD_ADDR = 0xc100000
 endif
 endif
+
+CFLAGS_NON_EFI := -fno-pic -ffixed-r9 -ffunction-sections -fdata-sections
+CFLAGS_EFI := -fpic -fshort-wchar
 
 LDFLAGS_FINAL += --gc-sections
 PLATFORM_RELFLAGS += -ffunction-sections -fdata-sections \
@@ -28,7 +31,7 @@ PLATFORM_RELFLAGS	+= $(LLVM_RELFLAGS)
 PLATFORM_CPPFLAGS += -D__ARM__
 
 # Choose between ARM/Thumb instruction sets
-ifeq ($(CONFIG_SYS_THUMB_BUILD),y)
+ifeq ($(CONFIG_$(SPL_)SYS_THUMB_BUILD),y)
 AFLAGS_IMPLICIT_IT	:= $(call as-option,-Wa$(comma)-mimplicit-it=always)
 PF_CPPFLAGS_ARM		:= $(AFLAGS_IMPLICIT_IT) \
 			$(call cc-option, -mthumb -mthumb-interwork,\
@@ -41,8 +44,7 @@ PF_CPPFLAGS_ARM := $(call cc-option,-marm,) \
 endif
 
 # Only test once
-ifneq ($(CONFIG_SPL_BUILD),y)
-ifeq ($(CONFIG_SYS_THUMB_BUILD),y)
+ifeq ($(CONFIG_$(SPL_)SYS_THUMB_BUILD),y)
 archprepare: checkthumb
 
 checkthumb:
@@ -53,7 +55,6 @@ checkthumb:
 		echo '*** Your board is configured for THUMB mode.'; \
 		false; \
 	fi
-endif
 endif
 
 # Try if EABI is supported, else fall back to old API,
@@ -96,7 +97,7 @@ LDFLAGS_u-boot += -pie
 #
 # http://sourceware.org/bugzilla/show_bug.cgi?id=12532
 #
-ifeq ($(CONFIG_SYS_THUMB_BUILD),y)
+ifeq ($(CONFIG_$(SPL_)SYS_THUMB_BUILD),y)
 ifeq ($(GAS_BUG_12532),)
 export GAS_BUG_12532:=$(shell if [ $(call binutils-version) -lt 0222 ] ; \
 	then echo y; else echo n; fi)
@@ -118,7 +119,8 @@ endif
 
 # limit ourselves to the sections we want in the .bin.
 ifdef CONFIG_ARM64
-OBJCOPYFLAGS += -j .text -j .rodata -j .data -j .u_boot_list -j .rela.dyn
+OBJCOPYFLAGS += -j .text -j .secure_text -j .secure_data -j .rodata -j .data \
+		-j .u_boot_list -j .rela.dyn
 else
 OBJCOPYFLAGS += -j .text -j .secure_text -j .secure_data -j .rodata -j .hash \
 		-j .data -j .got -j .got.plt -j .u_boot_list -j .rel.dyn
@@ -148,3 +150,7 @@ ifneq ($(CONFIG_VF610),)
 ALL-y += u-boot.vyb
 endif
 endif
+
+EFI_LDS := elf_arm_efi.lds
+EFI_CRT0 := crt0_arm_efi.o
+EFI_RELOC := reloc_arm_efi.o

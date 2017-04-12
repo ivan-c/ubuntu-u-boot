@@ -19,13 +19,6 @@
 #define CONFIG_OMAP			/* in a TI OMAP core */
 
 #define CONFIG_OMAP_GPIO
-#define CONFIG_OMAP_COMMON
-/* Common ARM Erratas */
-#define CONFIG_ARM_ERRATA_454179
-#define CONFIG_ARM_ERRATA_430973
-#define CONFIG_ARM_ERRATA_621766
-
-#define MACH_TYPE_OMAP3_TAO3530		2836
 
 #define CONFIG_SDRC			/* Has an SDRC controller */
 
@@ -70,11 +63,6 @@
 
 /* allow to overwrite serial and ethaddr */
 #define CONFIG_ENV_OVERWRITE
-#define CONFIG_BAUDRATE			115200
-#define CONFIG_GENERIC_MMC
-#define CONFIG_MMC
-#define CONFIG_OMAP_HSMMC
-#define CONFIG_DOS_PARTITION
 
 /* GPIO banks */
 #define CONFIG_OMAP3_GPIO_2		/* GPIO32 ..63  is in GPIO bank 2 */
@@ -93,7 +81,6 @@
 
 #define CONFIG_CMD_NAND		/* NAND support			*/
 
-#define CONFIG_SYS_NO_FLASH
 #define CONFIG_SYS_I2C
 #define CONFIG_SYS_I2C_OMAP34XX
 #define CONFIG_SYS_OMAP24_I2C_SPEED	100000
@@ -270,14 +257,11 @@
 
 #define CONFIG_USB_ETHER
 #define CONFIG_USB_ETHER_RNDIS
-#define CONGIG_CMD_STORAGE
 
 /* Defines for SPL */
 #define CONFIG_SPL_FRAMEWORK
 #define CONFIG_SPL_NAND_SIMPLE
 
-#define CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR	0x300 /* address 0x60000 */
-#define CONFIG_SYS_U_BOOT_MAX_SIZE_SECTORS	0x200 /* 256 KB */
 #define CONFIG_SYS_MMCSD_FS_BOOT_PARTITION	1
 #define CONFIG_SPL_FS_LOAD_PAYLOAD_NAME	"u-boot.img"
 
@@ -286,7 +270,7 @@
 #define CONFIG_SPL_NAND_DRIVERS
 #define CONFIG_SPL_NAND_ECC
 #define CONFIG_SPL_OMAP3_ID_NAND
-#define CONFIG_SPL_LDSCRIPT		"$(CPUDIR)/omap-common/u-boot-spl.lds"
+#define CONFIG_SPL_LDSCRIPT		"arch/arm/mach-omap2/u-boot-spl.lds"
 
 /* NAND boot config */
 #define CONFIG_SYS_NAND_5_ADDR_CYCLE

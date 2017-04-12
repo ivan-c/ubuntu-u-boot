@@ -17,12 +17,6 @@
 #ifndef __CONFIG_TI_ARMV7_COMMON_H__
 #define __CONFIG_TI_ARMV7_COMMON_H__
 
-/*
- * We typically do not contain NOR flash.  In the cases where we do, we
- * undefine this later.
- */
-#define CONFIG_SYS_NO_FLASH
-
 /* Support both device trees and ATAGs. */
 #define CONFIG_CMDLINE_TAG
 #define CONFIG_SETUP_MEMORY_TAGS
@@ -54,7 +48,8 @@
 	"ramdisk_addr_r=0x88080000\0" \
 	"scriptaddr=0x80000000\0" \
 	"pxefile_addr_r=0x80100000\0" \
-	"bootm_size=0x10000000\0"
+	"bootm_size=0x10000000\0" \
+	"boot_fdt=try\0"
 
 #define DEFAULT_MMC_TI_ARGS \
 	"mmcdev=0\0" \
@@ -71,6 +66,8 @@
 	"importbootenv=echo Importing environment from mmc${mmcdev} ...; " \
 		"env import -t ${loadaddr} ${filesize}\0" \
 	"loadbootenv=fatload mmc ${mmcdev} ${loadaddr} ${bootenvfile}\0" \
+	"loadimage=load ${devtype} ${bootpart} ${loadaddr} ${bootdir}/${bootfile}\0" \
+	"loadfdt=load ${devtype} ${bootpart} ${fdtaddr} ${bootdir}/${fdtfile}\0" \
 	"envboot=mmc dev ${mmcdev}; " \
 		"if mmc rescan; then " \
 			"echo SD/MMC found on device ${mmcdev};" \
@@ -87,6 +84,41 @@
 				"fi;" \
 			"fi;" \
 		"fi;\0" \
+	"mmcloados=run args_mmc; " \
+		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
+			"if run loadfdt; then " \
+				"bootz ${loadaddr} - ${fdtaddr}; " \
+			"else " \
+				"if test ${boot_fdt} = try; then " \
+					"bootz; " \
+				"else " \
+					"echo WARN: Cannot load the DT; " \
+				"fi; " \
+			"fi; " \
+		"else " \
+			"bootz; " \
+		"fi;\0" \
+	"mmcboot=mmc dev ${mmcdev}; " \
+		"setenv devnum ${mmcdev}; " \
+		"setenv devtype mmc; " \
+		"if mmc rescan; then " \
+			"echo SD/MMC found on device ${mmcdev};" \
+			"if run loadimage; then " \
+				"if test ${boot_fit} -eq 1; then " \
+					"run loadfit; " \
+				"else " \
+					"run mmcloados;" \
+				"fi;" \
+			"fi;" \
+		"fi;\0" \
+
+#define DEFAULT_FIT_TI_ARGS \
+	"boot_fit=0\0" \
+	"fit_loadaddr=0x88000000\0" \
+	"fit_bootfile=fitImage.itb\0" \
+	"update_to_fit=setenv loadaddr ${fit_loadaddr}; setenv bootfile ${fit_bootfile}\0" \
+	"args_fit=setenv bootargs console=${console} \0" \
+	"loadfit=run args_fit; bootm ${loadaddr}#${fdtfile};\0" \
 
 /*
  * DDR information.  If the CONFIG_NR_DRAM_BANKS is not defined,
@@ -128,10 +160,6 @@
 #define CONFIG_DM_I2C_COMPAT
 #endif
 
-/* MMC/SD IP block */
-#define CONFIG_MMC
-#define CONFIG_GENERIC_MMC
-
 /* McSPI IP block */
 #define CONFIG_SPI
 
@@ -147,7 +175,6 @@
  * console baudrate of 115200 and use the default baud rate table.
  */
 #define CONFIG_SYS_MALLOC_LEN		SZ_32M
-#define CONFIG_BAUDRATE			115200
 #define CONFIG_ENV_VARS_UBOOT_CONFIG	/* Strongly encouraged */
 #define CONFIG_ENV_OVERWRITE		/* Overwrite ethaddr / serial# */
 
@@ -160,7 +187,7 @@
 #define CONFIG_SYS_MAXARGS		64
 
 /* Console I/O Buffer Size */
-#define CONFIG_SYS_CBSIZE		512
+#define CONFIG_SYS_CBSIZE		1024
 /* Print Buffer Size */
 #define CONFIG_SYS_PBSIZE		(CONFIG_SYS_CBSIZE \
 					+ sizeof(CONFIG_SYS_PROMPT) + 16)
@@ -184,10 +211,7 @@
  * enabled a number of useful commands and support.
  */
 #if defined(CONFIG_MMC) || defined(CONFIG_USB_STORAGE)
-#define CONFIG_DOS_PARTITION
 #define CONFIG_FAT_WRITE
-#define CONFIG_PARTITION_UUIDS
-#define CONFIG_CMD_PART
 #endif
 
 /*
@@ -235,10 +259,6 @@
 #endif
 
 
-/* RAW SD card / eMMC locations. */
-#define CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR	0x300 /* address 0x60000 */
-#define CONFIG_SYS_U_BOOT_MAX_SIZE_SECTORS	0x200 /* 256 KB */
-
 /* FAT sd card locations. */
 #define CONFIG_SYS_MMCSD_FS_BOOT_PARTITION	1
 #define CONFIG_SPL_FS_LOAD_PAYLOAD_NAME	"u-boot.img"
@@ -256,8 +276,6 @@
 /* spl export command */
 #define CONFIG_CMD_SPL
 #endif
-
-#define CONFIG_SYS_THUMB_BUILD
 
 /* General parts of the framework, required. */
 #define CONFIG_SPL_BOARD_INIT

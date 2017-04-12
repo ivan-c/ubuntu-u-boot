@@ -123,8 +123,10 @@ int __maybe_unused ti_i2c_eeprom_am_get(int bus_addr, int dev_addr)
 	struct ti_common_eeprom *ep;
 
 	ep = TI_EEPROM_DATA;
+#ifndef CONFIG_SPL_BUILD
 	if (ep->header == TI_EEPROM_HEADER_MAGIC)
-		goto already_read;
+		return 0; /* EEPROM has already been read */
+#endif
 
 	/* Initialize with a known bad marker for i2c fails.. */
 	ep->header = TI_DEAD_EEPROM_MAGIC;
@@ -157,7 +159,6 @@ int __maybe_unused ti_i2c_eeprom_am_get(int bus_addr, int dev_addr)
 	memcpy(ep->mac_addr, am_ep.mac_addr,
 	       TI_EEPROM_HDR_NO_OF_MAC_ADDR * TI_EEPROM_HDR_ETH_ALEN);
 
-already_read:
 	return 0;
 }
 
@@ -168,8 +169,10 @@ int __maybe_unused ti_i2c_eeprom_dra7_get(int bus_addr, int dev_addr)
 	struct ti_common_eeprom *ep;
 
 	ep = TI_EEPROM_DATA;
+#ifndef CONFIG_SPL_BUILD
 	if (ep->header == DRA7_EEPROM_HEADER_MAGIC)
-		goto already_read;
+		return 0; /* EEPROM has already been read */
+#endif
 
 	/* Initialize with a known bad marker for i2c fails.. */
 	ep->header = TI_DEAD_EEPROM_MAGIC;
@@ -202,7 +205,6 @@ int __maybe_unused ti_i2c_eeprom_dra7_get(int bus_addr, int dev_addr)
 	strlcpy(ep->config, dra7_ep.config, TI_EEPROM_HDR_CONFIG_LEN + 1);
 	ti_eeprom_string_cleanup(ep->config);
 
-already_read:
 	return 0;
 }
 
@@ -311,4 +313,66 @@ void __maybe_unused set_board_info_env(char *name)
 		setenv("board_serial", ep->serial);
 	else
 		setenv("board_serial", unknown);
+}
+
+static u64 mac_to_u64(u8 mac[6])
+{
+	int i;
+	u64 addr = 0;
+
+	for (i = 0; i < 6; i++) {
+		addr <<= 8;
+		addr |= mac[i];
+	}
+
+	return addr;
+}
+
+static void u64_to_mac(u64 addr, u8 mac[6])
+{
+	mac[5] = addr;
+	mac[4] = addr >> 8;
+	mac[3] = addr >> 16;
+	mac[2] = addr >> 24;
+	mac[1] = addr >> 32;
+	mac[0] = addr >> 40;
+}
+
+void board_ti_set_ethaddr(int index)
+{
+	uint8_t mac_addr[6];
+	int i;
+	u64 mac1, mac2;
+	u8 mac_addr1[6], mac_addr2[6];
+	int num_macs;
+	/*
+	 * Export any Ethernet MAC addresses from EEPROM.
+	 * The 2 MAC addresses in EEPROM define the address range.
+	 */
+	board_ti_get_eth_mac_addr(0, mac_addr1);
+	board_ti_get_eth_mac_addr(1, mac_addr2);
+
+	if (is_valid_ethaddr(mac_addr1) && is_valid_ethaddr(mac_addr2)) {
+		mac1 = mac_to_u64(mac_addr1);
+		mac2 = mac_to_u64(mac_addr2);
+
+		/* must contain an address range */
+		num_macs = mac2 - mac1 + 1;
+		if (num_macs <= 0)
+			return;
+
+		if (num_macs > 50) {
+			printf("%s: Too many MAC addresses: %d. Limiting to 50\n",
+			       __func__, num_macs);
+			num_macs = 50;
+		}
+
+		for (i = 0; i < num_macs; i++) {
+			u64_to_mac(mac1 + i, mac_addr);
+			if (is_valid_ethaddr(mac_addr)) {
+				eth_setenv_enetaddr_by_index("eth", i + index,
+							     mac_addr);
+			}
+		}
+	}
 }

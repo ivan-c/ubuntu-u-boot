@@ -104,7 +104,6 @@
 
 /* NS16550 Configuration: primary UART via FTDI */
 #define CONFIG_SYS_NS16550_COM1		0x44e09000
-#define CONFIG_BAUDRATE			115200
 
 /* I2C Configuration */
 #define	CONFIG_SYS_I2C_SPEED		100000
@@ -183,7 +182,6 @@
  * add mass storage support.
  */
 #define CONFIG_USB_MUSB_DSPS
-#define CONFIG_ARCH_MISC_INIT
 #define CONFIG_USB_MUSB_PIO_ONLY
 #define CONFIG_USB_MUSB_DISABLE_BULK_COMBINE_SPLIT
 #define CONFIG_AM335X_USB0
@@ -207,6 +205,6 @@
 
 /* CPSW support */
 
-#define CONFIG_SPL_LDSCRIPT		"$(CPUDIR)/am33xx/u-boot-spl.lds"
+#define CONFIG_SPL_LDSCRIPT		"arch/arm/mach-omap2/am33xx/u-boot-spl.lds"
 
 #endif	/* ! __CONFIG_PENGWYN_H */

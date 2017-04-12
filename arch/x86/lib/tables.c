@@ -12,18 +12,13 @@
 #include <asm/acpi_table.h>
 #include <asm/coreboot_tables.h>
 
-static u32 write_smbios_table_wrapper(u32 addr)
-{
-	return write_smbios_table(addr);
-}
-
 /**
  * Function prototype to write a specific configuration table
  *
  * @addr:	start address to write the table
  * @return:	end address of the table
  */
-typedef u32 (*table_write)(u32 addr);
+typedef ulong (*table_write)(ulong addr);
 
 static table_write table_write_funcs[] = {
 #ifdef CONFIG_GENERATE_PIRQ_TABLE
@@ -39,7 +34,7 @@ static table_write table_write_funcs[] = {
 	write_acpi_tables,
 #endif
 #ifdef CONFIG_GENERATE_SMBIOS_TABLE
-	write_smbios_table_wrapper,
+	write_smbios_table,
 #endif
 };
 

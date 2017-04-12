@@ -8,6 +8,7 @@
 #include <inttypes.h>
 #include <config.h>
 #include <dm.h>
+#include <efi_loader.h>
 #include <fdt_support.h>
 #include <fdt_simplefb.h>
 #include <lcd.h>
@@ -17,7 +18,6 @@
 #include <asm/arch/mbox.h>
 #include <asm/arch/sdhci.h>
 #include <asm/global_data.h>
-#include <dm/platform_data/serial_pl01x.h>
 #include <dm/platform_data/serial_bcm283x_mu.h>
 #ifdef CONFIG_ARM64
 #include <asm/armv8/mmu.h>
@@ -25,42 +25,9 @@
 
 DECLARE_GLOBAL_DATA_PTR;
 
-static const struct bcm2835_gpio_platdata gpio_platdata = {
-	.base = BCM2835_GPIO_BASE,
-};
+/* From lowlevel_init.S */
+extern unsigned long fw_dtb_pointer;
 
-U_BOOT_DEVICE(bcm2835_gpios) = {
-	.name = "gpio_bcm2835",
-	.platdata = &gpio_platdata,
-};
-
-#ifdef CONFIG_PL01X_SERIAL
-static const struct pl01x_serial_platdata serial_platdata = {
-#ifndef CONFIG_BCM2835
-	.base = 0x3f201000,
-#else
-	.base = 0x20201000,
-#endif
-	.type = TYPE_PL011,
-	.skip_init = true,
-};
-
-U_BOOT_DEVICE(bcm2835_serials) = {
-	.name = "serial_pl01x",
-	.platdata = &serial_platdata,
-};
-#else
-static struct bcm283x_mu_serial_platdata serial_platdata = {
-	.base = 0x3f215040,
-	.clock = 250000000,
-	.skip_init = true,
-};
-
-U_BOOT_DEVICE(bcm2837_serials) = {
-	.name = "serial_bcm283x_mu",
-	.platdata = &serial_platdata,
-};
-#endif
 
 struct msg_get_arm_mem {
 	struct bcm2835_mbox_hdr hdr;
@@ -98,6 +65,12 @@ struct msg_get_clock_rate {
 	u32 end_tag;
 };
 
+#ifdef CONFIG_ARM64
+#define DTB_DIR "broadcom/"
+#else
+#define DTB_DIR ""
+#endif
+
 /*
  * http://raspberryalphaomega.org.uk/2013/02/06/automatic-raspberry-pi-board-revision-detection-model-a-b1-and-b2/
  * http://www.raspberrypi.org/forums/viewtopic.php?f=63&t=32733
@@ -116,24 +89,24 @@ struct rpi_model {
 
 static const struct rpi_model rpi_model_unknown = {
 	"Unknown model",
-	"bcm283x-rpi-other.dtb",
+	DTB_DIR "bcm283x-rpi-other.dtb",
 	false,
 };
 
 static const struct rpi_model rpi_models_new_scheme[] = {
 	[0x4] = {
 		"2 Model B",
-		"bcm2836-rpi-2-b.dtb",
+		DTB_DIR "bcm2836-rpi-2-b.dtb",
 		true,
 	},
 	[0x8] = {
 		"3 Model B",
-		"bcm2837-rpi-3-b.dtb",
+		DTB_DIR "bcm2837-rpi-3-b.dtb",
 		true,
 	},
 	[0x9] = {
 		"Zero",
-		"bcm2835-rpi-zero.dtb",
+		DTB_DIR "bcm2835-rpi-zero.dtb",
 		false,
 	},
 };
@@ -141,87 +114,87 @@ static const struct rpi_model rpi_models_new_scheme[] = {
 static const struct rpi_model rpi_models_old_scheme[] = {
 	[0x2] = {
 		"Model B",
-		"bcm2835-rpi-b.dtb",
+		DTB_DIR "bcm2835-rpi-b.dtb",
 		true,
 	},
 	[0x3] = {
 		"Model B",
-		"bcm2835-rpi-b.dtb",
+		DTB_DIR "bcm2835-rpi-b.dtb",
 		true,
 	},
 	[0x4] = {
 		"Model B rev2",
-		"bcm2835-rpi-b-rev2.dtb",
+		DTB_DIR "bcm2835-rpi-b-rev2.dtb",
 		true,
 	},
 	[0x5] = {
 		"Model B rev2",
-		"bcm2835-rpi-b-rev2.dtb",
+		DTB_DIR "bcm2835-rpi-b-rev2.dtb",
 		true,
 	},
 	[0x6] = {
 		"Model B rev2",
-		"bcm2835-rpi-b-rev2.dtb",
+		DTB_DIR "bcm2835-rpi-b-rev2.dtb",
 		true,
 	},
 	[0x7] = {
 		"Model A",
-		"bcm2835-rpi-a.dtb",
+		DTB_DIR "bcm2835-rpi-a.dtb",
 		false,
 	},
 	[0x8] = {
 		"Model A",
-		"bcm2835-rpi-a.dtb",
+		DTB_DIR "bcm2835-rpi-a.dtb",
 		false,
 	},
 	[0x9] = {
 		"Model A",
-		"bcm2835-rpi-a.dtb",
+		DTB_DIR "bcm2835-rpi-a.dtb",
 		false,
 	},
 	[0xd] = {
 		"Model B rev2",
-		"bcm2835-rpi-b-rev2.dtb",
+		DTB_DIR "bcm2835-rpi-b-rev2.dtb",
 		true,
 	},
 	[0xe] = {
 		"Model B rev2",
-		"bcm2835-rpi-b-rev2.dtb",
+		DTB_DIR "bcm2835-rpi-b-rev2.dtb",
 		true,
 	},
 	[0xf] = {
 		"Model B rev2",
-		"bcm2835-rpi-b-rev2.dtb",
+		DTB_DIR "bcm2835-rpi-b-rev2.dtb",
 		true,
 	},
 	[0x10] = {
 		"Model B+",
-		"bcm2835-rpi-b-plus.dtb",
+		DTB_DIR "bcm2835-rpi-b-plus.dtb",
 		true,
 	},
 	[0x11] = {
 		"Compute Module",
-		"bcm2835-rpi-cm.dtb",
+		DTB_DIR "bcm2835-rpi-cm.dtb",
 		false,
 	},
 	[0x12] = {
 		"Model A+",
-		"bcm2835-rpi-a-plus.dtb",
+		DTB_DIR "bcm2835-rpi-a-plus.dtb",
 		false,
 	},
 	[0x13] = {
 		"Model B+",
-		"bcm2835-rpi-b-plus.dtb",
+		DTB_DIR "bcm2835-rpi-b-plus.dtb",
 		true,
 	},
 	[0x14] = {
 		"Compute Module",
-		"bcm2835-rpi-cm.dtb",
+		DTB_DIR "bcm2835-rpi-cm.dtb",
 		false,
 	},
 	[0x15] = {
 		"Model A+",
-		"bcm2835-rpi-a-plus.dtb",
+		DTB_DIR "bcm2835-rpi-a-plus.dtb",
 		false,
 	},
 };
@@ -283,6 +256,31 @@ static void set_fdtfile(void)
 
 	fdtfile = model->fdtfile;
 	setenv("fdtfile", fdtfile);
+}
+
+/*
+ * If the firmware provided a valid FDT at boot time, let's expose it in
+ * ${fdt_addr} so it may be passed unmodified to the kernel.
+ */
+static void set_fdt_addr(void)
+{
+	if (getenv("fdt_addr"))
+		return;
+
+	if (fdt_magic(fw_dtb_pointer) != FDT_MAGIC)
+		return;
+
+	setenv_hex("fdt_addr", fw_dtb_pointer);
+}
+
+/*
+ * Prevent relocation from stomping on a firmware provided FDT blob.
+ */
+unsigned long board_get_usable_ram_top(unsigned long total_size)
+{
+	if ((gd->ram_top - fw_dtb_pointer) > SZ_64M)
+		return gd->ram_top;
+	return fw_dtb_pointer & ~0xffff;
 }
 
 static void set_usbethaddr(void)
@@ -356,6 +354,7 @@ static void set_serial_number(void)
 
 int misc_init_r(void)
 {
+	set_fdt_addr();
 	set_fdtfile();
 	set_usbethaddr();
 #ifdef CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
@@ -443,15 +442,6 @@ static void get_board_rev(void)
 	printf("RPI %s (0x%x)\n", model->name, revision);
 }
 
-int board_init(void)
-{
-	get_board_rev();
-
-	gd->bd->bi_boot_params = 0x100;
-
-	return power_on_module(BCM2835_MBOX_POWER_DEVID_USB_HCD);
-}
-
 #ifndef CONFIG_PL01X_SERIAL
 static bool rpi_is_serial_active(void)
 {
@@ -471,17 +461,38 @@ static bool rpi_is_serial_active(void)
 
 	return true;
 }
+
+/* Disable mini-UART I/O if it's not pinmuxed to our pins.
+ * The firmware only enables it if explicitly done in config.txt: enable_uart=1
+ */
+static void rpi_disable_inactive_uart(void)
+{
+	struct udevice *dev;
+	struct bcm283x_mu_serial_platdata *plat;
+
+	if (uclass_get_device_by_driver(UCLASS_SERIAL,
+					DM_GET_DRIVER(serial_bcm283x_mu),
+					&dev) || !dev)
+		return;
+
+	if (!rpi_is_serial_active()) {
+		plat = dev_get_platdata(dev);
+		plat->disabled = true;
+	}
+}
 #endif
 
-int board_early_init_f(void)
+int board_init(void)
 {
 #ifndef CONFIG_PL01X_SERIAL
-	/* Disable mini-UART I/O if it's not pinmuxed to our pins */
-	if (!rpi_is_serial_active())
-		serial_platdata.disabled = true;
+	rpi_disable_inactive_uart();
 #endif
 
-	return 0;
+	get_board_rev();
+
+	gd->bd->bi_boot_params = 0x100;
+
+	return power_on_module(BCM2835_MBOX_POWER_DEVID_USB_HCD);
 }
 
 int board_mmc_init(bd_t *bis)
@@ -513,6 +524,11 @@ int ft_board_setup(void *blob, bd_t *bd)
 	 * node exists for the "real" graphics driver.
 	 */
 	lcd_dt_simplefb_add_node(blob);
+
+#ifdef CONFIG_EFI_LOADER
+	/* Reserve the spin table */
+	efi_add_memory_map(0, 1, EFI_RESERVED_MEMORY_TYPE, 0);
+#endif
 
 	return 0;
 }

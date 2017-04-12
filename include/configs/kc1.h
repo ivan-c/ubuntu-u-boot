@@ -16,8 +16,6 @@
  * Build
  */
 
-#define CONFIG_SYS_THUMB_BUILD
-
 /*
  * CPU
  */
@@ -31,7 +29,6 @@
 
 #define CONFIG_OMAP
 #define CONFIG_OMAP4430
-#define CONFIG_OMAP_COMMON
 
 /*
  * Board
@@ -80,20 +77,6 @@
 #define CONFIG_I2C_MULTI_BUS
 
 /*
- * Flash
- */
-
-#define CONFIG_SYS_NO_FLASH
-
-/*
- * MMC
- */
-
-#define CONFIG_MMC
-#define CONFIG_GENERIC_MMC
-#define CONFIG_OMAP_HSMMC
-
-/*
  * Power
  */
 
@@ -104,13 +87,6 @@
  */
 
 #define CONFIG_TWL6030_INPUT
-
-/*
- * Partitions
- */
-
-#define CONFIG_PARTITION_UUIDS
-#define CONFIG_CMD_PART
 
 /*
  * SPL
@@ -126,10 +102,8 @@
 #define CONFIG_SYS_SPL_MALLOC_START	0x80208000
 #define CONFIG_SYS_SPL_MALLOC_SIZE	(1024 * 1024)
 
-#define CONFIG_SPL_LDSCRIPT		"$(CPUDIR)/omap-common/u-boot-spl.lds"
+#define CONFIG_SPL_LDSCRIPT		"arch/arm/mach-omap2/u-boot-spl.lds"
 #define CONFIG_SPL_BOARD_INIT
-
-#define CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_PARTITION	2
 
 /*
  * Console
@@ -154,7 +128,6 @@
 #define CONFIG_SYS_NS16550_COM3		UART3_BASE
 #define CONFIG_CONS_INDEX		3
 
-#define CONFIG_BAUDRATE			115200
 #define CONFIG_SYS_BAUDRATE_TABLE	{ 4800, 9600, 19200, 38400, 57600, \
 					  115200 }
 

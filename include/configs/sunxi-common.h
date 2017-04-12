@@ -32,13 +32,6 @@
 # define CONFIG_MACH_TYPE_COMPAT_REV	1
 #endif
 
-/*
- * High Level Configuration Options
- */
-#ifdef CONFIG_SPL_BUILD
-#define CONFIG_SYS_THUMB_BUILD	/* Thumbs mode to save space in SPL */
-#endif
-
 /* Serial & console */
 #define CONFIG_SYS_NS16550_SERIAL
 /* ns16550 reg in the low bits of cpu reg */
@@ -140,11 +133,10 @@
 
 /* mmc config */
 #ifdef CONFIG_MMC
-#define CONFIG_GENERIC_MMC
-#define CONFIG_MMC_SUNXI
 #define CONFIG_MMC_SUNXI_SLOT		0
 #define CONFIG_ENV_IS_IN_MMC
 #define CONFIG_SYS_MMC_ENV_DEV		0	/* first detected MMC controller */
+#define CONFIG_SYS_MMC_MAX_DEVICE	4
 #endif
 
 /* 64MB of malloc() pool */
@@ -164,14 +156,11 @@
 #define CONFIG_STANDALONE_LOAD_ADDR	CONFIG_SYS_LOAD_ADDR
 
 /* baudrate */
-#define CONFIG_BAUDRATE			115200
 
 /* The stack sizes are set up in start.S using the settings below */
 #define CONFIG_STACKSIZE		(256 << 10)	/* 256 KiB */
 
 /* FLASH and environment organization */
-
-#define CONFIG_SYS_NO_FLASH
 
 #define CONFIG_SYS_MONITOR_LEN		(768 << 10)	/* 768 KiB */
 
@@ -182,7 +171,9 @@
 
 #define CONFIG_SPL_FRAMEWORK
 
+#ifndef CONFIG_ARM64		/* AArch64 FEL support is not ready yet */
 #define CONFIG_SPL_BOARD_LOAD_IMAGE
+#endif
 
 #if defined(CONFIG_MACH_SUN9I)
 #define CONFIG_SPL_TEXT_BASE		0x10040		/* sram start+header */
@@ -199,7 +190,6 @@
 #define CONFIG_SPL_LDSCRIPT "arch/arm/cpu/armv7/sunxi/u-boot-spl.lds"
 #endif
 
-#define CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR	80	/* 40KiB */
 #define CONFIG_SPL_PAD_TO		32768		/* decimal for 'dd' */
 
 #if defined(CONFIG_MACH_SUN9I) || defined(CONFIG_MACH_SUN50I)
@@ -337,7 +327,6 @@ extern int soft_i2c_gpio_scl;
 
 #ifdef CONFIG_MMC
 #define CONFIG_FASTBOOT_FLASH_MMC_DEV	0
-#define CONFIG_EFI_PARTITION
 #endif
 #endif
 

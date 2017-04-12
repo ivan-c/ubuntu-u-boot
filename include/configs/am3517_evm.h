@@ -16,16 +16,8 @@
 /* High Level Configuration Options */
 
 #define CONFIG_OMAP
-#define CONFIG_OMAP_COMMON
-
-#define CONFIG_SYS_NO_FLASH
 
 #define CONFIG_NR_DRAM_BANKS	2	/* CS1 may or may not be populated */
-
-/* Common ARM Erratas */
-#define CONFIG_ARM_ERRATA_454179
-#define CONFIG_ARM_ERRATA_430973
-#define CONFIG_ARM_ERRATA_621766
 
 #define CONFIG_EMIF4	/* The chip has EMIF4 controller */
 
@@ -73,15 +65,8 @@
 
 /* allow to overwrite serial and ethaddr */
 #define CONFIG_ENV_OVERWRITE
-#define CONFIG_BAUDRATE			115200
 #define CONFIG_SYS_BAUDRATE_TABLE	{4800, 9600, 19200, 38400, 57600,\
 					115200}
-
-/* SD/MMC */
-#define CONFIG_MMC
-#define CONFIG_GENERIC_MMC
-#define CONFIG_OMAP_HSMMC
-#define CONFIG_DOS_PARTITION
 
 /*
  * USB configuration
@@ -94,8 +79,6 @@
 #ifdef CONFIG_USB_MUSB_AM35X
 
 #ifdef CONFIG_USB_MUSB_HOST
-
-#define CONGIG_CMD_STORAGE
 
 #ifdef CONFIG_USB_KEYBOARD
 #define CONFIG_SYS_USB_EVENT_POLL
@@ -113,7 +96,6 @@
 
 /* commands to include */
 #define CONFIG_CMD_NAND
-#define CONFIG_CMD_PART
 #define CONFIG_CMD_MTDPARTS
 
 /* I2C */
@@ -262,7 +244,6 @@
 #define CONFIG_AUTO_COMPLETE
 #define CONFIG_CMDLINE_EDITING
 #define CONFIG_SYS_LONGHELP
-#define CONFIG_PARTITION_UUIDS
 
 /* We set the max number of command args high to avoid HUSH bugs. */
 #define CONFIG_SYS_MAXARGS		64
@@ -335,14 +316,12 @@
 #define CONFIG_SPL_BSS_START_ADDR	0x80000000
 #define CONFIG_SPL_BSS_MAX_SIZE		0x80000		/* 512 KB */
 
-#define CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR	0x300 /* address 0x60000 */
-#define CONFIG_SYS_U_BOOT_MAX_SIZE_SECTORS	0x200 /* 256 KB */
 #define CONFIG_SYS_MMCSD_FS_BOOT_PARTITION	1
 #define CONFIG_SPL_FS_LOAD_PAYLOAD_NAME		"u-boot.img"
 
 #define CONFIG_SPL_NAND_BASE
 #define CONFIG_SPL_NAND_DRIVERS
 #define CONFIG_SPL_NAND_ECC
-#define CONFIG_SPL_LDSCRIPT		"$(CPUDIR)/omap-common/u-boot-spl.lds"
+#define CONFIG_SPL_LDSCRIPT		"arch/arm/mach-omap2/u-boot-spl.lds"
 
 #endif /* __CONFIG_H */

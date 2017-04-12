@@ -12,8 +12,6 @@
 #define __CONFIG_H
 
 /* High Level Configuration Options */
-#define CONFIG_MPC8610		1	/* MPC8610 specific */
-#define CONFIG_MPC8610HPCD	1	/* MPC8610HPCD board specific */
 #define CONFIG_LINUX_RESET_VEC	0x100	/* Reset vector used by Linux */
 
 #define	CONFIG_SYS_TEXT_BASE	0xfff00000
@@ -44,7 +42,6 @@
 #define CONFIG_FSL_PCI_INIT	1	/* Use common FSL init code */
 #define CONFIG_PCI_INDIRECT_BRIDGE 1	/* indirect PCI bridge support */
 #define CONFIG_SYS_PCI_64BIT	1	/* enable 64-bit PCI resources */
-#define CONFIG_FSL_LAW		1	/* Use common FSL init code */
 
 #define CONFIG_ENV_OVERWRITE
 #define CONFIG_INTERRUPTS		/* enable pci, srio, ddr interrupts */
@@ -64,7 +61,6 @@
 #define CONFIG_SYS_CLK_FREQ	get_board_sys_clk(0)
 #endif
 
-#define CONFIG_BOARD_EARLY_INIT_F	1	/* Call board_pre_init */
 #define CONFIG_MISC_INIT_R		1
 
 #define CONFIG_SYS_MEMTEST_START	0x00200000	/* memtest region */
@@ -74,7 +70,6 @@
  * Base addresses -- Note these are effective addresses where the
  * actual resources get mapped (not physical addresses)
  */
-#define CONFIG_SYS_CCSRBAR_DEFAULT	0xff700000	/* CCSRBAR Default */
 #define CONFIG_SYS_CCSRBAR		0xe0000000	/* relocated CCSRBAR */
 #define CONFIG_SYS_IMMR		CONFIG_SYS_CCSRBAR	/* PQII uses CONFIG_SYS_IMMR */
 
@@ -83,7 +78,6 @@
 #define CONFIG_SYS_CCSRBAR_PHYS		CONFIG_SYS_CCSRBAR_PHYS_LOW
 
 /* DDR Setup */
-#define CONFIG_SYS_FSL_DDR2
 #undef CONFIG_FSL_DDR_INTERACTIVE
 #define CONFIG_SPD_EEPROM		/* Use SPD for DDR */
 #define CONFIG_DDR_SPD
@@ -96,7 +90,6 @@
 #define CONFIG_SYS_MAX_DDR_BAT_SIZE	0x80000000	/* BAT mapping size */
 #define CONFIG_VERY_BIG_RAM
 
-#define CONFIG_NUM_DDR_CONTROLLERS	1
 #define CONFIG_DIMM_SLOTS_PER_CTLR	1
 #define CONFIG_CHIP_SELECTS_PER_CTRL	(2 * CONFIG_DIMM_SLOTS_PER_CTLR)
 
@@ -292,7 +285,6 @@
 #define PCI_IDSEL_NUMBER	0x0c	/* slot0->3(IDSEL)=12->15 */
 #endif
 
-#define CONFIG_DOS_PARTITION
 #define CONFIG_SCSI_AHCI
 
 #ifdef CONFIG_SCSI_AHCI
@@ -492,8 +484,6 @@
 #define CONFIG_LOADADDR		0x10000000
 
 #undef	CONFIG_BOOTARGS		/* the boot command will set bootargs */
-
-#define CONFIG_BAUDRATE	115200
 
 #if defined(CONFIG_PCI1)
 #define PCI_ENV \

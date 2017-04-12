@@ -14,6 +14,7 @@
 #include <time.h>
 #else
 #include <linux/compiler.h>
+#include <linux/kconfig.h>
 #include <common.h>
 #include <errno.h>
 #include <mapmem.h>
@@ -777,6 +778,54 @@ int fit_image_get_data(const void *fit, int noffset,
 }
 
 /**
+ * Get 'data-offset' property from a given image node.
+ *
+ * @fit: pointer to the FIT image header
+ * @noffset: component image node offset
+ * @data_offset: holds the data-offset property
+ *
+ * returns:
+ *     0, on success
+ *     -ENOENT if the property could not be found
+ */
+int fit_image_get_data_offset(const void *fit, int noffset, int *data_offset)
+{
+	const fdt32_t *val;
+
+	val = fdt_getprop(fit, noffset, FIT_DATA_OFFSET_PROP, NULL);
+	if (!val)
+		return -ENOENT;
+
+	*data_offset = fdt32_to_cpu(*val);
+
+	return 0;
+}
+
+/**
+ * Get 'data-size' property from a given image node.
+ *
+ * @fit: pointer to the FIT image header
+ * @noffset: component image node offset
+ * @data_size: holds the data-size property
+ *
+ * returns:
+ *     0, on success
+ *     -ENOENT if the property could not be found
+ */
+int fit_image_get_data_size(const void *fit, int noffset, int *data_size)
+{
+	const fdt32_t *val;
+
+	val = fdt_getprop(fit, noffset, FIT_DATA_SIZE_PROP, NULL);
+	if (!val)
+		return -ENOENT;
+
+	*data_size = fdt32_to_cpu(*val);
+
+	return 0;
+}
+
+/**
  * fit_image_hash_get_algo - get hash algorithm name
  * @fit: pointer to the FIT format image header
  * @noffset: hash node offset
@@ -1161,11 +1210,18 @@ int fit_image_check_os(const void *fit, int noffset, uint8_t os)
 int fit_image_check_arch(const void *fit, int noffset, uint8_t arch)
 {
 	uint8_t image_arch;
+	int aarch32_support = 0;
+
+#ifdef CONFIG_ARM64_SUPPORT_AARCH32
+	aarch32_support = 1;
+#endif
 
 	if (fit_image_get_arch(fit, noffset, &image_arch))
 		return 0;
 	return (arch == image_arch) ||
-		(arch == IH_ARCH_I386 && image_arch == IH_ARCH_X86_64);
+		(arch == IH_ARCH_I386 && image_arch == IH_ARCH_X86_64) ||
+		(arch == IH_ARCH_ARM64 && image_arch == IH_ARCH_ARM &&
+		 aarch32_support);
 }
 
 /**
@@ -1505,12 +1561,6 @@ void fit_conf_print(const void *fit, int noffset, const char *p)
 
 static int fit_image_select(const void *fit, int rd_noffset, int verify)
 {
-#if !defined(USE_HOSTCC) && defined(CONFIG_FIT_IMAGE_POST_PROCESS)
-	const void *data;
-	size_t size;
-	int ret;
-#endif
-
 	fit_image_print(fit, rd_noffset, "   ");
 
 	if (verify) {
@@ -1521,23 +1571,6 @@ static int fit_image_select(const void *fit, int rd_noffset, int verify)
 		}
 		puts("OK\n");
 	}
-
-#if !defined(USE_HOSTCC) && defined(CONFIG_FIT_IMAGE_POST_PROCESS)
-	ret = fit_image_get_data(fit, rd_noffset, &data, &size);
-	if (ret)
-		return ret;
-
-	/* perform any post-processing on the image data */
-	board_fit_image_post_process((void **)&data, &size);
-
-	/*
-	 * update U-Boot's understanding of the "data" property start address
-	 * and size according to the performed post-processing
-	 */
-	ret = fdt_setprop((void *)fit, rd_noffset, FIT_DATA_PROP, data, size);
-	if (ret)
-		return ret;
-#endif
 
 	return 0;
 }
@@ -1614,6 +1647,9 @@ int fit_image_load(bootm_headers_t *images, ulong addr,
 	int type_ok, os_ok;
 	ulong load, data, len;
 	uint8_t os;
+#ifndef USE_HOSTCC
+	uint8_t os_arch;
+#endif
 	const char *prop_name;
 	int ret;
 
@@ -1697,6 +1733,12 @@ int fit_image_load(bootm_headers_t *images, ulong addr,
 		return -ENOEXEC;
 	}
 #endif
+
+#ifndef USE_HOSTCC
+	fit_image_get_arch(fit, noffset, &os_arch);
+	images->os.arch = os_arch;
+#endif
+
 	if (image_type == IH_TYPE_FLATDT &&
 	    !fit_image_check_comp(fit, noffset, IH_COMP_NONE)) {
 		puts("FDT image is compressed");
@@ -1738,6 +1780,12 @@ int fit_image_load(bootm_headers_t *images, ulong addr,
 		bootstage_error(bootstage_id + BOOTSTAGE_SUB_GET_DATA);
 		return -ENOENT;
 	}
+
+#if !defined(USE_HOSTCC) && defined(CONFIG_FIT_IMAGE_POST_PROCESS)
+	/* perform any post-processing on the image data */
+	board_fit_image_post_process((void **)&buf, &size);
+#endif
+
 	len = (ulong)size;
 
 	/* verify that image data is a proper FDT blob */

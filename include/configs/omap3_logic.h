@@ -15,19 +15,6 @@
 
 #define CONFIG_NR_DRAM_BANKS	2	/* CS1 may or may not be populated */
 
-/*
- * 1MB into the SDRAM to allow for SPL's bss at the beginning of SDRAM
- * 64 bytes before this address should be set aside for u-boot.img's
- * header. That is 0x800FFFC0--0x80100000 should not be used for any
- * other needs.  We use this rather than the inherited defines from
- * ti_armv7_common.h for backwards compatibility.
- */
-#define CONFIG_SYS_TEXT_BASE		0x80100000
-#define CONFIG_SPL_BSS_START_ADDR	0x80000000
-#define CONFIG_SPL_BSS_MAX_SIZE		(512 << 10)	/* 512 KB */
-#define CONFIG_SYS_SPL_MALLOC_START	0x80208000
-#define CONFIG_SYS_SPL_MALLOC_SIZE	0x100000
-
 #include <configs/ti_omap3_common.h>
 
 /*
@@ -38,13 +25,11 @@
 #undef CONFIG_SPL_TEXT_BASE
 #define CONFIG_SPL_TEXT_BASE		0x40200000
 
-#define CONFIG_BOARD_LATE_INIT
 #define CONFIG_MISC_INIT_R		/* misc_init_r dumps the die id */
 #define CONFIG_CMDLINE_TAG		/* enable passing of ATAGs */
 #define CONFIG_SETUP_MEMORY_TAGS
 #define CONFIG_INITRD_TAG
 #define CONFIG_REVISION_TAG
-#define CONFIG_CMDLINE_EDITING		/* cmd line edit/history */
 
 /* Hardware drivers */
 
@@ -121,9 +106,12 @@
 #define CONFIG_MTD_DEVICE		/* needed for mtdparts commands */
 #define CONFIG_MTD_PARTITIONS		/* required for UBI partition support */
 #define MTDIDS_DEFAULT			"nand0=omap2-nand.0"
-#define MTDPARTS_DEFAULT		"mtdparts=omap2-nand.0:512k(MLO),"\
-					"1920k(u-boot),128k(u-boot-env),"\
-					"4m(kernel),-(fs)"
+#define MTDPARTS_DEFAULT	"mtdparts=omap2-nand.0:"\
+							"512k(MLO),"\
+							"1792k(u-boot),"\
+							"128k(spl-os)," \
+							"128k(u-boot-env),"\
+							"6m(kernel),-(fs)"
 #endif
 
 /* Environment information */
@@ -134,9 +122,7 @@
 	"saveenv;"
 
 #define CONFIG_EXTRA_ENV_SETTINGS \
-	"loadaddr=0x81000000\0" \
-	"uimage=uImage\0" \
-	"zimage=zImage\0" \
+	DEFAULT_LINUX_BOOT_ENV \
 	"mtdids=" MTDIDS_DEFAULT "\0"	\
 	"mtdparts=" MTDPARTS_DEFAULT "\0" \
 	"mmcdev=0\0" \
@@ -153,7 +139,6 @@
 		"else run defaultboot; fi\0" \
 	"defaultboot=run mmcramboot\0" \
 	"consoledevice=ttyO0\0" \
-	"display=15\0" \
 	"setconsole=setenv console ${consoledevice},${baudrate}n8\0" \
 	"dump_bootargs=echo 'Bootargs: '; echo $bootargs\0" \
 	"rotation=0\0" \
@@ -162,84 +147,91 @@
 		"omapfb.rotate=${rotation}; " \
 		"fi\0" \
 	"optargs=ignore_loglevel early_printk no_console_suspend\0" \
-	"addmtdparts=setenv bootargs ${bootargs} ${mtdparts}\0" \
-	"common_bootargs=setenv bootargs ${bootargs} display=${display} " \
-		"${optargs};" \
-		"run addmtdparts; " \
+	"common_bootargs=run setconsole; setenv bootargs " \
+		"${bootargs} "\
+		"console=${console} " \
+		"${mtdparts} "\
+		"${optargs}; " \
 		"run vrfb_arg\0" \
-	"loadbootscript=fatload mmc ${mmcdev} ${loadaddr} boot.scr\0" \
+	"loadbootscript=load mmc ${mmcdev} ${loadaddr} boot.scr\0" \
 	"bootscript=echo 'Running bootscript from mmc ...'; " \
 		"source ${loadaddr}\0" \
-	"loaduimage=mmc rescan; " \
-		"fatload mmc ${mmcdev} ${loadaddr} ${uimage}\0" \
-	"loadzimage=mmc rescan; " \
-		"fatload mmc ${mmcdev} ${loadaddr} ${zimage}\0" \
+	"loadimage=mmc rescan; " \
+		"load mmc ${mmcdev} ${loadaddr} ${bootfile}\0" \
 	"ramdisksize=64000\0" \
-	"ramdiskaddr=0x82000000\0" \
 	"ramdiskimage=rootfs.ext2.gz.uboot\0" \
 	"loadramdisk=mmc rescan; " \
-		"fatload mmc ${mmcdev} ${ramdiskaddr} ${ramdiskimage}\0" \
-	"ramargs=run setconsole; setenv bootargs console=${console} " \
+		"load mmc ${mmcdev} ${rdaddr} ${ramdiskimage}\0" \
+	"ramargs=setenv bootargs "\
 		"root=/dev/ram rw ramdisk_size=${ramdisksize}\0" \
-	"mmcargs=run setconsole; setenv bootargs console=${console} " \
-		"${optargs} " \
-		"root=${mmcroot} " \
-		"rootfstype=${mmcrootfstype}\0" \
-	"nandargs=run setconsole; setenv bootargs console=${console} " \
-		"${optargs} " \
+	"mmcargs=setenv bootargs "\
+		"root=${mmcroot} rootfstype=${mmcrootfstype}\0" \
+	"nandargs=setenv bootargs "\
 		"root=${nandroot} " \
 		"rootfstype=${nandrootfstype}\0" \
-	"nfsargs=run setconsole; setenv serverip ${tftpserver}; " \
-		"setenv bootargs console=${console} root=/dev/nfs " \
+	"nfsargs=setenv serverip ${tftpserver}; " \
+		"setenv bootargs root=/dev/nfs " \
 		"nfsroot=${nfsrootpath} " \
 		"ip=${ipaddr}:${tftpserver}:${gatewayip}:${netmask}::eth0:off\0" \
 	"nfsrootpath=/opt/nfs-exports/omap\0" \
 	"autoload=no\0" \
-	"fdtaddr=0x86000000\0" \
-	"loadfdtimage=mmc rescan; " \
-		"fatload mmc ${mmcdev} ${fdtaddr} ${fdtimage}\0" \
-	"mmcbootz=echo Booting with DT from mmc${mmcdev} ...; " \
+	"loadfdt=mmc rescan; " \
+		"load mmc ${mmcdev} ${fdtaddr} ${fdtimage}\0" \
+	"mmcbootcommon=echo Booting with DT from mmc${mmcdev} ...; " \
 		"run mmcargs; " \
 		"run common_bootargs; " \
 		"run dump_bootargs; " \
-		"run loadzimage; " \
-		"run loadfdtimage; " \
+		"run loadimage; " \
+		"run loadfdt;\0 " \
+	"mmcbootz=setenv bootfile zImage; " \
+		"run mmcbootcommon; "\
 		"bootz ${loadaddr} - ${fdtaddr}\0" \
-	"mmcramboot=echo 'Booting uImage kernel from mmc w/ramdisk...'; " \
+	"mmcboot=setenv bootfile uImage; "\
+		"run mmcbootcommon; "\
+		"bootm ${loadaddr} - ${fdtaddr}\0" \
+	"mmcrambootcommon=echo 'Booting kernel from MMC w/ramdisk...'; " \
 		"run ramargs; " \
 		"run common_bootargs; " \
 		"run dump_bootargs; " \
-		"run loaduimage; " \
-		"run loadramdisk; " \
-		"bootm ${loadaddr} ${ramdiskaddr}\0" \
-	"mmcrambootz=echo 'Booting zImage kernel from mmc w/ramdisk...'; " \
-		"run ramargs; " \
-		"run common_bootargs; " \
-		"run dump_bootargs; " \
-		"run loadzimage; " \
-		"run loadramdisk; " \
-		"run loadfdtimage; " \
-		"bootz ${loadaddr} ${ramdiskaddr} ${fdtaddr};\0" \
+		"run loadimage; " \
+		"run loadfdt; " \
+		"run loadramdisk\0" \
+	"mmcramboot=setenv bootfile uImage; " \
+		"run mmcrambootcommon; " \
+		"bootm ${loadaddr} ${rdaddr} ${fdtimage}\0" \
+	"mmcrambootz=setenv bootfile zImage; " \
+		"run mmcrambootcommon; " \
+		"bootz ${loadaddr} ${rdaddr} ${fdtimage}\0" \
 	"tftpboot=echo 'Booting kernel/ramdisk rootfs from tftp...'; " \
 		"run ramargs; " \
 		"run common_bootargs; " \
 		"run dump_bootargs; " \
 		"tftpboot ${loadaddr} ${zimage}; " \
-		"tftpboot ${ramdiskaddr} ${ramdiskimage}; " \
-		"bootm ${loadaddr} ${ramdiskaddr}\0" \
+		"tftpboot ${rdaddr} ${ramdiskimage}; " \
+		"bootm ${loadaddr} ${rdaddr}\0" \
 	"tftpbootz=echo 'Booting kernel NFS rootfs...'; " \
 		"dhcp;" \
 		"run nfsargs;" \
 		"run common_bootargs;" \
 		"run dump_bootargs;" \
 		"tftpboot $loadaddr zImage;" \
-		"bootz $loadaddr\0"
+		"bootz $loadaddr\0" \
+	"nandbootcommon=echo 'Booting kernel from NAND...';" \
+		"nand unlock;" \
+		"run nandargs;" \
+		"run common_bootargs;" \
+		"run dump_bootargs;" \
+		"nand read ${loadaddr} kernel;" \
+		"nand read ${fdtaddr} spl-os;\0" \
+	"nandbootz=run nandbootcommon; "\
+		"bootz ${loadaddr} - ${fdtaddr}\0"\
+	"nandboot=run nandbootcommon; "\
+		"bootm ${loadaddr} - ${fdtaddr}\0"\
 
 #define CONFIG_BOOTCOMMAND \
 	"run autoboot"
 
 /* Miscellaneous configurable options */
-#define CONFIG_AUTO_COMPLETE
 
 /* memtest works on */
 #define CONFIG_SYS_MEMTEST_START	(OMAP34XX_SDRC_CS0)
@@ -251,8 +243,6 @@
 /* **** PISMO SUPPORT *** */
 #if defined(CONFIG_CMD_NAND)
 #define CONFIG_SYS_FLASH_BASE		NAND_BASE
-#elif defined(CONFIG_CMD_ONENAND)
-#define CONFIG_SYS_FLASH_BASE		ONENAND_MAP
 #endif
 
 /* Monitor at start of flash */
@@ -260,7 +250,6 @@
 
 #define CONFIG_ENV_IS_IN_NAND		1
 #define CONFIG_ENV_SIZE			(128 << 10)	/* 128 KiB */
-#define ONENAND_ENV_OFFSET		0x260000 /* environment starts here */
 #define SMNAND_ENV_OFFSET		0x260000 /* environment starts here */
 
 #define CONFIG_SYS_ENV_SECT_SIZE	(128 << 10)	/* 128 KiB */

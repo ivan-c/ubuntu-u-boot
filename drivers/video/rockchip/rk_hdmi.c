@@ -32,37 +32,37 @@ struct rk_hdmi_priv {
 
 static const struct tmds_n_cts n_cts_table[] = {
 	{
-		.tmds = 25175, .n = 6144, .cts = 25175,
+		.tmds = 25175000, .n = 6144, .cts = 25175,
 	}, {
-		.tmds = 25200, .n = 6144, .cts = 25200,
+		.tmds = 25200000, .n = 6144, .cts = 25200,
 	}, {
-		.tmds = 27000, .n = 6144, .cts = 27000,
+		.tmds = 27000000, .n = 6144, .cts = 27000,
 	}, {
-		.tmds = 27027, .n = 6144, .cts = 27027,
+		.tmds = 27027000, .n = 6144, .cts = 27027,
 	}, {
-		.tmds = 40000, .n = 6144, .cts = 40000,
+		.tmds = 40000000, .n = 6144, .cts = 40000,
 	}, {
-		.tmds = 54000, .n = 6144, .cts = 54000,
+		.tmds = 54000000, .n = 6144, .cts = 54000,
 	}, {
-		.tmds = 54054, .n = 6144, .cts = 54054,
+		.tmds = 54054000, .n = 6144, .cts = 54054,
 	}, {
-		.tmds = 65000, .n = 6144, .cts = 65000,
+		.tmds = 65000000, .n = 6144, .cts = 65000,
 	}, {
-		.tmds = 74176, .n = 11648, .cts = 140625,
+		.tmds = 74176000, .n = 11648, .cts = 140625,
 	}, {
-		.tmds = 74250, .n = 6144, .cts = 74250,
+		.tmds = 74250000, .n = 6144, .cts = 74250,
 	}, {
-		.tmds = 83500, .n = 6144, .cts = 83500,
+		.tmds = 83500000, .n = 6144, .cts = 83500,
 	}, {
-		.tmds = 106500, .n = 6144, .cts = 106500,
+		.tmds = 106500000, .n = 6144, .cts = 106500,
 	}, {
-		.tmds = 108000, .n = 6144, .cts = 108000,
+		.tmds = 108000000, .n = 6144, .cts = 108000,
 	}, {
-		.tmds = 148352, .n = 5824, .cts = 140625,
+		.tmds = 148352000, .n = 5824, .cts = 140625,
 	}, {
-		.tmds = 148500, .n = 6144, .cts = 148500,
+		.tmds = 148500000, .n = 6144, .cts = 148500,
 	}, {
-		.tmds = 297000, .n = 5120, .cts = 247500,
+		.tmds = 297000000, .n = 5120, .cts = 247500,
 	}
 };
 
@@ -85,13 +85,13 @@ struct hdmi_phy_config {
 
 static const struct hdmi_phy_config rockchip_phy_config[] = {
 	{
-		.mpixelclock = 74250,
+		.mpixelclock = 74250000,
 		.sym_ctr = 0x8009, .term = 0x0004, .vlev_ctr = 0x0272,
 	}, {
-		.mpixelclock = 148500,
+		.mpixelclock = 148500000,
 		.sym_ctr = 0x802b, .term = 0x0004, .vlev_ctr = 0x028d,
 	}, {
-		.mpixelclock = 297000,
+		.mpixelclock = 297000000,
 		.sym_ctr = 0x8039, .term = 0x0005, .vlev_ctr = 0x028d,
 	}, {
 		.mpixelclock = ~0ul,
@@ -101,22 +101,22 @@ static const struct hdmi_phy_config rockchip_phy_config[] = {
 
 static const struct hdmi_mpll_config rockchip_mpll_cfg[] = {
 	{
-		.mpixelclock = 40000,
+		.mpixelclock = 40000000,
 		.cpce = 0x00b3, .gmp = 0x0000, .curr = 0x0018,
 	}, {
-		.mpixelclock = 65000,
+		.mpixelclock = 65000000,
 		.cpce = 0x0072, .gmp = 0x0001, .curr = 0x0028,
 	}, {
-		.mpixelclock = 66000,
+		.mpixelclock = 66000000,
 		.cpce = 0x013e, .gmp = 0x0003, .curr = 0x0038,
 	}, {
-		.mpixelclock = 83500,
+		.mpixelclock = 83500000,
 		.cpce = 0x0072, .gmp = 0x0001, .curr = 0x0028,
 	}, {
-		.mpixelclock = 146250,
+		.mpixelclock = 146250000,
 		.cpce = 0x0051, .gmp = 0x0002, .curr = 0x0038,
 	}, {
-		.mpixelclock = 148500,
+		.mpixelclock = 148500000,
 		.cpce = 0x0051, .gmp = 0x0003, .curr = 0x0000,
 	}, {
 		.mpixelclock = ~0ul,
@@ -124,16 +124,10 @@ static const struct hdmi_mpll_config rockchip_mpll_cfg[] = {
 	}
 };
 
-static const u32 csc_coeff_default[3][4] = {
-	{ 0x2000, 0x0000, 0x0000, 0x0000 },
-	{ 0x0000, 0x2000, 0x0000, 0x0000 },
-	{ 0x0000, 0x0000, 0x2000, 0x0000 }
-};
-
 static void hdmi_set_clock_regenerator(struct rk3288_hdmi *regs, u32 n, u32 cts)
 {
-	u8 cts3;
-	u8 n3;
+	uint cts3;
+	uint n3;
 
 	/* first set ncts_atomic_write (if present) */
 	n3 = HDMI_AUD_N3_NCTS_ATOMIC_WRITE;
@@ -199,7 +193,7 @@ static void hdmi_audio_set_samplerate(struct rk3288_hdmi *regs, u32 pixel_clk)
 static void hdmi_video_sample(struct rk3288_hdmi *regs)
 {
 	u32 color_format = 0x01;
-	u8 val;
+	uint val;
 
 	val = HDMI_TX_INVID0_INTERNAL_DE_GENERATOR_DISABLE |
 	      ((color_format << HDMI_TX_INVID0_VIDEO_MAPPING_OFFSET) &
@@ -220,43 +214,12 @@ static void hdmi_video_sample(struct rk3288_hdmi *regs)
 	writel(0x0, &regs->tx_bcbdata1);
 }
 
-static void hdmi_update_csc_coeffs(struct rk3288_hdmi *regs)
-{
-	u32 i, j;
-	u32 csc_scale = 1;
-
-	/* the csc registers are sequential, alternating msb then lsb */
-	for (i = 0; i < ARRAY_SIZE(csc_coeff_default); i++) {
-		for (j = 0; j < ARRAY_SIZE(csc_coeff_default[0]); j++) {
-			u32 coeff = csc_coeff_default[i][j];
-			writel(coeff >> 8, &regs->csc_coef[i][j].msb);
-			writel(coeff && 0xff, &regs->csc_coef[i][j].lsb);
-		}
-	}
-
-	clrsetbits_le32(&regs->csc_scale, HDMI_CSC_SCALE_CSCSCALE_MASK,
-			csc_scale);
-}
-
-static void hdmi_video_csc(struct rk3288_hdmi *regs)
-{
-	u32 color_depth = HDMI_CSC_SCALE_CSC_COLORDE_PTH_24BPP;
-	u32 interpolation = HDMI_CSC_CFG_INTMODE_DISABLE;
-
-	/* configure the csc registers */
-	writel(interpolation, &regs->csc_cfg);
-	clrsetbits_le32(&regs->csc_scale,
-			HDMI_CSC_SCALE_CSC_COLORDE_PTH_MASK, color_depth);
-
-	hdmi_update_csc_coeffs(regs);
-}
-
 static void hdmi_video_packetize(struct rk3288_hdmi *regs)
 {
 	u32 output_select = HDMI_VP_CONF_OUTPUT_SELECTOR_BYPASS;
 	u32 remap_size = HDMI_VP_REMAP_YCC422_16BIT;
 	u32 color_depth = 0;
-	u8 val, vp_conf;
+	uint val, vp_conf;
 
 	/* set the packetizer registers */
 	val = ((color_depth << HDMI_VP_PR_CD_COLOR_DEPTH_OFFSET) &
@@ -297,7 +260,7 @@ static void hdmi_video_packetize(struct rk3288_hdmi *regs)
 			output_select);
 }
 
-static inline void hdmi_phy_test_clear(struct rk3288_hdmi *regs, u8 bit)
+static inline void hdmi_phy_test_clear(struct rk3288_hdmi *regs, uint bit)
 {
 	clrsetbits_le32(&regs->phy_tst0, HDMI_PHY_TST0_TSTCLR_MASK,
 			bit << HDMI_PHY_TST0_TSTCLR_OFFSET);
@@ -382,7 +345,7 @@ static void hdmi_phy_sel_interface_control(struct rk3288_hdmi *regs,
 static int hdmi_phy_configure(struct rk3288_hdmi *regs, u32 mpixelclock)
 {
 	ulong start;
-	u8 i, val;
+	uint i, val;
 
 	writel(HDMI_MC_FLOWCTRL_FEED_THROUGH_OFF_CSC_BYPASS,
 	       &regs->mc_flowctrl);
@@ -467,7 +430,6 @@ static int hdmi_phy_init(struct rk3288_hdmi *regs, uint mpixelclock)
 		hdmi_phy_enable_tmds(regs, 0);
 		hdmi_phy_enable_power(regs, 0);
 
-		/* enable csc */
 		ret = hdmi_phy_configure(regs, mpixelclock);
 		if (ret) {
 			debug("hdmi phy config failure %d\n", ret);
@@ -481,8 +443,8 @@ static int hdmi_phy_init(struct rk3288_hdmi *regs, uint mpixelclock)
 static void hdmi_av_composer(struct rk3288_hdmi *regs,
 			     const struct display_timing *edid)
 {
-	u8 mdataenablepolarity = 1;
-	u8 inv_val;
+	bool mdataenablepolarity = true;
+	uint inv_val;
 	uint hbl;
 	uint vbl;
 
@@ -553,7 +515,7 @@ static void hdmi_av_composer(struct rk3288_hdmi *regs,
 /* hdmi initialization step b.4 */
 static void hdmi_enable_video_path(struct rk3288_hdmi *regs)
 {
-	u8 clkdis;
+	uint clkdis;
 
 	/* control period minimum duration */
 	writel(12, &regs->fc_ctrldur);
@@ -580,7 +542,7 @@ static void hdmi_enable_video_path(struct rk3288_hdmi *regs)
 /* workaround to clear the overflow condition */
 static void hdmi_clear_overflow(struct rk3288_hdmi *regs)
 {
-	u8 val, count;
+	uint val, count;
 
 	/* tmds software reset */
 	writel((u8)~HDMI_MC_SWRSTZ_TMDSSWRST_REQ, &regs->mc_swrstz);
@@ -614,7 +576,7 @@ static void hdmi_audio_fifo_reset(struct rk3288_hdmi *regs)
 
 static void hdmi_init_interrupt(struct rk3288_hdmi *regs)
 {
-	u8 ih_mute;
+	uint ih_mute;
 
 	/*
 	 * boot up defaults are:
@@ -650,11 +612,11 @@ static void hdmi_init_interrupt(struct rk3288_hdmi *regs)
 	writel(HDMI_IH_PHY_STAT0_HPD, &regs->ih_phy_stat0);
 }
 
-static u8 hdmi_get_plug_in_status(struct rk3288_hdmi *regs)
+static int hdmi_get_plug_in_status(struct rk3288_hdmi *regs)
 {
-	u8 val = readl(&regs->phy_stat0) & HDMI_PHY_HPD;
+	uint val = readl(&regs->phy_stat0) & HDMI_PHY_HPD;
 
-	return !!(val);
+	return !!val;
 }
 
 static int hdmi_wait_for_hpd(struct rk3288_hdmi *regs)
@@ -753,7 +715,7 @@ static int hdmi_read_edid(struct rk3288_hdmi *regs, int block, u8 *buff)
 	return edid_read_err;
 }
 
-static u8 pre_buf[] = {
+static const u8 pre_buf[] = {
 	0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00,
 	0x04, 0x69, 0xfa, 0x23, 0xc8, 0x28, 0x01, 0x00,
 	0x10, 0x17, 0x01, 0x03, 0x80, 0x33, 0x1d, 0x78,
@@ -837,7 +799,6 @@ static int rk_hdmi_enable(struct udevice *dev, int panel_bpp,
 	hdmi_audio_set_samplerate(regs, edid->pixelclock.typ);
 
 	hdmi_video_packetize(regs);
-	hdmi_video_csc(regs);
 	hdmi_video_sample(regs);
 
 	hdmi_clear_overflow(regs);
@@ -870,7 +831,7 @@ static int rk_hdmi_probe(struct udevice *dev)
 		clk_free(&clk);
 	}
 	if (ret) {
-		debug("%s: Failed to set EDP clock: ret=%d\n", __func__, ret);
+		debug("%s: Failed to set hdmi clock: ret=%d\n", __func__, ret);
 		return ret;
 	}
 
@@ -899,7 +860,8 @@ static int rk_hdmi_probe(struct udevice *dev)
 	rk_setreg(&priv->grf->soc_con6, 1 << 15);
 
 	/* hdmi data from vop id */
-	rk_setreg(&priv->grf->soc_con6, (vop_id == 1) ? (1 << 4) : (1 << 4));
+	rk_clrsetreg(&priv->grf->soc_con6, 1 << 4,
+		     (vop_id == 1) ? (1 << 4) : 0);
 
 	ret = hdmi_wait_for_hpd(priv->regs);
 	if (ret < 0) {

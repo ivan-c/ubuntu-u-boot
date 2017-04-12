@@ -17,9 +17,6 @@
 #ifndef __CONFIG_TI_OMAP5_COMMON_H
 #define __CONFIG_TI_OMAP5_COMMON_H
 
-/* Common ARM Erratas */
-#define CONFIG_ARM_ERRATA_798870
-
 /* Use General purpose timer 1 */
 #define CONFIG_SYS_TIMERBASE		GPT2_BASE
 
@@ -45,7 +42,7 @@
  * Hardware drivers
  */
 #define CONFIG_SYS_NS16550_CLK		48000000
-#if defined(CONFIG_SPL_BUILD) || !defined(CONFIG_DM_SERIAL)
+#if !defined(CONFIG_DM_SERIAL)
 #define CONFIG_SYS_NS16550_SERIAL
 #define CONFIG_SYS_NS16550_REG_SIZE	(-4)
 #endif
@@ -65,6 +62,7 @@
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	DEFAULT_LINUX_BOOT_ENV \
 	DEFAULT_MMC_TI_ARGS \
+	DEFAULT_FIT_TI_ARGS \
 	"console=" CONSOLEDEV ",115200n8\0" \
 	"fdtfile=undefined\0" \
 	"bootpart=0:2\0" \
@@ -75,20 +73,6 @@
 	"partitions=" PARTS_DEFAULT "\0" \
 	"optargs=\0" \
 	"dofastboot=0\0" \
-	"loadbootscript=fatload mmc ${mmcdev} ${loadaddr} boot.scr\0" \
-	"bootscript=echo Running bootscript from mmc${mmcdev} ...; " \
-		"source ${loadaddr}\0" \
-	"loadimage=load mmc ${bootpart} ${loadaddr} ${bootdir}/${bootfile}\0" \
-	"mmcboot=mmc dev ${mmcdev}; " \
-		"if mmc rescan; then " \
-			"echo SD/MMC found on device ${mmcdev};" \
-			"if run loadimage; then " \
-				"run loadfdt; " \
-				"echo Booting from mmc${mmcdev} ...; " \
-				"run args_mmc; " \
-				"bootz ${loadaddr} - ${fdtaddr}; " \
-			"fi;" \
-		"fi;\0" \
 	"findfdt="\
 		"if test $board_name = omap5_uevm; then " \
 			"setenv fdtfile omap5-uevm.dtb; fi; " \
@@ -98,15 +82,22 @@
 			"setenv fdtfile dra72-evm-revc.dtb; fi;" \
 		"if test $board_name = dra72x; then " \
 			"setenv fdtfile dra72-evm.dtb; fi;" \
+		"if test $board_name = dra71x; then " \
+			"setenv fdtfile dra71-evm.dtb; fi;" \
 		"if test $board_name = beagle_x15; then " \
 			"setenv fdtfile am57xx-beagle-x15.dtb; fi;" \
+		"if test $board_name = beagle_x15_revb1; then " \
+			"setenv fdtfile am57xx-beagle-x15-revb1.dtb; fi;" \
 		"if test $board_name = am572x_idk; then " \
 			"setenv fdtfile am572x-idk.dtb; fi;" \
 		"if test $board_name = am57xx_evm; then " \
 			"setenv fdtfile am57xx-beagle-x15.dtb; fi;" \
+		"if test $board_name = am57xx_evm_reva3; then " \
+			"setenv fdtfile am57xx-beagle-x15.dtb; fi;" \
+		"if test $board_name = am571x_idk; then " \
+			"setenv fdtfile am571x-idk.dtb; fi;" \
 		"if test $fdtfile = undefined; then " \
 			"echo WARNING: Could not determine device tree to use; fi; \0" \
-	"loadfdt=load mmc ${bootpart} ${fdtaddr} ${bootdir}/${fdtfile};\0" \
 	DFUARGS \
 	NETARGS \
 
@@ -114,8 +105,12 @@
 	"if test ${dofastboot} -eq 1; then " \
 		"echo Boot fastboot requested, resetting dofastboot ...;" \
 		"setenv dofastboot 0; saveenv;" \
-		"echo Booting into fastboot ...; fastboot 0;" \
+		"echo Booting into fastboot ...; " \
+		"fastboot " __stringify(CONFIG_FASTBOOT_USB_DEV) "; " \
 	"fi;" \
+	"if test ${boot_fit} -eq 1; then "	\
+		"run update_to_fit;"	\
+	"fi;"	\
 	"run findfdt; " \
 	"run envboot; " \
 	"run mmcboot;" \
@@ -157,7 +152,7 @@
 #define CONFIG_SPL_TEXT_BASE	0x40300000
 #endif
 
-#define CONFIG_SPL_LDSCRIPT "$(CPUDIR)/omap-common/u-boot-spl.lds"
+#define CONFIG_SPL_LDSCRIPT "arch/arm/mach-omap2/u-boot-spl.lds"
 #define CONFIG_SYS_SPL_ARGS_ADDR	(CONFIG_SYS_SDRAM_BASE + \
 					 (128 << 20))
 
@@ -165,14 +160,8 @@
 #define CONFIG_SPL_NAND_AM33XX_BCH	/* ELM support */
 #endif
 
-/*
- * Disable MMC DM for SPL build and can be re-enabled after adding
- * DM support in SPL
- */
 #ifdef CONFIG_SPL_BUILD
-#undef CONFIG_DM_MMC
 #undef CONFIG_TIMER
-#undef CONFIG_DM_ETH
 #endif
 
 #endif /* __CONFIG_TI_OMAP5_COMMON_H */
