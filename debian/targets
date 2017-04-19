@@ -9,15 +9,15 @@ armel	-		dreamplug	u-boot.kwb
 armel	-		guruplug	u-boot.kwb
 
 # Albert ARIBAUD <albert.u.boot@aribaud.net>
-armel  -               openrd_base u-boot.kwb
+armel  -        openrd_base u-boot.kwb
 
 # Rick Thomas <rbthomas@rcthomas.org>
 # Albert ARIBAUD <albert.u.boot@aribaud.net>
-armel  -               openrd_client u-boot.kwb
+armel  -        openrd_client u-boot.kwb
 
 # Rick Thomas <rbthomas@rcthomas.org>
 # Philip Hands <phil@hands.com>
-armel  -               openrd_ultimate u-boot.kwb
+armel  -        openrd_ultimate u-boot.kwb
 
 # Vagrant Cascadian <vagrant@debian.org>, rpi B 256M
 armel	rpi		rpi		u-boot.bin
@@ -59,9 +59,6 @@ armhf	imx		usbarmory	u-boot.imx
 # Vagrant Cascadian <vagrant@debian.org>
 # Robert Nelson <robertcnelson@gmail.com>
 armhf	imx		wandboard	u-boot.img spl/u-boot-spl.bin SPL
-
-# Ian Campbell <ijc@debian.org>
-armhf	tegra		jetson-tk1	u-boot-tegra.bin
 
 # Vagrant Cascadian <vagrant@debian.org>
 # Andrew M.A. Cater <amacater@galactic.demon.co.uk>
@@ -163,6 +160,12 @@ armhf	sunxi		orangepi_plus	u-boot-sunxi-with-spl.bin
 
 # Mateusz Łukasik <mati75@linuxmint.pl>, Orange PI Zero
 armhf	sunxi		orangepi_zero	u-boot-sunxi-with-spl.bin
+
+# Ian Campbell <ijc@debian.org>
+armhf	tegra		jetson-tk1	u-boot-tegra.bin
+
+# Vagrant Cascadian <vagrant@debian.org>
+arm64	amlogic		odroid-c2	u-boot.bin
 
 # Ricardo Salveti <rsalveti@rsalveti.net>
 arm64	qcom		dragonboard410c	u-boot.bin
