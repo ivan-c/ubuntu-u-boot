@@ -2,7 +2,6 @@ add-debian-revision-to-u-boot-version
 mipsel-native-endianness.diff
 no-force-CROSS_COMPILE-powerpc.diff
 tools-generic-builds.patch
-tools-only-in-no-dot-config-targets.diff
 Makefile-add-kwb-target-to-all.patch
 hurd.diff
 
@@ -29,3 +28,7 @@ odroid-xu3/bootdelay
 odroid-xu3/877074-u-boot-exynos-Default-environment-for-Odr.patch
 
 firefly/fdtfile
+
+test-imagetools-test-fixes
+
+upstream/0001-ARM-imx6-Adjust-DDR-DRAM-settings-on-DHCOM-i.MX6-PDK.patch
