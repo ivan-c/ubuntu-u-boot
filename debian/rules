@@ -31,25 +31,18 @@ override_dh_auto_build:
 		case $$platform in \
 			mx6cuboxi4x4) \
 				cp configs/mx6cuboxi_defconfig configs/mx6cuboxi4x4_defconfig;\
-				echo CONFIG_I4X4_RAM=y >> configs/mx6cuboxi4x4;\
+				echo CONFIG_I4X4_RAM=y >> configs/mx6cuboxi4x4_defconfig ;\
 				targets="$$targets" ;\
 				maketargets="$$targets" ;\
 				;; \
 			*) \
-				targets="$$targets uboot.elf" ;\
+				targets="$$targets" ;\
 				maketargets="all" ;\
 				;; \
 		esac; \
 		mkdir -p $$builddir; \
 		$(MAKE) O=$$builddir $${platform}_defconfig; \
 		$(MAKE) $(DEB_UBOOT_FLAGS) O=$$builddir $${maketargets}; \
-		case "$$targets" in \
-			*uboot.elf*) \
-				install -m 644 $$builddir/u-boot $$builddir/uboot.elf; \
-				$(CROSS_COMPILE)strip --remove-section=.comment \
-					$$builddir/uboot.elf; \
-				;; \
-		esac; \
 		for target in $$targets; do \
 			chmod -x $$builddir/$$target; \
 			echo $$builddir/$$target /usr/lib/u-boot/$$platform/ \
@@ -74,7 +67,7 @@ override_dh_auto_build:
 	done
 
 	# Load dummy config
-	touch configs/tools_defconfig
+	echo CONFIG_SYS_TEXT_BASE=0 > configs/tools_defconfig
 	$(MAKE) O=$(TOOLSDIR) CROSS_COMPILE=$(CROSS_COMPILE) tools_defconfig
 	# board-independent tools
 	$(MAKE) O=$(TOOLSDIR) $(DEB_UBOOT_FLAGS) \

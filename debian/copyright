@@ -114,8 +114,7 @@ Files:
  drivers/tpm/tpm_atmel_twi.c
  drivers/gpio/tca642x.c
  include/splash.h
- include/fdt.h
- include/libfdt.h
+ include/linux/libfdt.h
  include/configs/controlcenterd.h
  include/configs/mxs.h
  include/configs/T1040QDS.h
@@ -161,6 +160,7 @@ Copyright: Clint Adams <clint@debian.org>
  Per Andersson <avtobiff@gmail.com>
  Vagrant Cascadian <vagrant@debian.org>
  Loïc Minier <lool@debian.org>
+ Adam Borowski <kilobyte@angband.pl>
 License: GPL-2+
 
 Files: fs/yaffs2/yaffs_allocator.h
@@ -228,8 +228,7 @@ Copyright: 2008 Pieter Voorthuijsen <pieter.voorthuijsen@prodrive.nl>
  2009 Robin Getz <rgetz@blackfin.uclinux.org>]
 License: Beerware
 
-Files: include/libfdt.h
- include/fdt.h
+Files: scripts/dtc/libfdt/*
 Copyright: 2006 David Gibson, IBM Corporation
  2012 Kim Phillips, Freescale Semiconductor
 License: libfdt-BSD-GPL
