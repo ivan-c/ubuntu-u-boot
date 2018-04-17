@@ -40,6 +40,12 @@ override_dh_auto_build:
 				maketargets="all" ;\
 				;; \
 		esac; \
+		case $$subarch in \
+			-) subpackage="u-boot" ;\
+				;; \
+			*) subpackage="u-boot-$$subarch" ;\
+				;; \
+		esac;\
 		mkdir -p $$builddir; \
 		$(MAKE) O=$$builddir $${platform}_defconfig; \
 		$(MAKE) $(DEB_UBOOT_FLAGS) O=$$builddir $${maketargets}; \
@@ -56,7 +62,10 @@ override_dh_auto_build:
 				>> debian/build/targets.$$subarch; \
 			echo $$platform >> debian/build/platforms.$$subarch; \
 		done ; \
-	        case $${subarch} in \
+		cp $$builddir/.config $$builddir/config.$$platform; \
+		echo $$builddir/config.$$platform /usr/share/doc/$$subpackage/configs/ \
+			>> debian/build/targets.$$subarch; \
+	    case $${subarch} in \
 		rockchip) \
 			debian/bin/generate-rksd $$builddir $$platform $$subarch; \
 			;; \
@@ -69,6 +78,7 @@ override_dh_auto_build:
 	# Load dummy config
 	echo CONFIG_SYS_TEXT_BASE=0 > configs/tools_defconfig
 	$(MAKE) O=$(TOOLSDIR) CROSS_COMPILE=$(CROSS_COMPILE) tools_defconfig
+	cp $(TOOLSDIR)/.config $(TOOLSDIR)/config
 	# board-independent tools
 	$(MAKE) O=$(TOOLSDIR) $(DEB_UBOOT_FLAGS) \
 		CROSS_COMPILE=$(CROSS_COMPILE) \
