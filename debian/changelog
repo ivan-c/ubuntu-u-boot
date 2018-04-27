@@ -1,3 +1,14 @@
+u-boot (2018.03+dfsg1-2ubuntu1) cosmic; urgency=low
+
+  * Merge from Debian unstable.  Remaining changes:
+    - rpi-import-mkknlimg.patch import tools/mkknlimg from Xenial/raspi2 -
+      scripts/mkknlimg @ 83a3ebb
+  * debian/patches/rpi2-rpi3-config-tweaks.patch: basing on the earlier
+    rpi2-config-tweaks.patch, make configuration adjustments to the rpi2 and
+    rpi3 configs.
+
+ -- Łukasz 'sil2100' Zemczak <lukasz.zemczak@ubuntu.com>  Fri, 27 Apr 2018 12:38:24 +0100
+
 u-boot (2018.03+dfsg1-2) unstable; urgency=medium
 
   [ Riku Voipio ]
@@ -474,6 +485,26 @@ u-boot (2016.05~rc3+dfsg1-1) experimental; urgency=medium
 
  -- Vagrant Cascadian <vagrant@debian.org>  Sat, 30 Apr 2016 18:53:04 -0700
 
+u-boot (2016.03+dfsg1-6ubuntu2) zesty; urgency=medium
+
+  * From upstream u-boot: (LP: #1636838)
+    - debian/patches/rpi-import-mkknlimg.patch: import tools/mkknlimg from
+      Xenial/raspi2 - scripts/mkknlimg @ 83a3ebb
+    - debian/u-boot-rpi.postinst: pass u-boot.bin through mkknlimg before
+      installing it as /boot/firmware/uboot.bin
+    - debian/patches/serial-pl01x-Add-support-for-devices-with-the-rate-p.patch:
+      Skip serial clock initialization when it's done by the firmware.
+
+ -- Paolo Pisati <paolo.pisati@canonical.com>  Wed, 09 Nov 2016 17:09:29 +0200
+
+u-boot (2016.03+dfsg1-6ubuntu1) yakkety; urgency=low
+
+  * Merge from Debian unstable.  Remaining changes:
+    - debian/patches/rpi2-config-tweaks.patch: configuration adjustments
+      to the RPi2 config.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Wed, 06 Jul 2016 17:30:44 -0700
+
 u-boot (2016.03+dfsg1-6) unstable; urgency=medium
 
   [ Vagrant Cascadian ]
@@ -494,6 +525,14 @@ u-boot (2016.03+dfsg1-6) unstable; urgency=medium
     tracking down the patch!
 
  -- Vagrant Cascadian <vagrant@debian.org>  Tue, 28 Jun 2016 09:38:27 +0200
+
+u-boot (2016.03+dfsg1-5ubuntu1) yakkety; urgency=low
+
+  * Merge from Debian unstable.  Remaining changes:
+    - debian/patches/rpi2-config-tweaks.patch: configuration adjustments
+      to the RPi2 config.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Fri, 10 Jun 2016 21:46:33 -0700
 
 u-boot (2016.03+dfsg1-5) unstable; urgency=medium
 
@@ -519,6 +558,14 @@ u-boot (2016.03+dfsg1-5) unstable; urgency=medium
   * u-boot-tegra: Update README.Debian for Jetson TX1.
 
  -- Vagrant Cascadian <vagrant@debian.org>  Sun, 29 May 2016 14:29:59 -0700
+
+u-boot (2016.03+dfsg1-4ubuntu1) yakkety; urgency=low
+
+  * Merge from Debian unstable.  Remaining changes:
+    - debian/patches/rpi2-config-tweaks.patch: configuration adjustments
+      to the RPi2 config.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Tue, 26 Apr 2016 21:06:04 -0700
 
 u-boot (2016.03+dfsg1-4) unstable; urgency=medium
 
@@ -578,6 +625,14 @@ u-boot (2016.03~rc2+dfsg1-1) experimental; urgency=medium
 
  -- Vagrant Cascadian <vagrant@debian.org>  Tue, 16 Feb 2016 15:01:48 -0800
 
+u-boot (2016.01+dfsg1-2ubuntu1) xenial; urgency=low
+
+  * Merge from Debian unstable.  Remaining changes:
+    - debian/patches/rpi2-config-tweaks.patch: configuration adjustments
+      to the RPi2 config.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Thu, 11 Feb 2016 21:55:38 -0800
+
 u-boot (2016.01+dfsg1-2) unstable; urgency=medium
 
   * u-boot-omap:
@@ -590,6 +645,13 @@ u-boot (2016.01+dfsg1-2) unstable; urgency=medium
     works" from upstream.
 
  -- Vagrant Cascadian <vagrant@debian.org>  Mon, 08 Feb 2016 20:14:04 -0800
+
+u-boot (2016.01+dfsg1-1ubuntu1) xenial; urgency=medium
+
+  * debian/patches/rpi2-config-tweaks.patch: configuration adjustments
+    to the RPi2 config.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Tue, 02 Feb 2016 11:43:50 -0800
 
 u-boot (2016.01+dfsg1-1) unstable; urgency=medium
 
@@ -1653,3 +1715,4 @@ u-boot (2010.03-1) unstable; urgency=low
   * Initial packaging.  closes: #583605.
 
  -- Clint Adams <schizo@debian.org>  Fri, 28 May 2010 16:20:39 -0400
+
