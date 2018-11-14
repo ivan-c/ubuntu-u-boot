@@ -8,17 +8,6 @@ armel	-		dreamplug	u-boot.kwb
 # drEagle <drEagle@doukki.net>
 armel	-		guruplug	u-boot.kwb
 
-# Albert ARIBAUD <albert.u.boot@aribaud.net>
-armel  -        openrd_base u-boot.kwb
-
-# Rick Thomas <rbthomas@rcthomas.org>
-# Albert ARIBAUD <albert.u.boot@aribaud.net>
-armel  -        openrd_client u-boot.kwb
-
-# Rick Thomas <rbthomas@rcthomas.org>
-# Philip Hands <phil@hands.com>
-armel  -        openrd_ultimate u-boot.kwb
-
 # Vagrant Cascadian <vagrant@debian.org>, rpi B 256M
 armel	rpi		rpi		u-boot.bin
 
@@ -85,10 +74,6 @@ armhf	omap		omap3_pandora	u-boot.bin
 
 # Robert Nelson <robertcnelson@gmail.com>
 armhf	omap		omap4_panda	u-boot.img MLO
-
-# Emilio Pozuelo Monfort <pochu@debian.org>
-# Sjoerd Simons <sjoerd@debian.org>
-armhf	rockchip	firefly-rk3288		u-boot.bin spl/u-boot-spl.bin
 
 # Vagrant Cascadian <vagrant@debian.org>, Raspberry PI 2B
 armhf	rpi		rpi_2		u-boot.bin
@@ -182,8 +167,14 @@ arm64	qcom		dragonboard820c	u-boot.bin
 # Ryan Finnie <ryan@finnie.org>
 arm64	rpi		rpi_3		u-boot.bin
 
+# Rodrigo Exterckötter Tjäder <rodrigo@tjader.xyz>
+arm64	sunxi				a64-olinuxino	u-boot.bin spl/sunxi-spl.bin u-boot-nodtb.bin arch/arm/dts/sun50i-a64-olinuxino.dtb
+
 # Vagrant Cascadian <vagrant@debian.org>
 arm64	sunxi		pine64_plus	u-boot.bin spl/sunxi-spl.bin u-boot-nodtb.bin arch/arm/dts/sun50i-a64-pine64-plus.dtb arch/arm/dts/sun50i-a64-pine64.dtb
+
+# Vagrant Cascadian <vagrant@debian.org>
+arm64	sunxi		pinebook	u-boot.bin spl/sunxi-spl.bin u-boot-nodtb.bin arch/arm/dts/sun50i-a64-pinebook.dtb
 
 # Martin Michlmayr <tbm@cyrius.com>
 arm64	tegra		p2371-2180	u-boot.bin
