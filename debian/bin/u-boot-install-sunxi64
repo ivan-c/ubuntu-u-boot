@@ -1,6 +1,20 @@
 #!/bin/sh
 set -e
 
+dtmodel="/sys/firmware/devicetree/base/model"
+if [ -z "$TARGET" ] && [ -f "${dtmodel}" ]; then
+	case $(cat "${dtmodel}") in
+		Pinebook) TARGET="/usr/lib/u-boot/pinebook" ;;
+		Pine64+) TARGET="/usr/lib/u-boot/pine64_plus" ;;
+		"Olimex A64-Olinuxino") TARGET="/usr/lib/u-boot/a64-olinuxino/" ;;
+	esac
+fi
+
+atf="/usr/lib/arm-trusted-firmware/sun50i_a64/bl31.bin"
+if [ -z "$BL31" ] && [ -f "${atf}" ]; then
+	BL31="${atf}"
+fi
+
 TARGET=${TARGET:-"/usr/lib/u-boot/pine64_plus"}
 BL31=${BL31:-"/usr/lib/atf/sun50iw1p1/bl31.bin"}
 FIT_GENERATOR=${FIT_GENERATOR:-"mksunxi_fit_atf"}
@@ -13,6 +27,11 @@ case "$1" in
 	echo >&2 "$0: unknown option '$1'"
 	exit 1;;
 esac
+
+if [ -z "$(which mkimage)" ]; then
+	echo >&2 "$0: mkimage: command not found. Please install u-boot-tools."
+	exit 1
+fi
 
 DEV="$1"
 if [ -z "$DEV" ] || ! shift || [ -n "$*" ]; then
