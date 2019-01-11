@@ -1,3 +1,20 @@
+u-boot (2018.07~rc3+dfsg1-0ubuntu1) disco; urgency=medium
+
+  * New interim upstream release.
+    - We pull in an rc version because that's the u-boot version we use in
+      our current core18 images and we want to provide 'feature parity'.
+  * debian/control:
+    - Added missing build-deps bison and flex.
+  * debian/patches:
+    - Refresh am57xx/omap5_distro_bootcmd.
+    - Refreshed patches.
+    - Removed odroid-xu3/bootdelay which was applied upstream.
+    - Add lzo-to-lzno.patch to use gzip instead of lzo compression for FIT
+      images as lzop in Ubuntu is in universe. This should be temporary and
+      in the next releases ideally we should follow what Debian does.
+
+ -- Dave Jones <dave.jones@canonical.com>  Fri, 11 Jan 2019 16:43:27 +0000
+
 u-boot (2018.03+dfsg1-2ubuntu2) disco; urgency=medium
 
   * debian/u-boot-rpi.postinst:

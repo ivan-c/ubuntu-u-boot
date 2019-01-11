@@ -1,11 +1,9 @@
 Adds standardized variables, fdtfile, fdt_addr_r, ramdisk_addr_r and
 kernel_addr_r.
 
-Index: u-boot/include/configs/udoo.h
-===================================================================
---- u-boot.orig/include/configs/udoo.h
-+++ u-boot/include/configs/udoo.h
-@@ -74,6 +74,9 @@
+--- a/include/configs/udoo.h
++++ b/include/configs/udoo.h
+@@ -54,6 +54,9 @@
  	"initrd_high=0xffffffff\0" \
  	"fdt_file=undefined\0" \
  	"fdt_addr=0x18000000\0" \
@@ -15,7 +13,7 @@ Index: u-boot/include/configs/udoo.h
  	"boot_fdt=try\0" \
  	"ip_dyn=yes\0" \
  	"mmcdev=0\0" \
-@@ -146,8 +149,10 @@
+@@ -126,8 +129,10 @@
  		"fi;\0" \
  		"findfdt=" \
  			"if test $board_rev = MX6Q ; then " \

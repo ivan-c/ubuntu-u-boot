@@ -1,8 +1,7 @@
+// SPDX-License-Identifier: GPL-2.0+
 /*
  * (C) Copyright 2013
  * David Feng <fenghua@phytium.com.cn>
- *
- * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>
@@ -61,4 +60,11 @@ unsigned long usec2ticks(unsigned long usec)
 		ticks = ((usec / 10) * (get_tbclk() / 100000));
 
 	return ticks;
+}
+
+ulong timer_get_boot_us(void)
+{
+	u64 val = get_ticks() * 1000000;
+
+	return val / get_tbclk();
 }
