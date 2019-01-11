@@ -5,11 +5,9 @@ Description: Configuration adjustments to the RPi2 and RPi3 configs
  we're tweaking the config so it's as close as possible what's used in the
  rpi* gadgets.
 
-Index: u-boot-2018.03+dfsg1-2ubuntu1/include/configs/rpi.h
-===================================================================
---- u-boot-2018.03+dfsg1-2ubuntu1.orig/include/configs/rpi.h
-+++ u-boot-2018.03+dfsg1-2ubuntu1/include/configs/rpi.h
-@@ -14,6 +14,12 @@
+--- a/include/configs/rpi.h
++++ b/include/configs/rpi.h
+@@ -13,6 +13,12 @@
  #define CONFIG_SKIP_LOWLEVEL_INIT
  #endif
  
@@ -22,7 +20,7 @@ Index: u-boot-2018.03+dfsg1-2ubuntu1/include/configs/rpi.h
  /* Architecture, CPU, etc.*/
  #define CONFIG_ARCH_CPU_INIT
  
-@@ -74,9 +80,19 @@
+@@ -73,9 +79,19 @@
  #define CONFIG_SYS_CBSIZE		1024
  
  /* Environment */
@@ -43,30 +41,24 @@ Index: u-boot-2018.03+dfsg1-2ubuntu1/include/configs/rpi.h
  
  /* Shell */
  
-Index: u-boot-2018.03+dfsg1-2ubuntu1/configs/rpi_2_defconfig
-===================================================================
---- u-boot-2018.03+dfsg1-2ubuntu1.orig/configs/rpi_2_defconfig
-+++ u-boot-2018.03+dfsg1-2ubuntu1/configs/rpi_2_defconfig
-@@ -34,3 +34,4 @@ CONFIG_SYS_WHITE_ON_BLACK=y
+--- a/configs/rpi_2_defconfig
++++ b/configs/rpi_2_defconfig
+@@ -36,3 +36,4 @@
  CONFIG_CONSOLE_SCROLL_LINES=10
  CONFIG_PHYS_TO_BUS=y
  CONFIG_OF_LIBFDT_OVERLAY=y
 +CONFIG_SUPPORT_RAW_INITRD=y
-Index: u-boot-2018.03+dfsg1-2ubuntu1/configs/rpi_3_32b_defconfig
-===================================================================
---- u-boot-2018.03+dfsg1-2ubuntu1.orig/configs/rpi_3_32b_defconfig
-+++ u-boot-2018.03+dfsg1-2ubuntu1/configs/rpi_3_32b_defconfig
-@@ -36,3 +36,5 @@ CONFIG_SYS_WHITE_ON_BLACK=y
+--- a/configs/rpi_3_32b_defconfig
++++ b/configs/rpi_3_32b_defconfig
+@@ -39,3 +39,5 @@
  CONFIG_CONSOLE_SCROLL_LINES=10
  CONFIG_PHYS_TO_BUS=y
  CONFIG_OF_LIBFDT_OVERLAY=y
 +CONFIG_SUPPORT_RAW_INITRD=y
 +CONFIG_ENV_IS_IN_FAT=y
-Index: u-boot-2018.03+dfsg1-2ubuntu1/configs/rpi_3_defconfig
-===================================================================
---- u-boot-2018.03+dfsg1-2ubuntu1.orig/configs/rpi_3_defconfig
-+++ u-boot-2018.03+dfsg1-2ubuntu1/configs/rpi_3_defconfig
-@@ -36,3 +36,5 @@ CONFIG_SYS_WHITE_ON_BLACK=y
+--- a/configs/rpi_3_defconfig
++++ b/configs/rpi_3_defconfig
+@@ -39,3 +39,5 @@
  CONFIG_CONSOLE_SCROLL_LINES=10
  CONFIG_PHYS_TO_BUS=y
  CONFIG_OF_LIBFDT_OVERLAY=y

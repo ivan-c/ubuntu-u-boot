@@ -1,11 +1,9 @@
 Enable booting of zImage/vmlinuz and initrd without requiring the use of
 mkimage to create uImage/uInitrd.
 
-Index: u-boot/include/configs/nokia_rx51.h
-===================================================================
---- u-boot.orig/include/configs/nokia_rx51.h
-+++ u-boot/include/configs/nokia_rx51.h
-@@ -160,6 +160,9 @@
+--- a/include/configs/nokia_rx51.h
++++ b/include/configs/nokia_rx51.h
+@@ -144,6 +144,9 @@
  #define PART6_OFFS			0x004c0000
  #define PART6_MASK			0x00000000
  

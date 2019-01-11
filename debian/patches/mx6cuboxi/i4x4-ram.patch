@@ -8,11 +8,9 @@ Description: Add support for cubox i4x4
  Thanks to vagrantc for identifying the underlying change needed.
 Author: Peter Michael Green <plugwash@debian.org>
 
-Index: u-boot/board/solidrun/mx6cuboxi/mx6cuboxi.c
-===================================================================
---- u-boot.orig/board/solidrun/mx6cuboxi/mx6cuboxi.c
-+++ u-boot/board/solidrun/mx6cuboxi/mx6cuboxi.c
-@@ -568,6 +568,19 @@ static struct mx6_ddr3_cfg mem_ddr_4g =
+--- a/board/solidrun/mx6cuboxi/mx6cuboxi.c
++++ b/board/solidrun/mx6cuboxi/mx6cuboxi.c
+@@ -676,6 +676,19 @@
  	.trasmin = 3500,
  };
  
@@ -32,7 +30,7 @@ Index: u-boot/board/solidrun/mx6cuboxi/mx6cuboxi.c
  static void ccgr_init(void)
  {
  	struct mxc_ccm_reg *ccm = (struct mxc_ccm_reg *)CCM_BASE_ADDR;
-@@ -611,7 +624,11 @@ static void spl_dram_init(int width)
+@@ -719,7 +732,11 @@
  	if (is_cpu_type(MXC_CPU_MX6D))
  		mx6_dram_cfg(&sysinfo, &mx6q_1g_mmcd_calib, &mem_ddr_2g);
  	else if (is_cpu_type(MXC_CPU_MX6Q))
@@ -45,11 +43,9 @@ Index: u-boot/board/solidrun/mx6cuboxi/mx6cuboxi.c
  	else if (is_cpu_type(MXC_CPU_MX6DL))
  		mx6_dram_cfg(&sysinfo, &mx6dl_1g_mmcd_calib, &mem_ddr_2g);
  	else if (is_cpu_type(MXC_CPU_MX6SOLO))
-Index: u-boot/board/solidrun/mx6cuboxi/Kconfig
-===================================================================
---- u-boot.orig/board/solidrun/mx6cuboxi/Kconfig
-+++ u-boot/board/solidrun/mx6cuboxi/Kconfig
-@@ -9,4 +9,8 @@ config SYS_VENDOR
+--- a/board/solidrun/mx6cuboxi/Kconfig
++++ b/board/solidrun/mx6cuboxi/Kconfig
+@@ -9,4 +9,8 @@
  config SYS_CONFIG_NAME
  	default "mx6cuboxi"
  

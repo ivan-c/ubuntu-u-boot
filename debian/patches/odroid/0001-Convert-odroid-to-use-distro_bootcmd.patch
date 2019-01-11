@@ -7,11 +7,9 @@ Subject: [PATCH] Convert odroid to use distro_bootcmd.
  include/configs/odroid.h | 23 +++++++++++++++++++----
  1 file changed, 19 insertions(+), 4 deletions(-)
 
-Index: u-boot/include/configs/odroid.h
-===================================================================
---- u-boot.orig/include/configs/odroid.h
-+++ u-boot/include/configs/odroid.h
-@@ -42,8 +42,7 @@
+--- a/include/configs/odroid.h
++++ b/include/configs/odroid.h
+@@ -41,8 +41,7 @@
  
  /* Console configuration */
  
@@ -21,7 +19,7 @@ Index: u-boot/include/configs/odroid.h
  
  #define CONFIG_SYS_INIT_SP_ADDR	(CONFIG_SYS_LOAD_ADDR \
  					- GENERATED_GBL_DATA_SIZE)
-@@ -84,6 +83,20 @@
+@@ -83,6 +82,20 @@
  	"bl2 raw 0x1f 0x1d;" \
  	"tzsw raw 0x83f 0x138\0"
  
@@ -42,7 +40,7 @@ Index: u-boot/include/configs/odroid.h
  /*
   * Bootable media layout:
   * dev:    SD   eMMC(part boot)
-@@ -99,78 +112,8 @@
+@@ -98,78 +111,8 @@
   * 2.  ROOT:  -
  */
  #define CONFIG_EXTRA_ENV_SETTINGS \
@@ -123,11 +121,9 @@ Index: u-boot/include/configs/odroid.h
  
  /* GPT */
  
-Index: u-boot/configs/odroid_defconfig
-===================================================================
---- u-boot.orig/configs/odroid_defconfig
-+++ u-boot/configs/odroid_defconfig
-@@ -9,7 +9,7 @@ CONFIG_DISTRO_DEFAULTS=y
+--- a/configs/odroid_defconfig
++++ b/configs/odroid_defconfig
+@@ -9,7 +9,7 @@
  CONFIG_FIT=y
  CONFIG_FIT_VERBOSE=y
  CONFIG_USE_BOOTARGS=y
