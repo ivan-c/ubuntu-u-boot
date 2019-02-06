@@ -1,3 +1,9 @@
+u-boot (2018.07~rc3+dfsg1-0ubuntu2~18.10.1) cosmic; urgency=medium
+
+  * d/control: Add missing dependency on binutils (for strings) (LP: #1814930)
+
+ -- Dave Jones <dave.jones@canonical.com>  Wed, 06 Feb 2019 16:40:22 +0000
+
 u-boot (2018.07~rc3+dfsg1-0ubuntu1~18.10.1) cosmic; urgency=medium
 
   * Backport to cosmic (LP: #1805668).

@@ -178,7 +178,7 @@ Description: A boot loader for Raspberry PI systems
 Package: u-boot-tools
 Architecture: linux-any
 Multi-Arch: foreign
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, binutils
 Recommends: device-tree-compiler
 Breaks: uboot-envtools (<< 20081215-3~),
         uboot-mkimage (<= 0.4build1),
