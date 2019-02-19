@@ -38,7 +38,7 @@ armhf	imx		mx6cuboxi	u-boot.img SPL
 # Hector Oron <zumbi@debian.org>
 armhf	imx		nitrogen6q	u-boot.imx
 
-# Tony Mancill <tmancill@debian.org> 
+# Vagrant Cascadian <vagrant@debian.org>
 armhf	imx		novena		u-boot.img SPL
 
 # Michael Fladischer <michael@fladi.at>
@@ -160,27 +160,18 @@ armhf	sunxi		Sinovoip_BPI_M3	u-boot-sunxi-with-spl.bin
 # Ian Campbell <ijc@debian.org>
 armhf	tegra		jetson-tk1	u-boot-tegra.bin
 
+# Frederic Danis <frederic.danis@collabora.com>
+arm64	amlogic		libretech-cc	u-boot.bin
+
 # Vagrant Cascadian <vagrant@debian.org>
 arm64	amlogic		odroid-c2	u-boot.bin
+
+# Vagrant Cascadian <vagrant@debian.org>
+arm64	  mvebu		mvebu_espressobin-88f3720	u-boot.bin arch/arm/dts/armada-3720-espressobin.dtb
 
 # Riku Voipio <riku.voipio@linaro.org>
 arm64	qcom		dragonboard410c	u-boot.bin
 arm64	qcom		dragonboard820c	u-boot.bin
-
-# Ryan Finnie <ryan@finnie.org>
-arm64	rpi		rpi_3		u-boot.bin
-
-# Rodrigo Exterckötter Tjäder <rodrigo@tjader.xyz>
-arm64	sunxi				a64-olinuxino	u-boot.bin spl/sunxi-spl.bin u-boot-nodtb.bin arch/arm/dts/sun50i-a64-olinuxino.dtb
-
-# Vagrant Cascadian <vagrant@debian.org>
-arm64	sunxi		pine64_plus	u-boot.bin spl/sunxi-spl.bin u-boot-nodtb.bin arch/arm/dts/sun50i-a64-pine64-plus.dtb arch/arm/dts/sun50i-a64-pine64.dtb
-
-# Vagrant Cascadian <vagrant@debian.org>
-arm64	sunxi		pinebook	u-boot.bin spl/sunxi-spl.bin u-boot-nodtb.bin arch/arm/dts/sun50i-a64-pinebook.dtb
-
-# Martin Michlmayr <tbm@cyrius.com>
-arm64	tegra		p2371-2180	u-boot.bin
 
 # Vagrant Cascadian <vagrant@debian.org>
 arm64  rockchip        firefly-rk3399  u-boot.img u-boot.bin u-boot-nodtb.bin spl/u-boot-spl.bin arch/arm/dts/rk3399-firefly.dtb
@@ -188,8 +179,20 @@ arm64  rockchip        firefly-rk3399  u-boot.img u-boot.bin u-boot-nodtb.bin sp
 # Vagrant Cascadian <vagrant@debian.org>
 arm64  rockchip        puma-rk3399  u-boot.img u-boot.bin u-boot-nodtb.bin spl/u-boot-spl.bin arch/arm/dts/rk3399-puma-ddr1333.dtb arch/arm/dts/rk3399-puma-ddr1600.dtb arch/arm/dts/rk3399-puma-ddr1866.dtb
 
+# Ryan Finnie <ryan@finnie.org>
+arm64	rpi		rpi_3		u-boot.bin
+
+# Rodrigo Exterckötter Tjäder <rodrigo@tjader.xyz>
+arm64	sunxi		a64-olinuxino	u-boot.bin spl/sunxi-spl.bin u-boot-nodtb.bin arch/arm/dts/sun50i-a64-olinuxino.dtb
+
 # Vagrant Cascadian <vagrant@debian.org>
-arm64	  mvebu		mvebu_espressobin-88f3720	u-boot.bin arch/arm/dts/armada-3720-espressobin.dtb
+arm64	sunxi		pine64_plus	u-boot.bin spl/sunxi-spl.bin u-boot-nodtb.bin arch/arm/dts/sun50i-a64-pine64-plus.dtb arch/arm/dts/sun50i-a64-pine64.dtb
+
+# Vagrant Cascadian <vagrant@debian.org>
+arm64	sunxi		pinebook	u-boot.bin spl/sunxi-spl.bin u-boot-nodtb.bin arch/arm/dts/sun50i-a64-pinebook.dtb
+
+# Vagrant Cascadian <vagrant@debian.org>
+arm64	tegra		p2371-2180	u-boot.bin
 
 avr32	-		hammerhead	u-boot.img
 
