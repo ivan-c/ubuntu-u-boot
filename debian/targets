@@ -37,6 +37,9 @@ armhf	imx		mx53loco	u-boot.imx
 # Rick Thomas <rbthomas@pobox.com>, Cubox-i4x4, Cubox-i4PRO
 armhf	imx		mx6cuboxi	u-boot.img SPL
 
+# Martyn Welch <martyn.welch@collabora.com>
+armhf	imx		mx6qsabrelite	u-boot.imx
+
 # Hector Oron <zumbi@debian.org>
 armhf	imx		nitrogen6q	u-boot.imx
 
@@ -165,8 +168,15 @@ armhf	sunxi		Sinovoip_BPI_M3	u-boot-sunxi-with-spl.bin
 # Ian Campbell <ijc@debian.org>
 armhf	tegra		jetson-tk1	u-boot-tegra.bin
 
+# Neil Armstrong <narmstrong@baylibre.com>
+arm64	amlogic		khadas-vim	u-boot.bin
+arm64	amlogic		khadas-vim2	u-boot.bin
+
 # Frederic Danis <frederic.danis@collabora.com>
 arm64	amlogic		libretech-cc	u-boot.bin
+
+# Neil Armstrong <narmstrong@baylibre.com>
+arm64	amlogic		nanopi-k2	u-boot.bin
 
 # Vagrant Cascadian <vagrant@debian.org>
 arm64	amlogic		odroid-c2	u-boot.bin
