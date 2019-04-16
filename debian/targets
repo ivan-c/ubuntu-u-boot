@@ -60,6 +60,7 @@ armhf	imx		wandboard	u-boot.img SPL
 # Vagrant Cascadian <vagrant@debian.org>
 # Andrew M.A. Cater <amacater@galactic.demon.co.uk>
 armhf	omap		am335x_boneblack u-boot.img MLO
+armhf	omap		am335x_evm u-boot.img MLO
 
 # Vagrant Cascadian <vagrant@debian.org>
 armhf	omap		am57xx_evm	u-boot.img MLO
@@ -200,11 +201,17 @@ arm64	rpi		rpi_3		u-boot.bin
 # Rodrigo Exterckötter Tjäder <rodrigo@tjader.xyz>
 arm64	sunxi		a64-olinuxino	u-boot.bin spl/sunxi-spl.bin u-boot-nodtb.bin arch/arm/dts/sun50i-a64-olinuxino.dtb
 
+# Frederic Danis <frederic.danis@collabora.com>
+arm64	sunxi		orangepi_zero_plus2	u-boot.bin spl/sunxi-spl.bin u-boot-nodtb.bin arch/arm/dts/sun50i-h5-orangepi-zero-plus2.dtb
+
 # Vagrant Cascadian <vagrant@debian.org>
 arm64	sunxi		pine64_plus	u-boot.bin spl/sunxi-spl.bin u-boot-nodtb.bin arch/arm/dts/sun50i-a64-pine64-plus.dtb arch/arm/dts/sun50i-a64-pine64.dtb
 
 # Vagrant Cascadian <vagrant@debian.org>
 arm64	sunxi		pinebook	u-boot.bin spl/sunxi-spl.bin u-boot-nodtb.bin arch/arm/dts/sun50i-a64-pinebook.dtb
+
+# Jonas Smedegaard <dr@jones.dk>
+arm64	sunxi		teres_i		u-boot.bin spl/sunxi-spl.bin u-boot-nodtb.bin arch/arm/dts/sun50i-a64-teres-i.dtb
 
 # Vagrant Cascadian <vagrant@debian.org>
 arm64	tegra		p2371-2180	u-boot.bin
