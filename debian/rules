@@ -31,17 +31,29 @@ LDFLAGS := $(patsubst -Wl$(comma)%,%,$(LDFLAGS))
 	dh $@
 
 configs/novena-rawsd_defconfig:
-	sed -e 's,CONFIG_SPL_FAT_SUPPORT=y,# CONFIG_SPL_FAT_SUPPORT is not set,' \
+	sed -e 's,CONFIG_SPL_FS_FAT=y,# CONFIG_SPL_FS_FAT is not set,' \
 		configs/novena_defconfig > configs/novena-rawsd_defconfig
 
 configs/am335x_boneblack_defconfig:
 	sed -e 's,CONFIG_OF_LIST=.*,CONFIG_OF_LIST="am335x-evm am335x-boneblack",g' \
 		configs/am335x_evm_defconfig > configs/am335x_boneblack_defconfig
 
-override_dh_auto_build: TOOLSDIR := debian/build/tools
-override_dh_auto_build: configs/novena-rawsd_defconfig configs/am335x_boneblack_defconfig
-	set -e; sed -n 's/^$(DEB_HOST_ARCH)[[:space:]]\+//p' debian/targets \
-	    | while read subarch platform targets; do \
+override_dh_auto_build-arch: TOOLSDIR := debian/build/tools
+override_dh_auto_build-arch: TARGETARCH := $(DEB_HOST_ARCH)
+ifeq (,$(filter pkg.uboot.notools,$(DEB_BUILD_PROFILES)))
+override_dh_auto_build-arch: build-targets build-tools
+else
+override_dh_auto_build-arch: build-targets
+endif
+
+override_dh_auto_build-indep: TOOLSDIR := debian/build/tools
+override_dh_auto_build-indep: TARGETARCH := all
+override_dh_auto_build-indep: build-targets
+
+build-targets: configs/novena-rawsd_defconfig configs/am335x_boneblack_defconfig
+	echo run build-targets for $(TARGETARCH)
+	set -e; grep ^$(TARGETARCH)[^a-z0-9] debian/targets \
+	    | while read arch subarch platform targets; do \
 	        builddir=debian/build/$$platform; \
 		case $$platform in \
 			novena-rawsd) targets="$$targets" ;\
@@ -56,13 +68,24 @@ override_dh_auto_build: configs/novena-rawsd_defconfig configs/am335x_boneblack_
 			*) subpackage="u-boot-$$subarch" ;\
 				;; \
 		esac;\
+		case $$arch in \
+			all:armhf) export CROSS_COMPILE=arm-linux-gnueabihf- ;;\
+			all:arm64) export CROSS_COMPILE=aarch64-linux-gnu- ;;\
+			all:mips) export CROSS_COMPILE=mips-linux-gnu- ;;\
+			all:mipsel) export CROSS_COMPILE=mipsel-linux-gnu- ;;\
+			all:mips64el) export CROSS_COMPILE=mips64el-linux-gnuabi64- ;;\
+			all:riscv64) export CROSS_COMPILE=riscv64-linux-gnu- ;;\
+			all:i386) export CROSS_COMPILE=i686-linux-gnu- ;;\
+			all:amd64) export CROSS_COMPILE=x86_64-linux-gnu- ;;\
+			*) ;; \
+		esac;\
 		mkdir -p $$builddir; \
 		$(MAKE) V=$(VERBOSE) O=$$builddir $${platform}_defconfig; \
 		$(MAKE) V=$(VERBOSE) $(DEB_UBOOT_FLAGS) O=$$builddir $${maketargets}; \
 		case "$$targets" in \
 			*uboot.elf*) \
 				install -m 644 $$builddir/u-boot $$builddir/uboot.elf; \
-				$(CROSS_COMPILE)strip --remove-section=.comment \
+				$${CROSS_COMPILE}strip --remove-section=.comment \
 					--remove-section=.note \
 					$$builddir/uboot.elf; \
 				;; \
@@ -86,6 +109,7 @@ override_dh_auto_build: configs/novena-rawsd_defconfig configs/am335x_boneblack_
 	        esac; \
 	done
 
+build-tools:
 	# Load dummy config
 	echo CONFIG_SYS_TEXT_BASE=0 > configs/tools_defconfig
 	$(MAKE) V=$(VERBOSE) O=$(TOOLSDIR) CROSS_COMPILE=$(CROSS_COMPILE) tools_defconfig
@@ -110,8 +134,15 @@ override_dh_auto_build: configs/novena-rawsd_defconfig configs/am335x_boneblack_
 override_dh_auto_test:
 ifeq ($(DEB_BUILD_GNU_TYPE),$(DEB_HOST_GNU_TYPE))
 	# only run tests on native builds
-	BASEDIR=debian/build/tools test/image/test-imagetools.sh
+	if [ -e debian/build/tools/tools/mkimage ] ; then \
+		BASEDIR=debian/build/tools test/image/test-imagetools.sh ;\
+	fi
 endif
+
+override_dh_strip:
+	# dh_strip tries to strip the cross compiled qemu images, which doesn't
+	# work
+	dh_strip -X qemu
 
 override_dh_clean:
 	rm -rf debian/build/

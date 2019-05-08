@@ -11,14 +11,25 @@ Build-Depends:
  dpkg-dev (>= 1.17.14),
  flex,
  libfdt-dev:native [arm64],
- libc6:arm64 [arm64] <cross>,
- libc6:armhf [armhf] <cross>,
- libc6:armel [armel] <cross>,
- libpython-dev:native [armhf arm64],
- python:any [armhf arm64],
+ libc6:arm64 [arm64] <cross !pkg.uboot.notools>,
+ libc6:armhf [armhf] <cross !pkg.uboot.notools>,
+ libc6:armel [armel] <cross !pkg.uboot.notools>,
+ libc6:riscv64 [riscv64] <cross !pkg.uboot.notools>,
+ libpython-dev:native [linux-any],
+ python:any [linux-any],
  skales:native [arm64],
- swig [armhf arm64],
+ swig [linux-any],
  lzop [armhf] <!cross> | lzop:native [armhf] <cross>,
+Build-Depends-Indep:
+# For u-boot-qemu targets
+ gcc-i686-linux-gnu [!i386],
+ gcc-arm-linux-gnueabihf [!armhf],
+ gcc-aarch64-linux-gnu [!arm64],
+ gcc-mips-linux-gnu [!mips],
+ gcc-mips64el-linux-gnuabi64 [!mips64el],
+ gcc-mipsel-linux-gnu [!mipsel],
+ gcc-riscv64-linux-gnu [!riscv64],
+ gcc-x86-64-linux-gnu [!amd64],
 Standards-Version: 4.3.0
 Homepage: http://www.denx.de/wiki/U-Boot/
 Vcs-Browser: https://salsa.debian.org/debian/u-boot
@@ -28,7 +39,7 @@ Package: u-boot
 Architecture: armel armhf avr32 mips sh4
 Multi-Arch: same
 Depends: ${misc:Depends},
- u-boot-imx [armhf], u-boot-omap [armhf], u-boot-sunxi [armhf], u-boot-exynos [armhf]
+ u-boot-imx [armhf], u-boot-omap [armhf], u-boot-sunxi [armhf], u-boot-exynos [armhf], u-boot-qemu [mips]
 Description: A boot loader for embedded systems
  Das U-Boot is a cross-platform bootloader for embedded systems,
  used as the default boot loader by several board vendors.  It is
@@ -66,6 +77,21 @@ Description: A boot loader for imx systems
  NIOS, and Microblaze.
  .
  This package includes boot loaders for various imx platforms.
+ ${uboot:platforms}
+
+Package: u-boot-qemu
+Architecture: all
+Depends: ${misc:Depends}
+Breaks: u-boot (<< 2019.01+dfsg-2)
+Replaces: u-boot (<< 2019.01+dfsg-2)
+Description: A boot loader for qemu
+ Das U-Boot is a cross-platform bootloader for embedded systems,
+ used as the default boot loader by several board vendors.  It is
+ intended to be easy to port and to debug, and runs on many
+ supported architectures, including PPC, ARM, MIPS, x86, m68k,
+ NIOS, and Microblaze.
+ .
+ This package includes boot loaders for qemu/kvm.
  ${uboot:platforms}
 
 Package: u-boot-qcom
@@ -190,8 +216,24 @@ Description: A boot loader for Raspberry PI systems
  platforms.
  ${uboot:platforms}
 
+Package: u-boot-sifive
+Architecture: riscv64
+Multi-Arch: same
+Depends: ${misc:Depends}
+Description: A boot loader for SiFive systems
+ Das U-Boot is a cross-platform bootloader for embedded systems,
+ used as the default boot loader by several board vendors.  It is
+ intended to be easy to port and to debug, and runs on many
+ supported architectures, including PPC, ARM, MIPS, x86, m68k,
+ NIOS, and Microblaze.
+ .
+ This package includes boot loaders for various SiFive
+ platforms.
+ ${uboot:platforms}
+
 Package: u-boot-tools
 Architecture: linux-any
+Build-Profiles: <!pkg.uboot.notools>
 Multi-Arch: foreign
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Recommends: device-tree-compiler
