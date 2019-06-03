@@ -25,3 +25,7 @@ dreamplug/Commit-ARM-CPU-arm926ejs-Consolidate-cache-routines-.patch
 mkimage/0001-fdt-Fix-mkimage-list-to-try-every-header-type.patch
 
 sunxi/teres-i.patch
+
+rpi-import-mkknlimg.patch
+rpi2-rpi3-config-tweaks.patch
+lzo-to-lzno.patch

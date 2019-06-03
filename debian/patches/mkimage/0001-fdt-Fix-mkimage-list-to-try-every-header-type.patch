@@ -18,11 +18,9 @@ Tested-by: Vagrant Cascadian <vagrant@debian.org>
  tools/mkimage.c | 23 +++++++++++++++--------
  1 file changed, 15 insertions(+), 8 deletions(-)
 
-diff --git a/tools/mkimage.c b/tools/mkimage.c
-index 2899adff81..76c3406d37 100644
 --- a/tools/mkimage.c
 +++ b/tools/mkimage.c
-@@ -403,14 +403,21 @@ int main(int argc, char **argv)
+@@ -403,14 +403,21 @@
  			exit (EXIT_FAILURE);
  		}
  
@@ -52,6 +50,3 @@ index 2899adff81..76c3406d37 100644
  
  		(void) munmap((void *)ptr, sbuf.st_size);
  		(void) close (ifd);
--- 
-2.20.1
-

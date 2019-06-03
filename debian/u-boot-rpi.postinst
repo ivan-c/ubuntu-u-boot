@@ -1,0 +1,41 @@
+#!/bin/sh
+
+set -e
+
+case "$1" in
+  configure)
+    if ! ischroot; then
+      if ! mountpoint -q /boot/firmware; then
+        echo "Error: missing /boot/firmware, did you forget to mount it?" >&2
+        exit 1
+      fi
+    fi
+
+    # The u-boot-rpi package now ships more than just one u-boot binary.
+    # We need to determine which supported Pi platform we're running on and
+    # use the right uboot binary for the upgrade, defaulting to Pi 2 (as we
+    # did previously).
+    DEVICES="rpi_2"
+    if [ -e /proc/device-tree/model ] && grep -q "Pi 3" /proc/device-tree/model; then
+      DEVICES="rpi_3 rpi_3_32b"
+    fi
+    for device in $DEVICES; do
+      BIN_PATH=/usr/lib/u-boot/$device/u-boot.bin
+      if [ -f $BIN_PATH ]; then
+        # In case of Pi3 on arm64, the uboot binary needs to be named
+	# kernel8.img.
+	if [ "$device" = "rpi_3" ]; then
+          TARGET_BINARY="kernel8.img"
+	else
+          TARGET_BINARY="uboot.bin"
+        fi
+        mkknlimg --dtok --270x --283x $BIN_PATH /boot/firmware/$TARGET_BINARY
+        break
+      fi
+    done
+    ;;
+esac
+
+exit 0
+
+#DEBHELPER#

@@ -17,10 +17,8 @@ Forwarded: (not yet)
 Reviewed-By: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
 Last-Update: 2014-12-10
 
-Index: u-boot/arch/sh/config.mk
-===================================================================
---- u-boot.orig/arch/sh/config.mk
-+++ u-boot/arch/sh/config.mk
+--- a/arch/sh/config.mk
++++ b/arch/sh/config.mk
 @@ -4,7 +4,7 @@
  # Wolfgang Denk, DENX Software Engineering, wd@denx.de.
  

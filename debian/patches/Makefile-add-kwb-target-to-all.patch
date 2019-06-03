@@ -1,10 +1,8 @@
 Add u-boot.kwb to "make all" target on Kirkwood.
 
-Index: u-boot/Makefile
-===================================================================
---- u-boot.orig/Makefile
-+++ u-boot/Makefile
-@@ -799,6 +799,7 @@ ALL-$(CONFIG_SPL_FRAMEWORK) += u-boot.im
+--- a/Makefile
++++ b/Makefile
+@@ -830,6 +830,7 @@
  endif
  endif
  ALL-$(CONFIG_TPL) += tpl/u-boot-tpl.bin

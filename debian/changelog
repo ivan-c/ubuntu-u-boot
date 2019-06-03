@@ -1,3 +1,26 @@
+u-boot (2019.04+dfsg-2ubuntu1) eoan; urgency=medium
+
+  * Merge with 2019.04+dfsg-2 from Debian experimental. Remaining changes:
+    - d/p/rpi-import-mkknlimg.patch import tools/mkknlimg from Xenial/raspi2 -
+      scripts/mkknlimg @ 83a3ebb
+    - d/p/rpi2-rpi3-config-tweaks.patch: basing on the earlier
+      rpi2-config-tweaks.patch, make configuration adjustments to the rpi2 and
+      rpi3 configs.
+    - d/u-boot-rpi.postinst: support the fact that we now ship multiple uboot
+      binaries for multiple Pi platforms in one package. Try to determine
+      which device we're running on and use the right binary during
+      upgrade/installation. * debian/patches:
+    - d/p/lzo-to-lzno.patch: use gzip instead of lzo compression for FIT
+      images as lzop in Ubuntu is in universe. This should be temporary and in
+      the next releases ideally we should follow what Debian does.
+    - debian/control: Add missing dependency on binutils (for strings)
+      (LP: #1814930)
+    - debian/patches: Refreshed patches.
+  * Obsoleted; applied upstream:
+    - Removed d/p/odroid-xu3/bootdelay
+
+ -- Dave Jones <dave.jones@canonical.com>  Mon, 03 Jun 2019 14:41:23 +0000
+
 u-boot (2019.04+dfsg-2) experimental; urgency=medium
 
   [ Vagrant Cascadian ]
@@ -40,6 +63,47 @@ u-boot (2019.04+dfsg-1) experimental; urgency=medium
     with FIT images used in the wild, and breaks the test suite.
 
  -- Vagrant Cascadian <vagrant@debian.org>  Mon, 08 Apr 2019 23:35:43 -0700
+
+u-boot (2019.01+dfsg-7) unstable; urgency=medium
+
+  [ Sunil Mohan Adapa ]
+  * Enable pine64-lts target in u-boot-sunxi (Closes: #928947).
+
+  [ Vagrant Cascadian ]
+  * u-boot-omap: Enable am335x_evm target.
+  * Add patches to enable PocketBeagle in am335x_evm target.
+  * u-boot-omap: Fix instructions for installing beaglebone black.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Mon, 13 May 2019 19:07:44 -0700
+
+u-boot (2019.01+dfsg-6) unstable; urgency=medium
+
+  [ Domenico Andreoli ]
+  * Enable support for NanoPi NEO 2 in u-boot-sunxi (Closes: #928612).
+
+  [ Jonas Smedegaard ]
+  * Sync sunxi teres-i patch with mainline u-boot, enabling USB
+    support (Closes: #928815).
+
+  [ Vagrant Cascadian ]
+  * Apply patch from upstream fixing buffer overflow with ext4 filesystems
+    (CVE-2019-11059, Closes: #928800).
+  * Apply patch from upstream fixing randomly generated
+    UUIDs. (CVE-2019-11690, Closes: #928557).
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Sat, 11 May 2019 18:20:19 -0700
+
+u-boot (2019.01+dfsg-5) unstable; urgency=medium
+
+  [ Jonas Smedegaard ]
+  * Add patch cherry-picked upstream to add i2c initialization for sun50i.
+  * Add patch by Vasily Khoruzhick to support Olimex Teres-I DIY laptop.
+  * Enable teres_i target in u-boot-sunxi (Closes: #926040).
+
+  [ Frédéric Danis ]
+  * Enable orangepi_zero_plus2 target in u-boot-sunxi (Closes: #927224).
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Fri, 19 Apr 2019 16:43:08 -0700
 
 u-boot (2019.01+dfsg-4) unstable; urgency=medium
 
@@ -157,6 +221,29 @@ u-boot (2018.07+dfsg-1) experimental; urgency=medium
 
  -- Vagrant Cascadian <vagrant@debian.org>  Mon, 09 Jul 2018 13:34:06 -0700
 
+u-boot (2018.07~rc3+dfsg1-0ubuntu2) disco; urgency=medium
+
+  * d/control: Add missing dependency on binutils (for strings) (LP: #1814930)
+
+ -- Dave Jones <dave.jones@canonical.com>  Wed, 06 Feb 2019 16:40:22 +0000
+
+u-boot (2018.07~rc3+dfsg1-0ubuntu1) disco; urgency=medium
+
+  * New interim upstream release.
+    - We pull in an rc version because that's the u-boot version we use in
+      our current core18 images and we want to provide 'feature parity'.
+  * debian/control:
+    - Added missing build-deps bison and flex.
+  * debian/patches:
+    - Refresh am57xx/omap5_distro_bootcmd.
+    - Refreshed patches.
+    - Removed odroid-xu3/bootdelay which was applied upstream.
+    - Add lzo-to-lzno.patch to use gzip instead of lzo compression for FIT
+      images as lzop in Ubuntu is in universe. This should be temporary and
+      in the next releases ideally we should follow what Debian does.
+
+ -- Dave Jones <dave.jones@canonical.com>  Fri, 11 Jan 2019 16:43:27 +0000
+
 u-boot (2018.07~rc2+dfsg-1) experimental; urgency=medium
 
   * New upstream release candidate:
@@ -217,6 +304,26 @@ u-boot (2018.05~rc2+dfsg-1) experimental; urgency=medium
   * Install build configs to /usr/share/doc/*/configs.
 
  -- Vagrant Cascadian <vagrant@debian.org>  Tue, 17 Apr 2018 16:05:55 -0700
+
+u-boot (2018.03+dfsg1-2ubuntu2) disco; urgency=medium
+
+  * debian/u-boot-rpi.postinst:
+    - Support the fact that we now ship multiple uboot binaries for multiple
+      Pi platforms in one package. Try to determine which device we're running
+      on and use the right binary during upgrade/installation.
+
+ -- Łukasz 'sil2100' Zemczak <lukasz.zemczak@ubuntu.com>  Thu, 29 Nov 2018 01:16:07 +0100
+
+u-boot (2018.03+dfsg1-2ubuntu1) cosmic; urgency=low
+
+  * Merge from Debian unstable.  Remaining changes:
+    - rpi-import-mkknlimg.patch import tools/mkknlimg from Xenial/raspi2 -
+      scripts/mkknlimg @ 83a3ebb
+  * debian/patches/rpi2-rpi3-config-tweaks.patch: basing on the earlier
+    rpi2-config-tweaks.patch, make configuration adjustments to the rpi2 and
+    rpi3 configs.
+
+ -- Łukasz 'sil2100' Zemczak <lukasz.zemczak@ubuntu.com>  Fri, 27 Apr 2018 12:38:24 +0100
 
 u-boot (2018.03+dfsg1-2) unstable; urgency=medium
 
@@ -694,6 +801,26 @@ u-boot (2016.05~rc3+dfsg1-1) experimental; urgency=medium
 
  -- Vagrant Cascadian <vagrant@debian.org>  Sat, 30 Apr 2016 18:53:04 -0700
 
+u-boot (2016.03+dfsg1-6ubuntu2) zesty; urgency=medium
+
+  * From upstream u-boot: (LP: #1636838)
+    - debian/patches/rpi-import-mkknlimg.patch: import tools/mkknlimg from
+      Xenial/raspi2 - scripts/mkknlimg @ 83a3ebb
+    - debian/u-boot-rpi.postinst: pass u-boot.bin through mkknlimg before
+      installing it as /boot/firmware/uboot.bin
+    - debian/patches/serial-pl01x-Add-support-for-devices-with-the-rate-p.patch:
+      Skip serial clock initialization when it's done by the firmware.
+
+ -- Paolo Pisati <paolo.pisati@canonical.com>  Wed, 09 Nov 2016 17:09:29 +0200
+
+u-boot (2016.03+dfsg1-6ubuntu1) yakkety; urgency=low
+
+  * Merge from Debian unstable.  Remaining changes:
+    - debian/patches/rpi2-config-tweaks.patch: configuration adjustments
+      to the RPi2 config.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Wed, 06 Jul 2016 17:30:44 -0700
+
 u-boot (2016.03+dfsg1-6) unstable; urgency=medium
 
   [ Vagrant Cascadian ]
@@ -714,6 +841,14 @@ u-boot (2016.03+dfsg1-6) unstable; urgency=medium
     tracking down the patch!
 
  -- Vagrant Cascadian <vagrant@debian.org>  Tue, 28 Jun 2016 09:38:27 +0200
+
+u-boot (2016.03+dfsg1-5ubuntu1) yakkety; urgency=low
+
+  * Merge from Debian unstable.  Remaining changes:
+    - debian/patches/rpi2-config-tweaks.patch: configuration adjustments
+      to the RPi2 config.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Fri, 10 Jun 2016 21:46:33 -0700
 
 u-boot (2016.03+dfsg1-5) unstable; urgency=medium
 
@@ -739,6 +874,14 @@ u-boot (2016.03+dfsg1-5) unstable; urgency=medium
   * u-boot-tegra: Update README.Debian for Jetson TX1.
 
  -- Vagrant Cascadian <vagrant@debian.org>  Sun, 29 May 2016 14:29:59 -0700
+
+u-boot (2016.03+dfsg1-4ubuntu1) yakkety; urgency=low
+
+  * Merge from Debian unstable.  Remaining changes:
+    - debian/patches/rpi2-config-tweaks.patch: configuration adjustments
+      to the RPi2 config.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Tue, 26 Apr 2016 21:06:04 -0700
 
 u-boot (2016.03+dfsg1-4) unstable; urgency=medium
 
@@ -798,6 +941,14 @@ u-boot (2016.03~rc2+dfsg1-1) experimental; urgency=medium
 
  -- Vagrant Cascadian <vagrant@debian.org>  Tue, 16 Feb 2016 15:01:48 -0800
 
+u-boot (2016.01+dfsg1-2ubuntu1) xenial; urgency=low
+
+  * Merge from Debian unstable.  Remaining changes:
+    - debian/patches/rpi2-config-tweaks.patch: configuration adjustments
+      to the RPi2 config.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Thu, 11 Feb 2016 21:55:38 -0800
+
 u-boot (2016.01+dfsg1-2) unstable; urgency=medium
 
   * u-boot-omap:
@@ -810,6 +961,13 @@ u-boot (2016.01+dfsg1-2) unstable; urgency=medium
     works" from upstream.
 
  -- Vagrant Cascadian <vagrant@debian.org>  Mon, 08 Feb 2016 20:14:04 -0800
+
+u-boot (2016.01+dfsg1-1ubuntu1) xenial; urgency=medium
+
+  * debian/patches/rpi2-config-tweaks.patch: configuration adjustments
+    to the RPi2 config.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Tue, 02 Feb 2016 11:43:50 -0800
 
 u-boot (2016.01+dfsg1-1) unstable; urgency=medium
 
@@ -1873,3 +2031,4 @@ u-boot (2010.03-1) unstable; urgency=low
   * Initial packaging.  closes: #583605.
 
  -- Clint Adams <schizo@debian.org>  Fri, 28 May 2010 16:20:39 -0400
+
