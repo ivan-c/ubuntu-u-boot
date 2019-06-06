@@ -46,3 +46,4 @@ upstream/wandboard/0001-wandboard-fix-variable-name-so-PXE-boot-works.patch
 rpi2-config-tweaks.patch
 serial-pl01x-Add-support-for-devices-with-the-rate-p.patch
 rpi-import-mkknlimg.patch
+ubuntu-hardening-limit-keynames-to-keydir.patch

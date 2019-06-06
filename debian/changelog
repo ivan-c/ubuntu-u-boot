@@ -1,3 +1,14 @@
+u-boot (2016.01+dfsg1-2ubuntu4) xenial; urgency=low
+
+  * Enable FIT signing support (LP: #1831942)
+    - Fix configuration supply to tools to ensure CONFIG_FIT_SIGNATURE
+      is available to mkimage such that is compiled with FIT build and
+      sign support.
+    - Add libssl-dev to Build-Depends: to enable crypto functionality.
+    - Limit key names to keys within the keydir.
+
+ -- Andy Whitcroft <apw@ubuntu.com>  Thu, 06 Jun 2019 12:54:10 +0100
+
 u-boot (2016.01+dfsg1-2ubuntu3) xenial-security; urgency=medium
 
   * No-change rebuild to get last set of changes into the security

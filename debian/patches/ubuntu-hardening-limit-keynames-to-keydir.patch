@@ -1,0 +1,35 @@
+Description: limit keyname to prevent escape from keydir
+ Limit key names to keys within the keydir by refusing keynames containing
+ a slash.
+Author: Andy Whitcroft <apw@canonical.com>
+Last-Update: 2019-06-06
+---
+
+Index: u-boot-2016.01+dfsg1/lib/rsa/rsa-sign.c
+===================================================================
+--- u-boot-2016.01+dfsg1.orig/lib/rsa/rsa-sign.c
++++ u-boot-2016.01+dfsg1/lib/rsa/rsa-sign.c
+@@ -47,6 +47,11 @@ static int rsa_get_pub_key(const char *k
+ 	FILE *f;
+ 	int ret;
+ 
++	if (strchr(name, '/')) {
++		fprintf(stderr, "Invalid key name '%s': contains '/'\n", name);
++		return -EACCES;
++	}
++
+ 	*rsap = NULL;
+ 	snprintf(path, sizeof(path), "%s/%s.crt", keydir, name);
+ 	f = fopen(path, "r");
+@@ -109,6 +114,11 @@ static int rsa_get_priv_key(const char *
+ 	RSA *rsa;
+ 	FILE *f;
+ 
++	if (strchr(name, '/')) {
++		fprintf(stderr, "Invalid key name '%s': contains '/'\n", name);
++		return -EACCES;
++	}
++
+ 	*rsap = NULL;
+ 	snprintf(path, sizeof(path), "%s/%s.key", keydir, name);
+ 	f = fopen(path, "r");
