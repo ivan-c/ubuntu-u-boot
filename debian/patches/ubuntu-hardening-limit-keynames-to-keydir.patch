@@ -1,0 +1,53 @@
+Description: limit keyname to prevent escape from keydir
+ Limit key names to keys within the keydir by refusing keynames containing
+ a slash.
+Author: Andy Whitcroft <apw@canonical.com>
+Forwarded: no
+Last-Update: 2019-05-31
+
+---
+
+Index: u-boot-2018.07~rc3+dfsg1--clean/lib/rsa/rsa-sign.c
+===================================================================
+--- u-boot-2018.07~rc3+dfsg1--clean.orig/lib/rsa/rsa-sign.c
++++ u-boot-2018.07~rc3+dfsg1--clean/lib/rsa/rsa-sign.c
+@@ -61,6 +61,11 @@ static int rsa_pem_get_pub_key(const cha
+ 	FILE *f;
+ 	int ret;
+ 
++	if (strchr(name, '/')) {
++		fprintf(stderr, "Invalid key name '%s': contains '/' \n", name);
++		return -EACCES;
++	}
++
+ 	*rsap = NULL;
+ 	snprintf(path, sizeof(path), "%s/%s.crt", keydir, name);
+ 	f = fopen(path, "r");
+@@ -199,6 +204,11 @@ static int rsa_pem_get_priv_key(const ch
+ 	RSA *rsa;
+ 	FILE *f;
+ 
++	if (strchr(name, '/')) {
++		fprintf(stderr, "Invalid key name '%s': contains '/' \n", name);
++		return -EACCES;
++	}
++
+ 	*rsap = NULL;
+ 	snprintf(path, sizeof(path), "%s/%s.key", keydir, name);
+ 	f = fopen(path, "r");
+Index: u-boot-2018.07~rc3+dfsg1--clean/tools/kwbimage.c
+===================================================================
+--- u-boot-2018.07~rc3+dfsg1--clean.orig/tools/kwbimage.c
++++ u-boot-2018.07~rc3+dfsg1--clean/tools/kwbimage.c
+@@ -395,6 +395,11 @@ static int kwb_load_rsa_key(const char *
+ 	if (!keydir)
+ 		keydir = ".";
+ 
++	if (strchr(name, '/')) {
++		fprintf(stderr, "Invalid key name '%s': contains '/' \n", name);
++		return -EACCES;
++	}
++
+ 	snprintf(path, sizeof(path), "%s/%s.key", keydir, name);
+ 	f = fopen(path, "r");
+ 	if (!f) {
