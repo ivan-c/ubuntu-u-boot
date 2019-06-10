@@ -34,3 +34,4 @@ odroid-c2/0001-mmc-avoid-division-by-zero-in-meson_mmc_config_clock.patch
 rpi-import-mkknlimg.patch
 rpi2-rpi3-config-tweaks.patch
 lzo-to-lzno.patch
+ubuntu-hardening-limit-keynames-to-keydir.patch
