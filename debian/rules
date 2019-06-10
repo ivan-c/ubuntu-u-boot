@@ -88,6 +88,9 @@ override_dh_auto_build: configs/novena-rawsd_defconfig configs/am335x_boneblack_
 
 	# Load dummy config
 	echo CONFIG_SYS_TEXT_BASE=0 > configs/tools_defconfig
+	# enable signatures
+	echo CONFIG_FIT=y >> configs/tools_defconfig
+	echo CONFIG_FIT_SIGNATURE=y >> configs/tools_defconfig
 	$(MAKE) V=$(VERBOSE) O=$(TOOLSDIR) CROSS_COMPILE=$(CROSS_COMPILE) tools_defconfig
 	cp $(TOOLSDIR)/.config $(TOOLSDIR)/config
 	# board-independent tools

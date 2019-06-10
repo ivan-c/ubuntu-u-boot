@@ -16,6 +16,7 @@ Build-Depends:
  libc6:armhf [armhf] <cross>,
  libc6:armel [armel] <cross>,
  libpython-dev:native [armhf arm64],
+ libssl-dev,
  python:any [armhf arm64],
  skales:native [arm64],
  swig [armhf arm64],
