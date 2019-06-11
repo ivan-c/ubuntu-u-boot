@@ -1,3 +1,11 @@
+u-boot (2016.01+dfsg1-2ubuntu5) xenial; urgency=low
+
+  * Enable FIT signing support (LP: #1831942)
+    - Ensure fit_image_process_sig() ENOSPC return propogates to
+      fit_file_name() space allocation loop.
+
+ -- Andy Whitcroft <apw@ubuntu.com>  Tue, 11 Jun 2019 22:44:54 +0100
+
 u-boot (2016.01+dfsg1-2ubuntu4) xenial; urgency=low
 
   * Enable FIT signing support (LP: #1831942)

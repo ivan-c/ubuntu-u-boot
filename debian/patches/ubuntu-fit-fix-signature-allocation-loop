@@ -1,0 +1,20 @@
+Description: FIT fix signature allocation loop
+  Ensure fit_image_process_sig() ENOSPC return propogates to
+  fit_file_name() space allocation loop.
+Author: Andy Whitcroft <apw@ubuntu.com>
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/1831942
+Last-Update: 2019-06-11
+
+---
+
+--- u-boot-2016.01+dfsg1.orig/tools/image-host.c
++++ u-boot-2016.01+dfsg1/tools/image-host.c
+@@ -322,7 +322,7 @@ int fit_image_add_verification_data(cons
+ 				comment, require_keys);
+ 		}
+ 		if (ret)
+-			return -1;
++			return ret;
+ 	}
+ 
+ 	return 0;
