@@ -3,7 +3,7 @@
 VERSION = 2019
 PATCHLEVEL = 07
 SUBLEVEL =
-EXTRAVERSION = -rc2
+EXTRAVERSION = -rc4
 NAME =
 
 # *DOCUMENTATION*
@@ -336,6 +336,19 @@ endif
 #ifeq ($(MAKECMDGOALS),)
 #  KBUILD_MODULES := 1
 #endif
+
+define size_check
+	actual=$$( wc -c $1 | awk '{print $$1}'); \
+	limit=$$( printf "%d" $2 ); \
+	if test $$actual -gt $$limit; then \
+		echo "$1 exceeds file size limit:" >&2; \
+		echo "  limit:  $$limit bytes" >&2; \
+		echo "  actual: $$actual bytes" >&2; \
+		echo "  excess: $$((actual - limit)) bytes" >&2; \
+		exit 1; \
+	fi
+endef
+export size_check
 
 export KBUILD_MODULES KBUILD_BUILTIN
 export KBUILD_CHECKSRC KBUILD_SRC KBUILD_EXTMOD
@@ -778,18 +791,15 @@ LDPPFLAGS += \
 #########################################################################
 
 ifneq ($(CONFIG_BOARD_SIZE_LIMIT),)
-BOARD_SIZE_CHECK = \
-	@actual=`wc -c $@ | awk '{print $$1}'`; \
-	limit=`printf "%d" $(CONFIG_BOARD_SIZE_LIMIT)`; \
-	if test $$actual -gt $$limit; then \
-		echo "$@ exceeds file size limit:" >&2 ; \
-		echo "  limit:  $$limit bytes" >&2 ; \
-		echo "  actual: $$actual bytes" >&2 ; \
-		echo "  excess: $$((actual - limit)) bytes" >&2; \
-		exit 1; \
-	fi
+BOARD_SIZE_CHECK= @ $(call size_check,$@,$(CONFIG_BOARD_SIZE_LIMIT))
 else
 BOARD_SIZE_CHECK =
+endif
+
+ifneq ($(CONFIG_SPL_SIZE_LIMIT),0)
+SPL_SIZE_CHECK = @$(call size_check,$@,$$(tools/spl_size_limit))
+else
+SPL_SIZE_CHECK =
 endif
 
 # Statically apply RELA-style relocations (currently arm64 only)
@@ -1090,6 +1100,7 @@ endif
 
 %.imx: %.bin
 	$(Q)$(MAKE) $(build)=arch/arm/mach-imx $@
+	$(BOARD_SIZE_CHECK)
 
 %.vyb: %.imx
 	$(Q)$(MAKE) $(build)=arch/arm/cpu/armv7/vf610 $@
@@ -1116,6 +1127,9 @@ OBJCOPYFLAGS_u-boot-spl.srec = $(OBJCOPYFLAGS_u-boot.srec)
 
 spl/u-boot-spl.srec: spl/u-boot-spl FORCE
 	$(call if_changed,objcopy)
+
+%.scif: %.srec
+	$(Q)$(MAKE) $(build)=arch/arm/mach-rmobile $@
 
 OBJCOPYFLAGS_u-boot-nodtb.bin := -O binary \
 		$(if $(CONFIG_X86_16BIT_INIT),-R .start16 -R .resetvec) \
@@ -1704,6 +1718,8 @@ u-boot.lds: $(LDSCRIPT) prepare FORCE
 
 spl/u-boot-spl.bin: spl/u-boot-spl
 	@:
+	$(SPL_SIZE_CHECK)
+
 spl/u-boot-spl: tools prepare \
 		$(if $(CONFIG_OF_SEPARATE)$(CONFIG_OF_EMBED)$(CONFIG_SPL_OF_PLATDATA),dts/dt.dtb) \
 		$(if $(CONFIG_OF_SEPARATE)$(CONFIG_OF_EMBED)$(CONFIG_TPL_OF_PLATDATA),dts/dt.dtb)
@@ -1766,6 +1782,7 @@ checkarmreloc: u-boot
 envtools: scripts_basic $(version_h) $(timestamp_h)
 	$(Q)$(MAKE) $(build)=tools/env
 
+tools-only: export TOOLS_ONLY=y
 tools-only: scripts_basic $(version_h) $(timestamp_h)
 	$(Q)$(MAKE) $(build)=tools
 
