@@ -226,3 +226,7 @@ mips	-		qemu_mips	u-boot.bin
 sh4	-		r2dplus		u-boot.bin
 
 sh4	-		sh7785lcr_32bit	u-boot.bin
+
+# Dave Jones <dave.jones@canonical.com>
+armhf	rpi		rpi_4_32b	u-boot.bin
+arm64	rpi		rpi_4		u-boot.bin
