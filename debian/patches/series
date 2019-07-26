@@ -19,7 +19,6 @@ test-imagetools-test-fixes
 
 exynos/0001-arm-config-fix-default-console-only-to-specify-the-d.patch
 
-rpi-import-mkknlimg.patch
 rpi2-rpi3-config-tweaks.patch
 lzo-to-lzno.patch
 ubuntu-hardening-limit-keynames-to-keydir.patch

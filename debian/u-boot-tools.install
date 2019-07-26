@@ -8,8 +8,6 @@ done
 # install config
 echo ${builddir}/config /usr/share/doc/u-boot-tools/
 
-echo tools/mkknlimg /usr/bin/
-
 echo doc/mkimage.1 /usr/share/man/man1/
 echo doc/kwboot.1 /usr/share/man/man1/
 

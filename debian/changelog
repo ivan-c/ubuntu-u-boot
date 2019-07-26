@@ -10,6 +10,7 @@ u-boot (2019.07+dfsg-1ubuntu1) eoan; urgency=medium
   * Add missing build dependency on arm/arm64
   * Correct odroid README paths
   * Add d/p/rpi4.patch to support Raspberry Pi 4 boot
+  * Remove redundant d/p/rpi-import-mkknlimg.patch
 
  -- Dave Jones <dave.jones@canonical.com>  Tue, 23 Jul 2019 10:02:04 +0000
 
