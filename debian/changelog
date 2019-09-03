@@ -1,3 +1,13 @@
+u-boot (2019.04+dfsg-2ubuntu3) eoan; urgency=medium
+
+  [ Shrirang Bagul ]
+  * Enable Ubuntu support for the Nitrogen6x board (LP: #1838064)
+    - Add d/p/ubuntu-nitrogen6q2g-config-tweaks.patch to tweak the
+      nitrogen6q2g configs to better fit our Ubuntu usage.
+    - Start building the nitrogen6x2g target for u-boot.
+
+ -- Łukasz 'sil2100' Zemczak <lukasz.zemczak@ubuntu.com>  Tue, 03 Sep 2019 11:39:53 +0200
+
 u-boot (2019.04+dfsg-2ubuntu2) eoan; urgency=low
 
   * Enable FIT signing support (LP: #1831942)
