@@ -50,6 +50,9 @@ armhf	imx		mx6cuboxi4x4	SPL
 # Hector Oron <zumbi@debian.org>
 armhf	imx		nitrogen6q	u-boot.imx
 
+# Shrirang Bagul <shrirang.bagul@canonical.com>
+armhf	imx		nitrogen6q2g	u-boot.imx
+
 # Tony Mancill <tmancill@debian.org> 
 armhf	imx		novena		u-boot.img SPL
 
