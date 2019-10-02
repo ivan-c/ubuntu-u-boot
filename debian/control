@@ -18,6 +18,7 @@ Build-Depends:
  libpython-dev:native [armhf arm64],
  libssl-dev,
  python:any [armhf arm64],
+ python-pyelftools [armhf arm64],
  skales:native [arm64],
  swig [armhf arm64],
 Standards-Version: 4.3.0
