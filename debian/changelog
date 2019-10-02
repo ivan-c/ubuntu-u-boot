@@ -1,3 +1,17 @@
+u-boot (2019.07+dfsg-1ubuntu1) eoan; urgency=medium
+
+  * New upstream release to support Pi 4 boot (LP: #1846329)
+  * Removed patches applied upstream:
+    - d/p/dreamplug/Commit-ARM-CPU-arm926ejs-Consolidate-cache-routines-.patch
+    - d/p/mkimage/0001-fdt-Fix-mkimage-list-to-try-every-header-type.patch
+    - d/p/sunxi/teres-i.patch
+  * Updated patch:
+    - d/p/am57xx/omap5_distro_bootcmd
+  * Add missing build dependency on arm/arm64
+  * Correct odroid README paths
+
+ -- Dave Jones <dave.jones@canonical.com>  Tue, 23 Jul 2019 10:02:04 +0000
+
 u-boot (2019.04+dfsg-2ubuntu3) eoan; urgency=medium
 
   [ Shrirang Bagul ]
