@@ -1,3 +1,10 @@
+u-boot (2019.07+dfsg-1ubuntu2) eoan; urgency=medium
+
+  * Don't attempt config migration when /boot/firmware is a chroot
+  * Use vc4-fkms-v3d overlay on all models of Raspberry Pi
+
+ -- Dave Jones <dave.jones@canonical.com>  Wed, 09 Oct 2019 12:35:06 +0100
+
 u-boot (2019.07+dfsg-1ubuntu1) eoan; urgency=medium
 
   * New upstream release to support Pi 4 boot (LP: #1846329)

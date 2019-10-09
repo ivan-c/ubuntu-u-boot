@@ -15,11 +15,11 @@ is_old_config() {
             # Old arm64 config.txt
             return 0
             ;;
-        "87c988981620519fcffd8c12d79e9323")
+        "780a68eb42f48c167dbea57f67203593")
             # New armhf config.txt
             return 1
             ;;
-        "85f3ac715975c2eeec592c35deda64d9")
+        "2ed54187a02180eea7ca746efe991b46")
             # New arm64 config.txt
             return 1
             ;;
@@ -173,7 +173,6 @@ new_config_txt() {
 
 [pi4]
 kernel=uboot_rpi_4${suffix}.bin
-dtoverlay=vc4-fkms-v3d
 max_framebuffers=2
 
 [pi2]
@@ -189,6 +188,7 @@ EOF
     fi
     cat << EOF
 device_tree_address=0x03000000
+dtoverlay=vc4-fkms-v3d
 
 # The following settings are "defaults" expected to be overridden by the
 # included configuration. The only reason they are included is, again, to

@@ -8,11 +8,13 @@ BOOT="/boot/firmware"
 
 case "$1" in
   configure)
-    if ! ischroot; then
-      if ! mountpoint -q "$BOOT"; then
-        echo "Error: missing $BOOT, did you forget to mount it?" >&2
-        exit 1
-      fi
+    if ischroot; then
+      echo "chroot detected; skipping postinst"
+      exit 0
+    fi
+    if ! mountpoint -q "$BOOT"; then
+      echo "Error: missing $BOOT, did you forget to mount it?" >&2
+      exit 1
     fi
 
     # The u-boot-rpi package now ships more than just one u-boot binary. Copy
