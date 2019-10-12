@@ -695,9 +695,10 @@ Description: Raspberry Pi 4 support
  int dram_init(void)
 --- /dev/null
 +++ b/configs/rpi_4_32b_defconfig
-@@ -0,0 +1,45 @@
+@@ -0,0 +1,46 @@
 +CONFIG_ARM=y
 +CONFIG_ARCH_BCM283X=y
++CONFIG_ARCH_FIXUP_FDT_MEMORY=n
 +CONFIG_SYS_TEXT_BASE=0x00008000
 +CONFIG_TARGET_RPI_4_32B=y
 +CONFIG_SYS_MALLOC_F_LEN=0x2000
@@ -743,9 +744,10 @@ Description: Raspberry Pi 4 support
 +CONFIG_ENV_IS_IN_FAT=y
 --- /dev/null
 +++ b/configs/rpi_4_defconfig
-@@ -0,0 +1,45 @@
+@@ -0,0 +1,46 @@
 +CONFIG_ARM=y
 +CONFIG_ARCH_BCM283X=y
++CONFIG_ARCH_FIXUP_FDT_MEMORY=n
 +CONFIG_SYS_TEXT_BASE=0x00080000
 +CONFIG_TARGET_RPI_4=y
 +CONFIG_SYS_MALLOC_F_LEN=0x2000

@@ -1,3 +1,10 @@
+u-boot (2019.07+dfsg-1ubuntu3) eoan; urgency=medium
+
+  * Avoid device-tree memory fixup on Raspberry Pi 4; this allows access to
+    the all the RAM on models with more than 1Gb (LP: #1847500)
+
+ -- Dave Jones <dave.jones@canonical.com>  Sat, 12 Oct 2019 01:02:29 +0100
+
 u-boot (2019.07+dfsg-1ubuntu2) eoan; urgency=medium
 
   * Don't attempt config migration when /boot/firmware is a chroot
