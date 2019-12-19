@@ -20,7 +20,7 @@ Description: Configuration adjustments to the RPi2 and RPi3 configs
  /* Architecture, CPU, etc.*/
  #define CONFIG_ARCH_CPU_INIT
  
-@@ -73,9 +79,19 @@
+@@ -71,9 +77,19 @@
  #define CONFIG_SYS_CBSIZE		1024
  
  /* Environment */
@@ -43,14 +43,14 @@ Description: Configuration adjustments to the RPi2 and RPi3 configs
  
 --- a/configs/rpi_2_defconfig
 +++ b/configs/rpi_2_defconfig
-@@ -36,3 +36,4 @@
+@@ -38,3 +38,4 @@
  CONFIG_CONSOLE_SCROLL_LINES=10
  CONFIG_PHYS_TO_BUS=y
  CONFIG_OF_LIBFDT_OVERLAY=y
 +CONFIG_SUPPORT_RAW_INITRD=y
 --- a/configs/rpi_3_32b_defconfig
 +++ b/configs/rpi_3_32b_defconfig
-@@ -39,3 +39,5 @@
+@@ -41,3 +41,5 @@
  CONFIG_CONSOLE_SCROLL_LINES=10
  CONFIG_PHYS_TO_BUS=y
  CONFIG_OF_LIBFDT_OVERLAY=y
@@ -58,7 +58,7 @@ Description: Configuration adjustments to the RPi2 and RPi3 configs
 +CONFIG_ENV_IS_IN_FAT=y
 --- a/configs/rpi_3_defconfig
 +++ b/configs/rpi_3_defconfig
-@@ -39,3 +39,5 @@
+@@ -41,3 +41,5 @@
  CONFIG_CONSOLE_SCROLL_LINES=10
  CONFIG_PHYS_TO_BUS=y
  CONFIG_OF_LIBFDT_OVERLAY=y

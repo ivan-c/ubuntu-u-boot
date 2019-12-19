@@ -1,11 +1,7 @@
 add-debian-revision-to-u-boot-version
-mipsel-native-endianness.diff
 no-force-CROSS_COMPILE-powerpc.diff
 tools-generic-builds.patch
 Makefile-add-kwb-target-to-all.patch
-
-udoo/udoo_quad-support.patch
-udoo/udoo-standardized-variables
 
 mx53loco
 
@@ -17,22 +13,15 @@ sh4-fix-linker-name-prefix.patch
 
 ensure-config-sandbox-for-make-env.patch
 
-mx6cuboxi/i4x4-ram.patch
-
 am57xx/omap5_distro_bootcmd
-
-odroid/0001-Convert-odroid-to-use-distro_bootcmd.patch
-
-odroid-xu3/877074-u-boot-exynos-Default-environment-for-Odr.patch
-
-firefly/fdtfile
 
 test-imagetools-test-fixes
 
-odroid-c2/0001-mmc-avoid-division-by-zero-in-meson_mmc_config_clock.patch
+exynos/0001-arm-config-fix-default-console-only-to-specify-the-d.patch
 
-rpi-import-mkknlimg.patch
 rpi2-rpi3-config-tweaks.patch
 lzo-to-lzno.patch
 ubuntu-hardening-limit-keynames-to-keydir.patch
 ubuntu-nitrogen6q2g-config-tweaks.patch
+rpi4.patch
+rpi-board-dt.patch

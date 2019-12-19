@@ -1,3 +1,11 @@
+u-boot (2019.07+dfsg-1ubuntu4~18.04.1) bionic; urgency=medium
+
+  * Backport of 2019.07+dfsg1 to support Raspberry Pi 4 boot (LP: #1846329)
+  * Handle differing root partition labels during migration
+  * Ensure boot.scr is from recent flash-kernel
+
+ -- Dave Jones <dave.jones@canonical.com>  Thu, 19 Dec 2019 22:06:27 +0000
+
 u-boot (2018.07~rc3+dfsg1-0ubuntu3~18.04.2) bionic; urgency=medium
 
   [ Shrirang Bagul ]

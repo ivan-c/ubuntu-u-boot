@@ -1,6 +1,6 @@
 --- a/configs/nitrogen6q2g_defconfig
 +++ b/configs/nitrogen6q2g_defconfig
-@@ -14,8 +14,10 @@
+@@ -17,8 +17,10 @@
  CONFIG_SYS_ALT_MEMTEST=y
  # CONFIG_CMD_FLASH is not set
  CONFIG_CMD_GPIO=y
@@ -11,7 +11,7 @@
  CONFIG_CMD_SATA=y
  CONFIG_CMD_SF=y
  CONFIG_CMD_USB=y
-@@ -31,10 +33,16 @@
+@@ -34,10 +36,16 @@
  CONFIG_CMD_EXT4_WRITE=y
  CONFIG_CMD_FAT=y
  CONFIG_CMD_FS_GENERIC=y
@@ -28,15 +28,15 @@
 +CONFIG_FS_FAT=y
  CONFIG_FSL_ESDHC=y
  CONFIG_SPI_FLASH=y
- CONFIG_SPI_FLASH_SST=y
-@@ -58,3 +66,4 @@
+ CONFIG_SF_DEFAULT_MODE=0
+@@ -63,3 +71,4 @@
  CONFIG_VIDEO=y
  # CONFIG_VIDEO_SW_CURSOR is not set
  CONFIG_OF_LIBFDT=y
 +CONFIG_SYS_REDUNDAND_ENVIRONMENT=y
 --- a/include/configs/nitrogen6x.h
 +++ b/include/configs/nitrogen6x.h
-@@ -160,7 +160,9 @@
+@@ -150,7 +150,9 @@
  	(CONFIG_SYS_INIT_RAM_ADDR + CONFIG_SYS_INIT_SP_OFFSET)
  
  /* Environment organization */

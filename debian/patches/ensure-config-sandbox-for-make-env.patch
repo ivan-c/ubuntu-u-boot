@@ -4,7 +4,7 @@ codepath...
 
 --- a/include/configs/sandbox.h
 +++ b/include/configs/sandbox.h
-@@ -64,6 +64,9 @@
+@@ -63,6 +63,9 @@
  	func(HOST, host, 1) \
  	func(HOST, host, 0)
  

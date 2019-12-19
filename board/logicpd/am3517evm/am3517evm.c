@@ -37,6 +37,15 @@ DECLARE_GLOBAL_DATA_PTR;
 #define CPGMACSS_SW_RST		(1 << 1)
 #define PHY_GPIO		30
 
+#if defined(CONFIG_SPL_BUILD)
+#if defined(CONFIG_SPL_OS_BOOT)
+int spl_start_uboot(void)
+{
+	/* break into full u-boot on 'c' */
+	return serial_tstc() && serial_getc() == 'c';
+}
+#endif
+#endif
 
 /*
  * Routine: board_init
@@ -108,10 +117,11 @@ int misc_init_r(void)
 	volatile unsigned int ctr;
 	u32 reset;
 
+#if !defined(CONFIG_DM_I2C)
 #ifdef CONFIG_SYS_I2C_OMAP24XX
 	i2c_init(CONFIG_SYS_OMAP24_I2C_SPEED, CONFIG_SYS_OMAP24_I2C_SLAVE);
 #endif
-
+#endif
 	omap_die_id_display();
 
 	am3517_evm_musb_init();

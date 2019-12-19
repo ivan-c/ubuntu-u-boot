@@ -37,7 +37,7 @@ static char *exceptions[] = {
 	"Overflow",
 	"BOUND Range Exceeded",
 	"Invalid Opcode (Undefined Opcode)",
-	"Device Not Avaiable (No Math Coprocessor)",
+	"Device Not Available (No Math Coprocessor)",
 	"Double Fault",
 	"Coprocessor Segment Overrun",
 	"Invalid TSS",
@@ -264,7 +264,9 @@ int interrupt_init(void)
 	i8259_init();
 #endif
 
+#ifdef CONFIG_APIC
 	lapic_setup();
+#endif
 
 	/* Initialize core interrupt and exception functionality of CPU */
 	cpu_init_interrupts();

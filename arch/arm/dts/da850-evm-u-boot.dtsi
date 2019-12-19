@@ -7,16 +7,23 @@
  */
 
 / {
-	chosen {
-		stdout-path = &serial2;
-	};
-
-	aliases {
-		i2c0 = &i2c0;
-		spi0 = &spi1;
+	soc@1c00000 {
+		u-boot,dm-spl;
 	};
 };
 
 &flash {
-	compatible = "m25p64", "spi-flash";
+	compatible = "m25p64", "jedec,spi-nor";
+};
+
+&mmc0 {
+	u-boot,dm-spl;
+};
+
+&serial2 {
+	u-boot,dm-spl;
+};
+
+&spi1 {
+	u-boot,dm-spl;
 };

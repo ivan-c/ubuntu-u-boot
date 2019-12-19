@@ -27,7 +27,6 @@
  */
 #define CONFIG_SPL_TARGET	"u-boot-with-spl.bin"
 #define CONFIG_SPL_MAX_SIZE	2048
-#define CONFIG_SPL_TEXT_BASE    0xA0000000
 
 /* NAND boot config */
 #define CONFIG_SYS_NAND_U_BOOT_START    CONFIG_SYS_TEXT_BASE
@@ -48,7 +47,6 @@
  * Memory configurations
  */
 #define CONFIG_NR_DRAM_POPULATED 1
-#define CONFIG_NR_DRAM_BANKS	2
 
 #define ACFG_SDRAM_MBYTE_SYZE 64
 
@@ -184,15 +182,12 @@
 /*
  * Partitions & Filsystems
  */
-#define CONFIG_MTD_DEVICE
-#define CONFIG_MTD_PARTITIONS
 
 /*
  * Ethernet (on SOC imx FEC)
  */
 #define CONFIG_FEC_MXC
 #define CONFIG_FEC_MXC_PHYADDR		0x1f
-#define CONFIG_MII				/* MII PHY management	*/
 
 /*
  * FPGA

@@ -4,7 +4,6 @@
  * Rick Chen, Andes Technology Corporation <rick@andestech.com>
  */
 
-#include <asm/mach-types.h>
 #include <common.h>
 #if defined(CONFIG_FTMAC100) && !defined(CONFIG_DM_ETH)
 #include <netdev.h>
@@ -15,13 +14,13 @@
 
 DECLARE_GLOBAL_DATA_PTR;
 
+extern phys_addr_t prior_stage_fdt_address;
 /*
  * Miscellaneous platform dependent initializations
  */
 
 int board_init(void)
 {
-	gd->bd->bi_arch_number = MACH_TYPE_AE350;
 	gd->bd->bi_boot_params = PHYS_SDRAM_0 + 0x400;
 
 	return 0;
@@ -68,10 +67,6 @@ ulong board_flash_get_legacy(ulong base, int banknum, flash_info_t *info)
 
 void *board_fdt_blob_setup(void)
 {
-	void **ptr = (void *)CONFIG_SYS_SDRAM_BASE;
-	if (fdt_magic(*ptr) == FDT_MAGIC)
-			return (void *)*ptr;
-
 	return (void *)CONFIG_SYS_FDT_BASE;
 }
 

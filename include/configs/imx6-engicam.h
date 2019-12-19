@@ -56,6 +56,7 @@
 	"loadimage=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
 	"loadfdt=fatload mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${fdt_file}\0" \
 	"loadfit=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${fit_image}\0" \
+	"altbootcmd=run recoveryboot\0"\
 	"fitboot=echo Booting FIT image from mmc ...; " \
 		"run mmcargs; " \
 		"bootm ${loadaddr}\0" \
@@ -97,7 +98,12 @@
 		"run ubiargs; " \
 		"nand read ${loadaddr} kernel 0x800000; " \
 		"nand read ${fdt_addr} dtb 0x100000; " \
-		"bootm ${loadaddr} - ${fdt_addr}\0"
+		"bootm ${loadaddr} - ${fdt_addr}\0" \
+	"recoveryboot=if test ${modeboot} = mmcboot; then " \
+			"run mmcboot; " \
+		"else " \
+			"run nandboot; " \
+		"fi\0"
 
 #define CONFIG_BOOTCOMMAND		"run $modeboot"
 
@@ -117,7 +123,6 @@
 #endif
 
 /* Physical Memory Map */
-#define CONFIG_NR_DRAM_BANKS		1
 #define PHYS_SDRAM			MMDC0_ARB_BASE_ADDR
 
 #define CONFIG_SYS_SDRAM_BASE		PHYS_SDRAM
@@ -153,8 +158,6 @@
 # define CONFIG_SYS_NAND_U_BOOT_OFFS	0x200000
 
 /* MTD device */
-# define CONFIG_MTD_DEVICE
-# define CONFIG_MTD_PARTITIONS
 #endif
 
 /* Ethernet */
@@ -166,8 +169,6 @@
 #  define CONFIG_FEC_MXC_PHYADDR	0
 #  define CONFIG_FEC_XCV_TYPE		RMII
 # endif
-
-# define CONFIG_MII
 #endif
 
 /* Falcon Mode */

@@ -982,6 +982,12 @@ int board_early_init_f(void)
 	 */
 	init_memory_bridge();
 
+	/*
+	 * Switch SDIO external ciu clock divider from default div-by-8 to
+	 * minimum possible div-by-2.
+	 */
+	writel(SDIO_UHS_REG_EXT_DIV_2, (void __iomem *)SDIO_UHS_REG_EXT);
+
 	return 0;
 }
 
@@ -1019,30 +1025,8 @@ int board_late_init(void)
 	return 0;
 }
 
-int board_mmc_init(bd_t *bis)
+int checkboard(void)
 {
-	struct dwmci_host *host = NULL;
-
-	host = malloc(sizeof(struct dwmci_host));
-	if (!host) {
-		printf("dwmci_host malloc fail!\n");
-		return 1;
-	}
-
-	/*
-	 * Switch SDIO external ciu clock divider from default div-by-8 to
-	 * minimum possible div-by-2.
-	 */
-	writel(SDIO_UHS_REG_EXT_DIV_2, (void __iomem *)SDIO_UHS_REG_EXT);
-
-	memset(host, 0, sizeof(struct dwmci_host));
-	host->name = "Synopsys Mobile storage";
-	host->ioaddr = (void *)ARC_DWMMC_BASE;
-	host->buswidth = 4;
-	host->dev_index = 0;
-	host->bus_hz = 50000000;
-
-	add_dwmci(host, host->bus_hz / 2, 400000);
-
+	puts("Board: Synopsys ARC HS Development Kit\n");
 	return 0;
-}
+};

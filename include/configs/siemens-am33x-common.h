@@ -61,11 +61,7 @@
 
 #define CONFIG_SYS_LOAD_ADDR		0x81000000 /* Default load address */
 
-#define CONFIG_MTD_DEVICE
-#define CONFIG_SF_DEFAULT_SPEED		(75000000)
-
  /* Physical Memory Map */
-#define CONFIG_NR_DRAM_BANKS		1		/*  1 bank of DRAM */
 #define PHYS_DRAM_1			0x80000000	/* DRAM Bank #1 */
 
 #define CONFIG_SYS_SDRAM_BASE		PHYS_DRAM_1
@@ -84,14 +80,12 @@
 #define CONFIG_SYS_NS16550_COM1		0x44e09000
 #define CONFIG_SYS_NS16550_COM4		0x481a6000
 
-#define CONFIG_SERIAL1                  1
 
 /* I2C Configuration */
 #define CONFIG_I2C
 #define CONFIG_SYS_I2C
 
 /* Defines for SPL */
-#define CONFIG_SPL_TEXT_BASE		0x402F0400
 #define CONFIG_SPL_MAX_SIZE		(SRAM_SCRATCH_SPACE_ADDR - \
 					 CONFIG_SPL_TEXT_BASE)
 
@@ -155,8 +149,6 @@
 /*
  * USB configuration
  */
-#define CONFIG_USB_MUSB_DISABLE_BULK_COMBINE_SPLIT
-
 #define CONFIG_AM335X_USB0
 #define CONFIG_AM335X_USB0_MODE	MUSB_PERIPHERAL
 #define CONFIG_AM335X_USB1
@@ -184,12 +176,10 @@
  * 0x442000 - 0x800000 : Userland
  */
 #if defined(CONFIG_SPI_BOOT)
-# define CONFIG_ENV_SPI_MAX_HZ		CONFIG_SF_DEFAULT_SPEED
 # define CONFIG_ENV_OFFSET		(892 << 10) /* 892 KiB in */
 # define CONFIG_ENV_SECT_SIZE		(4 << 10) /* 4 KB sectors */
 #endif /* SPI support */
 
-#define CONFIG_MII
 #define CONFIG_BOOTP_DEFAULT
 #define CONFIG_BOOTP_DNS2
 #define CONFIG_BOOTP_SEND_HOSTNAME
@@ -198,10 +188,6 @@
 /* NAND support */
 #ifdef CONFIG_NAND
 /* UBI Support */
-#ifndef CONFIG_SPL_BUILD
-#define CONFIG_MTD_PARTITIONS
-#define CONFIG_MTD_DEVICE
-#endif
 
 /* Commen environment */
 #define CONFIG_PREBOOT
@@ -244,7 +230,6 @@
 	"project_dir=targetdir\0" \
 	"upgrade_available=0\0" \
 	"altbootcmd=run bootcmd\0" \
-	"bootlimit=3\0" \
 	"partitionset_active=A\0" \
 	"loadaddr=0x82000000\0" \
 	"kloadaddr=0x81000000\0" \

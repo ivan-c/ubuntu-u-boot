@@ -44,7 +44,6 @@
 					 50, 51, 52, 53, 54, 55, 56, 57, }
 
 /* CPSW Ethernet support */
-#define CONFIG_MII
 #define CONFIG_BOOTP_DEFAULT
 #define CONFIG_BOOTP_SEND_HOSTNAME
 #define CONFIG_PHY_ATHEROS
@@ -53,11 +52,6 @@
 /* USB support */
 #define CONFIG_USB_XHCI_OMAP
 #define CONFIG_AM437X_USB2PHY2_HOST
-
-/* SPI Flash support */
-#define CONFIG_TI_SPI_MMAP
-#define CONFIG_SF_DEFAULT_SPEED		48000000
-#define CONFIG_DEFAULT_SPI_MODE		SPI_MODE_3
 
 /* Power */
 #define CONFIG_POWER
@@ -88,7 +82,6 @@
 
 #define CONFIG_ENV_SECT_SIZE		(64 * 1024)
 #define CONFIG_ENV_OFFSET		(768 * 1024)
-#define CONFIG_ENV_SPI_MAX_HZ           48000000
 
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	"loadaddr=0x80200000\0" \
@@ -126,7 +119,6 @@
 	"fi;"
 
 /* SPL defines. */
-#define CONFIG_SPL_TEXT_BASE		0x40300350
 #define CONFIG_SYS_SPL_ARGS_ADDR	(CONFIG_SYS_SDRAM_BASE + (128 << 20))
 #define CONFIG_SYS_SPI_U_BOOT_OFFS	(256 * 1024)
 #define CONFIG_SYS_MONITOR_LEN		(512 * 1024)

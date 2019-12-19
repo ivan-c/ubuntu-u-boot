@@ -2,7 +2,7 @@ Add u-boot.kwb to "make all" target on Kirkwood.
 
 --- a/Makefile
 +++ b/Makefile
-@@ -821,6 +821,7 @@
+@@ -830,6 +830,7 @@
  endif
  endif
  ALL-$(CONFIG_TPL) += tpl/u-boot-tpl.bin

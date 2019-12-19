@@ -30,7 +30,6 @@
 
 #define CONFIG_SYS_NS16550_COM3		UART3_BASE
 
-#define CONFIG_MISC_INIT_R
 /* MMC ENV related defines */
 #define CONFIG_SYS_MMC_ENV_DEV		1	/* SLOT2: eMMC(1) */
 #define CONFIG_ENV_SIZE			(128 << 10)
@@ -40,7 +39,6 @@
 
 /* Enhance our eMMC support / experience. */
 #define CONFIG_HSMMC2_8BIT
-#define CONFIG_SUPPORT_EMMC_BOOT
 
 /* Required support for the TCA642X GPIO we have on the uEVM */
 #define CONFIG_TCA642X

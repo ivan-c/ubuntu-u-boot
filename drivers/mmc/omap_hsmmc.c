@@ -47,6 +47,7 @@
 #endif
 #include <dm.h>
 #include <power/regulator.h>
+#include <thermal.h>
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -83,7 +84,6 @@ struct omap_hsmmc_data {
 #if CONFIG_IS_ENABLED(DM_MMC)
 	struct gpio_desc cd_gpio;	/* Change Detect GPIO */
 	struct gpio_desc wp_gpio;	/* Write Protect GPIO */
-	bool cd_inverted;
 #else
 	int cd_gpio;
 	int wp_gpio;
@@ -216,6 +216,10 @@ static unsigned char mmc_board_init(struct mmc *mmc)
 	/* for cairo board, we need to set up 1.8 Volt bias level on MMC1 */
 	pbias_lite &= ~PBIASLITEVMODE0;
 #endif
+#ifdef CONFIG_TARGET_OMAP3_LOGIC
+	/* For Logic PD board, 1.8V bias to go enable gpio127 for mmc_cd */
+	pbias_lite &= ~PBIASLITEVMODE1;
+#endif
 #ifdef CONFIG_MMC_OMAP36XX_PINS
 	if (get_cpu_family() == CPU_OMAP36XX) {
 		/* Disable extended drain IO before changing PBIAS */
@@ -260,7 +264,7 @@ static unsigned char mmc_board_init(struct mmc *mmc)
 	!CONFIG_IS_ENABLED(DM_REGULATOR)
 	/* PBIAS config needed for MMC1 only */
 	if (mmc_get_blk_desc(mmc)->devnum == 0)
-		vmmc_pbias_config(LDO_VOLT_3V0);
+		vmmc_pbias_config(LDO_VOLT_3V3);
 #endif
 
 	return 0;
@@ -414,7 +418,7 @@ static void omap_hsmmc_conf_bus_power(struct mmc *mmc, uint signal_voltage)
 
 	switch (signal_voltage) {
 	case MMC_SIGNAL_VOLTAGE_330:
-		hctl |= SDVS_3V0;
+		hctl |= SDVS_3V3;
 		break;
 	case MMC_SIGNAL_VOLTAGE_180:
 		hctl |= SDVS_1V8;
@@ -467,21 +471,21 @@ static int omap_hsmmc_set_io_regulator(struct mmc *mmc, int mV)
 		return 0;
 
 	/* Disable PBIAS */
-	ret = regulator_set_enable(priv->pbias_supply, false);
-	if (ret && ret != -ENOSYS)
+	ret = regulator_set_enable_if_allowed(priv->pbias_supply, false);
+	if (ret)
 		return ret;
 
 	/* Turn off IO voltage */
-	ret = regulator_set_enable(mmc->vqmmc_supply, false);
-	if (ret && ret != -ENOSYS)
+	ret = regulator_set_enable_if_allowed(mmc->vqmmc_supply, false);
+	if (ret)
 		return ret;
 	/* Program a new IO voltage value */
 	ret = regulator_set_value(mmc->vqmmc_supply, uV);
 	if (ret)
 		return ret;
 	/* Turn on IO voltage */
-	ret = regulator_set_enable(mmc->vqmmc_supply, true);
-	if (ret && ret != -ENOSYS)
+	ret = regulator_set_enable_if_allowed(mmc->vqmmc_supply, true);
+	if (ret)
 		return ret;
 
 	/* Program PBIAS voltage*/
@@ -489,8 +493,8 @@ static int omap_hsmmc_set_io_regulator(struct mmc *mmc, int mV)
 	if (ret && ret != -ENOSYS)
 		return ret;
 	/* Enable PBIAS */
-	ret = regulator_set_enable(priv->pbias_supply, true);
-	if (ret && ret != -ENOSYS)
+	ret = regulator_set_enable_if_allowed(priv->pbias_supply, true);
+	if (ret)
 		return ret;
 
 	return 0;
@@ -510,10 +514,9 @@ static int omap_hsmmc_set_signal_voltage(struct mmc *mmc)
 		return -EINVAL;
 
 	if (mmc->signal_voltage == MMC_SIGNAL_VOLTAGE_330) {
-		/* Use 3.0V rather than 3.3V */
-		mv = 3000;
-		capa_mask = VS30_3V0SUP;
-		palmas_ldo_volt = LDO_VOLT_3V0;
+		mv = 3300;
+		capa_mask = VS33_3V3SUP;
+		palmas_ldo_volt = LDO_VOLT_3V3;
 	} else if (mmc->signal_voltage == MMC_SIGNAL_VOLTAGE_180) {
 		capa_mask = VS18_1V8SUP;
 		palmas_ldo_volt = LDO_VOLT_1V8;
@@ -552,13 +555,13 @@ static uint32_t omap_hsmmc_set_capabilities(struct mmc *mmc)
 	val = readl(&mmc_base->capa);
 
 	if (priv->controller_flags & OMAP_HSMMC_SUPPORTS_DUAL_VOLT) {
-		val |= (VS30_3V0SUP | VS18_1V8SUP);
+		val |= (VS33_3V3SUP | VS18_1V8SUP);
 	} else if (priv->controller_flags & OMAP_HSMMC_NO_1_8_V) {
-		val |= VS30_3V0SUP;
+		val |= VS33_3V3SUP;
 		val &= ~VS18_1V8SUP;
 	} else {
 		val |= VS18_1V8SUP;
-		val &= ~VS30_3V0SUP;
+		val &= ~VS33_3V3SUP;
 	}
 
 	writel(val, &mmc_base->capa);
@@ -619,6 +622,10 @@ static int omap_hsmmc_execute_tuning(struct udevice *dev, uint opcode)
 	u32 phase_delay = 0;
 	u32 start_window = 0, max_window = 0;
 	u32 length = 0, max_len = 0;
+	bool single_point_failure = false;
+	struct udevice *thermal_dev;
+	int temperature;
+	int i;
 
 	mmc_base = priv->base_addr;
 	val = readl(&mmc_base->capa2);
@@ -629,9 +636,25 @@ static int omap_hsmmc_execute_tuning(struct udevice *dev, uint opcode)
 	      ((mmc->selected_mode == UHS_SDR50) && (val & CAPA2_TSDR50))))
 		return 0;
 
+	ret = uclass_first_device(UCLASS_THERMAL, &thermal_dev);
+	if (ret) {
+		printf("Couldn't get thermal device for tuning\n");
+		return ret;
+	}
+	ret = thermal_get_temp(thermal_dev, &temperature);
+	if (ret) {
+		printf("Couldn't get temperature for tuning\n");
+		return ret;
+	}
 	val = readl(&mmc_base->dll);
 	val |= DLL_SWT;
 	writel(val, &mmc_base->dll);
+
+	/*
+	 * Stage 1: Search for a maximum pass window ignoring any
+	 * any single point failures. If the tuning value ends up
+	 * near it, move away from it in stage 2 below
+	 */
 	while (phase_delay <= MAX_PHASE_DELAY) {
 		omap_hsmmc_set_dll(mmc, phase_delay);
 
@@ -640,10 +663,16 @@ static int omap_hsmmc_execute_tuning(struct udevice *dev, uint opcode)
 		if (cur_match) {
 			if (prev_match) {
 				length++;
+			} else if (single_point_failure) {
+				/* ignore single point failure */
+				length++;
+				single_point_failure = false;
 			} else {
 				start_window = phase_delay;
 				length = 1;
 			}
+		} else {
+			single_point_failure = prev_match;
 		}
 
 		if (length > max_len) {
@@ -665,8 +694,71 @@ static int omap_hsmmc_execute_tuning(struct udevice *dev, uint opcode)
 		ret = -EIO;
 		goto tuning_error;
 	}
+	/*
+	 * Assign tuning value as a ratio of maximum pass window based
+	 * on temperature
+	 */
+	if (temperature < -20000)
+		phase_delay = min(max_window + 4 * max_len - 24,
+				  max_window +
+				  DIV_ROUND_UP(13 * max_len, 16) * 4);
+	else if (temperature < 20000)
+		phase_delay = max_window + DIV_ROUND_UP(9 * max_len, 16) * 4;
+	else if (temperature < 40000)
+		phase_delay = max_window + DIV_ROUND_UP(8 * max_len, 16) * 4;
+	else if (temperature < 70000)
+		phase_delay = max_window + DIV_ROUND_UP(7 * max_len, 16) * 4;
+	else if (temperature < 90000)
+		phase_delay = max_window + DIV_ROUND_UP(5 * max_len, 16) * 4;
+	else if (temperature < 120000)
+		phase_delay = max_window + DIV_ROUND_UP(4 * max_len, 16) * 4;
+	else
+		phase_delay = max_window + DIV_ROUND_UP(3 * max_len, 16) * 4;
 
-	phase_delay = max_window + 4 * ((3 * max_len) >> 2);
+	/*
+	 * Stage 2: Search for a single point failure near the chosen tuning
+	 * value in two steps. First in the +3 to +10 range and then in the
+	 * +2 to -10 range. If found, move away from it in the appropriate
+	 * direction by the appropriate amount depending on the temperature.
+	 */
+	for (i = 3; i <= 10; i++) {
+		omap_hsmmc_set_dll(mmc, phase_delay + i);
+		if (mmc_send_tuning(mmc, opcode, NULL)) {
+			if (temperature < 10000)
+				phase_delay += i + 6;
+			else if (temperature < 20000)
+				phase_delay += i - 12;
+			else if (temperature < 70000)
+				phase_delay += i - 8;
+			else if (temperature < 90000)
+				phase_delay += i - 6;
+			else
+				phase_delay += i - 6;
+
+			goto single_failure_found;
+		}
+	}
+
+	for (i = 2; i >= -10; i--) {
+		omap_hsmmc_set_dll(mmc, phase_delay + i);
+		if (mmc_send_tuning(mmc, opcode, NULL)) {
+			if (temperature < 10000)
+				phase_delay += i + 12;
+			else if (temperature < 20000)
+				phase_delay += i + 8;
+			else if (temperature < 70000)
+				phase_delay += i + 8;
+			else if (temperature < 90000)
+				phase_delay += i + 10;
+			else
+				phase_delay += i + 12;
+
+			goto single_failure_found;
+		}
+	}
+
+single_failure_found:
+
 	omap_hsmmc_set_dll(mmc, phase_delay);
 
 	mmc_reset_controller_fsm(mmc_base, SYSCTL_SRD);
@@ -749,11 +841,11 @@ static int omap_hsmmc_init_setup(struct mmc *mmc)
 
 #if CONFIG_IS_ENABLED(DM_MMC)
 	reg_val = omap_hsmmc_set_capabilities(mmc);
-	omap_hsmmc_conf_bus_power(mmc, (reg_val & VS30_3V0SUP) ?
+	omap_hsmmc_conf_bus_power(mmc, (reg_val & VS33_3V3SUP) ?
 			  MMC_SIGNAL_VOLTAGE_330 : MMC_SIGNAL_VOLTAGE_180);
 #else
 	writel(DTW_1_BITMODE | SDBP_PWROFF | SDVS_3V0, &mmc_base->hctl);
-	writel(readl(&mmc_base->capa) | VS30_3V0SUP | VS18_1V8SUP,
+	writel(readl(&mmc_base->capa) | VS33_3V3SUP | VS18_1V8SUP,
 		&mmc_base->capa);
 #endif
 
@@ -1364,25 +1456,25 @@ static int omap_hsmmc_set_ios(struct udevice *dev)
 #if CONFIG_IS_ENABLED(DM_MMC)
 static int omap_hsmmc_getcd(struct udevice *dev)
 {
+	int value = -1;
+#if CONFIG_IS_ENABLED(DM_GPIO)
 	struct omap_hsmmc_data *priv = dev_get_priv(dev);
-	int value;
-
 	value = dm_gpio_get_value(&priv->cd_gpio);
+#endif
 	/* if no CD return as 1 */
 	if (value < 0)
 		return 1;
 
-	if (priv->cd_inverted)
-		return !value;
 	return value;
 }
 
 static int omap_hsmmc_getwp(struct udevice *dev)
 {
+	int value = 0;
+#if CONFIG_IS_ENABLED(DM_GPIO)
 	struct omap_hsmmc_data *priv = dev_get_priv(dev);
-	int value;
-
 	value = dm_gpio_get_value(&priv->wp_gpio);
+#endif
 	/* if no WP return as 0 */
 	if (value < 0)
 		return 0;
@@ -1854,10 +1946,6 @@ static int omap_hsmmc_ofdata_to_platdata(struct udevice *dev)
 	}
 #endif
 
-#ifdef OMAP_HSMMC_USE_GPIO
-	plat->cd_inverted = fdtdec_get_bool(fdt, node, "cd-inverted");
-#endif
-
 	return 0;
 }
 #endif
@@ -1886,9 +1974,6 @@ static int omap_hsmmc_probe(struct udevice *dev)
 	priv->base_addr = plat->base_addr;
 	priv->controller_flags = plat->controller_flags;
 	priv->hw_rev = plat->hw_rev;
-#ifdef OMAP_HSMMC_USE_GPIO
-	priv->cd_inverted = plat->cd_inverted;
-#endif
 
 #ifdef CONFIG_BLK
 	mmc = plat->mmc;
@@ -1901,9 +1986,11 @@ static int omap_hsmmc_probe(struct udevice *dev)
 	device_get_supply_regulator(dev, "pbias-supply",
 				    &priv->pbias_supply);
 #endif
-#if defined(OMAP_HSMMC_USE_GPIO) && CONFIG_IS_ENABLED(OF_CONTROL)
+#if defined(OMAP_HSMMC_USE_GPIO)
+#if CONFIG_IS_ENABLED(OF_CONTROL) && CONFIG_IS_ENABLED(DM_GPIO)
 	gpio_request_by_name(dev, "cd-gpios", 0, &priv->cd_gpio, GPIOD_IS_IN);
 	gpio_request_by_name(dev, "wp-gpios", 0, &priv->wp_gpio, GPIOD_IS_IN);
+#endif
 #endif
 
 	mmc->dev = dev;
@@ -1955,6 +2042,8 @@ U_BOOT_DRIVER(omap_hsmmc) = {
 	.ops = &omap_hsmmc_ops,
 	.probe	= omap_hsmmc_probe,
 	.priv_auto_alloc_size = sizeof(struct omap_hsmmc_data),
+#if !CONFIG_IS_ENABLED(OF_CONTROL)
 	.flags	= DM_FLAG_PRE_RELOC,
+#endif
 };
 #endif
