@@ -18,7 +18,6 @@ Build-Depends:
  libpython3-dev:native [linux-any],
  python3:any [linux-any],
  python3-distutils [linux-any],
- skales:native [arm64],
  swig [linux-any],
  lzop [armhf] <!cross> | lzop:native [armhf] <cross>,
 Build-Depends-Indep:
@@ -190,7 +189,7 @@ Package: u-boot-rockchip
 Architecture: armhf arm64
 Multi-Arch: same
 Depends: ${misc:Depends}
-Recommends: python3
+Recommends: python3, arm-trusted-firmware [arm64], u-boot-tools [arm64]
 Description: A boot loader for rockchip systems
  Das U-Boot is a cross-platform bootloader for embedded systems,
  used as the default boot loader by several board vendors.  It is
