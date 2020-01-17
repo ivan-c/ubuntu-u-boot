@@ -1,5 +1,3 @@
-#!/bin/sh
-
 BOOT=${BOOT:-/boot/firmware}
 HOST_ARCH=${HOST_ARCH:-$(dpkg --print-architecture)}
 
@@ -15,11 +13,11 @@ is_old_config() {
             # Old arm64 config.txt
             return 0
             ;;
-        "780a68eb42f48c167dbea57f67203593")
+        "f5a2110f821b89009561f47dd9d4e670")
             # New armhf config.txt
             return 1
             ;;
-        "2ed54187a02180eea7ca746efe991b46")
+        "46a426582ff4b1eb2581700b70f8c440")
             # New arm64 config.txt
             return 1
             ;;
@@ -90,18 +88,14 @@ enable_uart=1
 cmdline=nobtcmd.txt
 #dtoverlay=pi3-disable-bt
 EOF
-    cat > "$BOOT/nobtcmd.txt" << EOF
-net.ifnames=0 dwc_otg.lpm_enable=0 console=ttyAMA0,115200 console=tty1 root=LABEL=writable rootfstype=ext4 elevator=deadline rootwait
-EOF
+    new_cmdline_txt "ttyAMA0,115200" > "$BOOT/nobtcmd.txt"
     cat > "$BOOT/btcfg.txt" << EOF
 # See "nobtcfg.txt" for further information.
 
 enable_uart=0
 cmdline=btcmd.txt
 EOF
-    cat > "$BOOT/btcmd.txt" << EOF
-net.ifnames=0 dwc_otg.lpm_enable=0 console=tty1 root=LABEL=writable rootfstype=ext4 elevator=deadline rootwait
-EOF
+    new_cmdline_txt "" > "$BOOT/btcmd.txt"
     cat > "$BOOT/syscfg.txt" << EOF
 # This file is intended to contain system-made configuration changes. User
 # configuration changes should be placed in "usercfg.txt". Please refer to the
@@ -149,6 +143,29 @@ EOF
     esac
 }
 
+new_cmdline_txt() {
+    local serial_console root_label root_device
+
+    serial_console=$1
+    if [ -n "$serial_console" ]; then
+        serial_console=" console=$serial_console"
+    fi
+    root_label=""
+    root_device=$(awk '$2=="/" {print $1}' /proc/mounts)
+    if [ -n "$root_device" ]; then
+        root_label=$(lsblk -o LABEL -P "$root_device" 2>/dev/null || echo -n "")
+    fi
+    if [ -z "$root_label" ]; then
+        # Something's gone horribly wrong; either we can't find the root mount
+        # in /proc/mounts, or lsblk has failed to retrieve the volume label so
+        # fallback to the default
+        root_label="LABEL=writable"
+    fi
+    cat << EOF
+net.ifnames=0 dwc_otg.lpm_enable=0${serial_console} console=tty1 root=${root_label} rootfstype=ext4 elevator=deadline rootwait
+EOF
+}
+
 new_config_txt() {
     case "$HOST_ARCH" in
         armhf)
@@ -188,7 +205,6 @@ EOF
     fi
     cat << EOF
 device_tree_address=0x03000000
-dtoverlay=vc4-fkms-v3d
 
 # The following settings are "defaults" expected to be overridden by the
 # included configuration. The only reason they are included is, again, to

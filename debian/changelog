@@ -1,3 +1,12 @@
+u-boot (2019.07+dfsg-1ubuntu4) focal; urgency=medium
+
+  * Do not include the vc4-fkms-v3d overlay; this breaks book on the 3A+
+    (LP: #1848247)
+  * Handle differing root partition labels during migration
+  * Ensure boot.scr is from recent flash-kernel
+
+ -- Dave Jones <dave.jones@canonical.com>  Fri, 17 Jan 2020 13:31:35 +0000
+
 u-boot (2019.07+dfsg-1ubuntu3) eoan; urgency=medium
 
   * Avoid device-tree memory fixup on Raspberry Pi 4; this allows access to
