@@ -1,3 +1,14 @@
+u-boot (2019.07+dfsg-1ubuntu5) focal; urgency=medium
+
+  [ Matthias Klose ]
+  * Use python2 for the build.
+
+  [ Dave Jones ]
+  * Added d/p/python2.patch to fix-up remaining scripts still using bare
+    "python"
+
+ -- Dave Jones <dave.jones@canonical.com>  Fri, 24 Jan 2020 11:29:15 +0000
+
 u-boot (2019.07+dfsg-1ubuntu4) focal; urgency=medium
 
   * Do not include the vc4-fkms-v3d overlay; this breaks book on the 3A+

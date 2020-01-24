@@ -1,0 +1,61 @@
+Author: Dave Jones <dave.jones@canonical.com>
+Description: Use the python2 interpreter explicitly rather than python
+ As part of the deprecation of python2, the "python" symlink should no longer
+ be used in the shebang of scripts. This patch replaces all such occurrences
+ with "python2" explicitly.
+--- a/arch/arm/mach-rockchip/make_fit_atf.py
++++ b/arch/arm/mach-rockchip/make_fit_atf.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ """
+ # SPDX-License-Identifier: GPL-2.0+
+ #
+--- a/lib/libfdt/test_libfdt.py
++++ b/lib/libfdt/test_libfdt.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python
++#!/usr/bin/python2
+ 
+ import os
+ import sys
+--- a/tools/concurrencytest/concurrencytest.py
++++ b/tools/concurrencytest/concurrencytest.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # SPDX-License-Identifier: GPL-2.0+
+ #
+ # Modified by: Corey Goldberg, 2013
+--- a/tools/dtoc/dtb_platdata.py
++++ b/tools/dtoc/dtb_platdata.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python
++#!/usr/bin/python2
+ # SPDX-License-Identifier: GPL-2.0+
+ #
+ # Copyright (C) 2017 Google, Inc
+--- a/tools/dtoc/fdt.py
++++ b/tools/dtoc/fdt.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python
++#!/usr/bin/python2
+ # SPDX-License-Identifier: GPL-2.0+
+ #
+ # Copyright (C) 2016 Google, Inc
+--- a/tools/dtoc/fdt_util.py
++++ b/tools/dtoc/fdt_util.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python
++#!/usr/bin/python2
+ # SPDX-License-Identifier: GPL-2.0+
+ #
+ # Copyright (C) 2016 Google, Inc
+--- a/tools/dtoc/test_fdt.py
++++ b/tools/dtoc/test_fdt.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python
++#!/usr/bin/python2
+ # SPDX-License-Identifier: GPL-2.0+
+ # Copyright (c) 2018 Google, Inc
+ # Written by Simon Glass <sjg@chromium.org>

@@ -25,3 +25,4 @@ ubuntu-hardening-limit-keynames-to-keydir.patch
 ubuntu-nitrogen6q2g-config-tweaks.patch
 rpi4.patch
 rpi-board-dt.patch
+python2.patch
