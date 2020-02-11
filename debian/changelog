@@ -1,3 +1,13 @@
+u-boot (2019.07+dfsg-1ubuntu6) focal; urgency=medium
+
+  [ Ethan Hsieh ]
+  * d/p/ubuntu-nitrogen6q2g-temporary-config-fixup.patch:
+    Fix bad CRC issue. The env size and redundant environment config variables
+    have not yet been migrated to Kconfig, so setting them in _defconfig has
+    no effect. Set those manually.
+
+ -- Łukasz 'sil2100' Zemczak <lukasz.zemczak@ubuntu.com>  Tue, 11 Feb 2020 11:43:57 +0100
+
 u-boot (2019.07+dfsg-1ubuntu5) focal; urgency=medium
 
   [ Matthias Klose ]
