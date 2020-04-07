@@ -34,14 +34,14 @@
 		u-boot,dm-spl;
 	};
 
-	clk_200mhz: dummy_clock {
+	clk_200mhz: dummy_clock_200mhz {
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
 		clock-frequency = <200000000>;
 		u-boot,dm-spl;
 	};
 
-	clk_19_2mhz: dummy_clock {
+	clk_19_2mhz: dummy_clock_19_2mhz {
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
 		clock-frequency = <19200000>;
@@ -157,9 +157,13 @@
 };
 
 &mcu_uart0 {
+	/delete-property/ power-domains;
+	/delete-property/ clocks;
+	/delete-property/ clock-names;
 	pinctrl-names = "default";
 	pinctrl-0 = <&mcu_uart0_pins_default>;
 	status = "okay";
+	clock-frequency = <48000000>;
 };
 
 &main_uart0 {

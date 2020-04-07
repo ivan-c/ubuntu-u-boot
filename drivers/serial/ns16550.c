@@ -479,11 +479,38 @@ static int ns16550_serial_getinfo(struct udevice *dev,
 	return 0;
 }
 
+static int ns16550_serial_assign_base(struct ns16550_platdata *plat, ulong base)
+{
+	if (base == FDT_ADDR_T_NONE)
+		return -EINVAL;
+
+#ifdef CONFIG_SYS_NS16550_PORT_MAPPED
+	plat->base = base;
+#else
+	plat->base = (unsigned long)map_physmem(base, 0, MAP_NOCACHE);
+#endif
+
+	return 0;
+}
+
 int ns16550_serial_probe(struct udevice *dev)
 {
+	struct ns16550_platdata *plat = dev->platdata;
 	struct NS16550 *const com_port = dev_get_priv(dev);
 	struct reset_ctl_bulk reset_bulk;
+	fdt_addr_t addr;
 	int ret;
+
+	/*
+	 * If we are on PCI bus, either directly attached to a PCI root port,
+	 * or via a PCI bridge, assign platdata->base before probing hardware.
+	 */
+	if (device_is_on_pci_bus(dev)) {
+		addr = devfdt_get_addr_pci(dev);
+		ret = ns16550_serial_assign_base(plat, addr);
+		if (ret)
+			return ret;
+	}
 
 	ret = reset_get_bulk(dev, &reset_bulk);
 	if (!ret)
@@ -511,16 +538,10 @@ int ns16550_serial_ofdata_to_platdata(struct udevice *dev)
 	struct clk clk;
 	int err;
 
-	/* try Processor Local Bus device first */
-	addr = dev_read_addr_pci(dev);
-	if (addr == FDT_ADDR_T_NONE)
-		return -EINVAL;
-
-#ifdef CONFIG_SYS_NS16550_PORT_MAPPED
-	plat->base = addr;
-#else
-	plat->base = (unsigned long)map_physmem(addr, 0, MAP_NOCACHE);
-#endif
+	addr = dev_read_addr(dev);
+	err = ns16550_serial_assign_base(plat, addr);
+	if (err && !device_is_on_pci_bus(dev))
+		return err;
 
 	plat->reg_offset = dev_read_u32_default(dev, "reg-offset", 0);
 	plat->reg_shift = dev_read_u32_default(dev, "reg-shift", 0);
