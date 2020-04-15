@@ -62,8 +62,12 @@ build-targets: configs/novena-rawsd_defconfig configs/am335x_boneblack_defconfig
 	echo run build-targets for $(TARGETARCH)
 	set -e; grep ^$(TARGETARCH)[^a-z0-9] debian/targets \
 	    | grep $(TARGETSUBARCH) \
-	    | while read arch subarch platform targets; do \
+	    | while read arch subarch platform bl31 targets; do \
 	        builddir=debian/build/$$platform; \
+		case $$bl31 in \
+			/usr/lib/arm-trusted-firmware/*) export BL31=$$bl31 ;; \
+			*) targets="$$bl31 $$targets" ;; \
+		esac; \
 		case $$platform in \
 			novena-rawsd) targets="$$targets" ;\
 				;; \
@@ -109,11 +113,6 @@ build-targets: configs/novena-rawsd_defconfig configs/am335x_boneblack_defconfig
 		cp $$builddir/.config $$builddir/config.$$platform; \
 		echo $$builddir/config.$$platform /usr/share/doc/$$subpackage/configs/ \
 			>> debian/build/targets.$$subarch; \
-	    case $${subarch} in \
-		rockchip) \
-			debian/bin/generate-rksd $$builddir $$platform $$subarch; \
-			;; \
-	        esac; \
 	done
 
 build-tools:
