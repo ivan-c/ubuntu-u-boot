@@ -54,7 +54,7 @@ SECTIONS
 	/DISCARD/ : { *(.interp*) }
 	/DISCARD/ : { *(.gnu*) }
 
-#if defined(CONFIG_SPL_X86_16BIT_INIT) || defined(CONFIG_TPL_X86_16BIT_INIT)
+#ifdef CONFIG_SPL_X86_16BIT_INIT
 	/*
 	 * The following expressions place the 16-bit Real-Mode code and
 	 * Reset Vector at the end of the Flash ROM

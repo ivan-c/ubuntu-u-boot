@@ -219,21 +219,11 @@ static int imx8_scu_bind(struct udevice *dev)
 	int ret;
 	struct udevice *child;
 	int node;
-	char *clk_compatible, *iomuxc_compatible;
-
-	if (IS_ENABLED(CONFIG_IMX8QXP)) {
-		clk_compatible = "fsl,imx8qxp-clk";
-		iomuxc_compatible = "fsl,imx8qxp-iomuxc";
-	} else if (IS_ENABLED(CONFIG_IMX8QM)) {
-		clk_compatible = "fsl,imx8qm-clk";
-		iomuxc_compatible = "fsl,imx8qm-iomuxc";
-	} else {
-		return -EINVAL;
-	}
 
 	debug("%s(dev=%p)\n", __func__, dev);
 
-	node = fdt_node_offset_by_compatible(gd->fdt_blob, -1, clk_compatible);
+	node = fdt_node_offset_by_compatible(gd->fdt_blob, -1,
+					     "fsl,imx8qxp-clk");
 	if (node < 0)
 		panic("No clk node found\n");
 
@@ -244,7 +234,7 @@ static int imx8_scu_bind(struct udevice *dev)
 	plat->clk = child;
 
 	node = fdt_node_offset_by_compatible(gd->fdt_blob, -1,
-					     iomuxc_compatible);
+					     "fsl,imx8qxp-iomuxc");
 	if (node < 0)
 		panic("No iomuxc node found\n");
 

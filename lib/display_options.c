@@ -23,9 +23,7 @@ char *display_options_get_banner_priv(bool newlines, const char *build_tag,
 				build_tag);
 	if (len > size - 3)
 		len = size - 3;
-	if (len < 0)
-		len = 0;
-	snprintf(buf + len, size - len, "\n\n");
+	strcpy(buf + len, "\n\n");
 
 	return buf;
 }

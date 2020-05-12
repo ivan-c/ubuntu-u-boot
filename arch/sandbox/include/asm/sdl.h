@@ -104,7 +104,7 @@ static inline int sandbox_sdl_sound_start(uint frequency)
 	return -ENODEV;
 }
 
-static inline int sandbox_sdl_sound_play(const void *data, uint count)
+int sandbox_sdl_sound_play(const void *data, uint count)
 {
 	return -ENODEV;
 }
@@ -114,7 +114,7 @@ static inline int sandbox_sdl_sound_stop(void)
 	return -ENODEV;
 }
 
-static inline int sandbox_sdl_sound_init(int rate, int channels)
+int sandbox_sdl_sound_init(int rate, int channels)
 {
 	return -ENODEV;
 }

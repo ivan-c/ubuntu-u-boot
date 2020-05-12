@@ -38,6 +38,5 @@ config BOARD_SPECIFIC_OPTIONS # dummy
 	imply PHY_LIB
 	imply PHY_MSCC
 	imply SIFIVE_SERIAL
-	imply SMP
 
 endif

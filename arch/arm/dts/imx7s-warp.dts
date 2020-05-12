@@ -19,11 +19,6 @@
 
 	aliases {
 		mmc0 = &usdhc3;
-		usb0 = &usbotg1;
-	};
-
-	chosen {
-		stdout-path = &uart1;
 	};
 
 	gpio-keys {

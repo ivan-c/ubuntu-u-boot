@@ -34,7 +34,6 @@ addons:
     - liblz4-tool
     - libisl15
     - clang-7
-    - srecord
 
 install:
  # Clone uboot-test-hooks
@@ -235,9 +234,9 @@ matrix:
       env:
         - BUILDMAN="sandbox x86"
           TOOLCHAIN="i386"
-    - name: "buildman kirkwood"
+    - name: "buildman kirkwood (excluding openrd)"
       env:
-        - BUILDMAN="kirkwood"
+        - BUILDMAN="kirkwood -x openrd"
     - name: "buildman mvebu"
       env:
         - BUILDMAN="mvebu"

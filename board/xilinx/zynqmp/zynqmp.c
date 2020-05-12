@@ -24,6 +24,10 @@
 
 DECLARE_GLOBAL_DATA_PTR;
 
+#if !defined(CONFIG_SPL_BUILD) && defined(CONFIG_WDT)
+static struct udevice *watchdog_dev __attribute__((section(".data"))) = NULL;
+#endif
+
 #if defined(CONFIG_FPGA) && defined(CONFIG_FPGA_ZYNQMPPL) && \
     !defined(CONFIG_SPL_BUILD)
 static xilinx_desc zynqmppl = XILINX_ZYNQMP_DESC;
@@ -165,10 +169,6 @@ static const struct {
 	{
 		.id = 0x62,
 		.name = "29dr",
-	},
-	{
-		.id = 0x66,
-		.name = "39dr",
 	},
 };
 #endif
@@ -340,8 +340,43 @@ int board_init(void)
 	}
 #endif
 
+#if !defined(CONFIG_SPL_BUILD) && defined(CONFIG_WDT)
+	if (uclass_get_device_by_seq(UCLASS_WDT, 0, &watchdog_dev)) {
+		debug("Watchdog: Not found by seq!\n");
+		if (uclass_get_device(UCLASS_WDT, 0, &watchdog_dev)) {
+			puts("Watchdog: Not found!\n");
+			return 0;
+		}
+	}
+
+	wdt_start(watchdog_dev, 0, 0);
+	puts("Watchdog: Started\n");
+#endif
+
 	return 0;
 }
+
+#ifdef CONFIG_WATCHDOG
+/* Called by macro WATCHDOG_RESET */
+void watchdog_reset(void)
+{
+# if !defined(CONFIG_SPL_BUILD)
+	static ulong next_reset;
+	ulong now;
+
+	if (!watchdog_dev)
+		return;
+
+	now = timer_get_us();
+
+	/* Do not reset the watchdog too often */
+	if (now > next_reset) {
+		wdt_reset(watchdog_dev);
+		next_reset = now + 1000;
+	}
+# endif
+}
+#endif
 
 int board_early_init_r(void)
 {
@@ -447,20 +482,18 @@ static const struct {
 	{}
 };
 
-static int reset_reason(void)
+static u32 reset_reason(void)
 {
-	u32 reg;
-	int i, ret;
+	u32 ret;
+	int i;
 	const char *reason = NULL;
 
-	ret = zynqmp_mmio_read((ulong)&crlapb_base->reset_reason, &reg);
-	if (ret)
-		return -EINVAL;
+	ret = readl(&crlapb_base->reset_reason);
 
 	puts("Reset reason:\t");
 
 	for (i = 0; i < ARRAY_SIZE(reset_reasons); i++) {
-		if (reg & reset_reasons[i].bit) {
+		if (ret & reset_reasons[i].bit) {
 			reason = reset_reasons[i].name;
 			printf("%s ", reset_reasons[i].name);
 			break;
@@ -471,9 +504,7 @@ static int reset_reason(void)
 
 	env_set("reset_reason", reason);
 
-	ret = zynqmp_mmio_write(~0, ~0, (ulong)&crlapb_base->reset_reason);
-	if (ret)
-		return -EINVAL;
+	writel(~0, &crlapb_base->reset_reason);
 
 	return ret;
 }

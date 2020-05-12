@@ -26,7 +26,6 @@ void enable_caches(void)
 #endif
 
 #ifdef CONFIG_DISPLAY_CPUINFO
-#ifndef CONFIG_RZA1
 static u32 __rmobile_get_cpu_type(void)
 {
 	return 0x0;
@@ -106,11 +105,4 @@ int print_cpuinfo(void)
 
 	return 0;
 }
-#else
-int print_cpuinfo(void)
-{
-	printf("CPU: Renesas Electronics RZ/A1\n");
-	return 0;
-}
-#endif
 #endif /* CONFIG_DISPLAY_CPUINFO */

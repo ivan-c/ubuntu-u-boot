@@ -460,15 +460,11 @@ def setup_buildconfigspec(item):
     """
 
     mark = item.get_marker('buildconfigspec')
-    if mark:
-        for option in mark.args:
-            if not ubconfig.buildconfig.get('config_' + option.lower(), None):
-                pytest.skip('.config feature "%s" not enabled' % option.lower())
-    notmark = item.get_marker('notbuildconfigspec')
-    if notmark:
-        for option in notmark.args:
-            if ubconfig.buildconfig.get('config_' + option.lower(), None):
-                pytest.skip('.config feature "%s" enabled' % option.lower())
+    if not mark:
+        return
+    for option in mark.args:
+        if not ubconfig.buildconfig.get('config_' + option.lower(), None):
+            pytest.skip('.config feature "%s" not enabled' % option.lower())
 
 def tool_is_in_path(tool):
     for path in os.environ["PATH"].split(os.pathsep):

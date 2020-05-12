@@ -19,4 +19,3 @@ obj-$(CONFIG_RESET_MESON) += reset-meson.o
 obj-$(CONFIG_RESET_SOCFPGA) += reset-socfpga.o
 obj-$(CONFIG_RESET_MEDIATEK) += reset-mediatek.o
 obj-$(CONFIG_RESET_SUNXI) += reset-sunxi.o
-obj-$(CONFIG_RESET_HISILICON) += reset-hisilicon.o

@@ -328,9 +328,7 @@ int spi_get_bus_and_cs(int busnum, int cs, int speed, int mode,
 	}
 
 	plat = dev_get_parent_platdata(dev);
-
-	/* get speed and mode from platdata when available */
-	if (plat->max_hz) {
+	if (!speed) {
 		speed = plat->max_hz;
 		mode = plat->mode;
 	}

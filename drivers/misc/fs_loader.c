@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0
  /*
- * Copyright (C) 2018-2019 Intel Corporation <www.intel.com>
+ * Copyright (C) 2018 Intel Corporation <www.intel.com>
  *
  */
 #include <common.h>
@@ -219,26 +219,32 @@ int request_firmware_into_buf(struct udevice *dev,
 
 static int fs_loader_ofdata_to_platdata(struct udevice *dev)
 {
+	const char *fs_loader_path;
 	u32 phandlepart[2];
 
-	ofnode fs_loader_node = dev_ofnode(dev);
+	fs_loader_path = ofnode_get_chosen_prop("firmware-loader");
 
-	if (ofnode_valid(fs_loader_node)) {
-		struct device_platdata *plat;
+	if (fs_loader_path) {
+		ofnode fs_loader_node;
 
-		plat = dev->platdata;
-		if (!ofnode_read_u32_array(fs_loader_node,
-					  "phandlepart",
-					  phandlepart, 2)) {
-			plat->phandlepart.phandle = phandlepart[0];
-			plat->phandlepart.partition = phandlepart[1];
+		fs_loader_node = ofnode_path(fs_loader_path);
+		if (ofnode_valid(fs_loader_node)) {
+			struct device_platdata *plat;
+			plat = dev->platdata;
+
+			if (!ofnode_read_u32_array(fs_loader_node,
+						  "phandlepart",
+						  phandlepart, 2)) {
+				plat->phandlepart.phandle = phandlepart[0];
+				plat->phandlepart.partition = phandlepart[1];
+			}
+
+			plat->mtdpart = (char *)ofnode_read_string(
+					 fs_loader_node, "mtdpart");
+
+			plat->ubivol = (char *)ofnode_read_string(
+					 fs_loader_node, "ubivol");
 		}
-
-		plat->mtdpart = (char *)ofnode_read_string(
-				 fs_loader_node, "mtdpart");
-
-		plat->ubivol = (char *)ofnode_read_string(
-				 fs_loader_node, "ubivol");
 	}
 
 	return 0;
@@ -246,29 +252,6 @@ static int fs_loader_ofdata_to_platdata(struct udevice *dev)
 
 static int fs_loader_probe(struct udevice *dev)
 {
-#if CONFIG_IS_ENABLED(DM) && CONFIG_IS_ENABLED(BLK)
-	int ret;
-	struct device_platdata *plat = dev->platdata;
-
-	if (plat->phandlepart.phandle) {
-		ofnode node = ofnode_get_by_phandle(plat->phandlepart.phandle);
-		struct udevice *parent_dev = NULL;
-
-		ret = device_get_global_by_ofnode(node, &parent_dev);
-		if (!ret) {
-			struct udevice *dev;
-
-			ret = blk_get_from_parent(parent_dev, &dev);
-			if (ret) {
-				debug("fs_loader: No block device: %d\n",
-					ret);
-
-				return ret;
-			}
-		}
-	}
-#endif
-
 	return 0;
 };
 

@@ -169,7 +169,6 @@ static void imx_set_wdog_powerdown(bool enable)
 
 int arch_cpu_init(void)
 {
-	struct ocotp_regs *ocotp = (struct ocotp_regs *)OCOTP_BASE_ADDR;
 	/*
 	 * Init timer at very early state, because sscg pll setting
 	 * will use it
@@ -179,12 +178,6 @@ int arch_cpu_init(void)
 	if (IS_ENABLED(CONFIG_SPL_BUILD)) {
 		clock_init();
 		imx_set_wdog_powerdown(false);
-	}
-
-	if (is_imx8mq()) {
-		clock_enable(CCGR_OCOTP, 1);
-		if (readl(&ocotp->ctrl) & 0x200)
-			writel(0x200, &ocotp->ctrl_clr);
 	}
 
 	return 0;

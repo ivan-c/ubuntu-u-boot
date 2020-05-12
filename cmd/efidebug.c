@@ -11,7 +11,6 @@
 #include <efi_loader.h>
 #include <environment.h>
 #include <exports.h>
-#include <hexdump.h>
 #include <malloc.h>
 #include <search.h>
 #include <linux/ctype.h>
@@ -186,7 +185,7 @@ static const struct {
 } guid_list[] = {
 	{
 		"Device Path",
-		EFI_DEVICE_PATH_PROTOCOL_GUID,
+		DEVICE_PATH_GUID,
 	},
 	{
 		"Device Path To Text",
@@ -218,7 +217,7 @@ static const struct {
 	},
 	{
 		"Block IO",
-		EFI_BLOCK_IO_PROTOCOL_GUID,
+		BLOCK_IO_GUID,
 	},
 	{
 		"Simple File System",
@@ -226,31 +225,11 @@ static const struct {
 	},
 	{
 		"Loaded Image",
-		EFI_LOADED_IMAGE_PROTOCOL_GUID,
+		LOADED_IMAGE_PROTOCOL_GUID,
 	},
 	{
-		"Graphics Output",
-		EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID,
-	},
-	{
-		"HII String",
-		EFI_HII_STRING_PROTOCOL_GUID,
-	},
-	{
-		"HII Database",
-		EFI_HII_DATABASE_PROTOCOL_GUID,
-	},
-	{
-		"HII Config Routing",
-		EFI_HII_CONFIG_ROUTING_PROTOCOL_GUID,
-	},
-	{
-		"Simple Network",
-		EFI_SIMPLE_NETWORK_PROTOCOL_GUID,
-	},
-	{
-		"PXE Base Code",
-		EFI_PXE_BASE_CODE_PROTOCOL_GUID,
+		"GOP",
+		EFI_GOP_GUID,
 	},
 };
 
@@ -546,10 +525,7 @@ static int do_efi_boot_add(cmd_tbl_t *cmdtp, int flag,
 				+ sizeof(struct efi_device_path); /* for END */
 
 	/* optional data */
-	if (argc < 6)
-		lo.optional_data = NULL;
-	else
-		lo.optional_data = (const u8 *)argv[6];
+	lo.optional_data = (u8 *)(argc == 6 ? "" : argv[6]);
 
 	size = efi_serialize_load_option(&lo, (u8 **)&data);
 	if (!size) {
@@ -619,13 +595,12 @@ static int do_efi_boot_rm(cmd_tbl_t *cmdtp, int flag,
 /**
  * show_efi_boot_opt_data() - dump UEFI load option
  *
- * @id:		load option number
- * @data:	value of UEFI load option variable
- * @size:	size of the boot option
+ * @id:		Load option number
+ * @data:	Value of UEFI load option variable
  *
  * Decode the value of UEFI load option variable and print information.
  */
-static void show_efi_boot_opt_data(int id, void *data, size_t size)
+static void show_efi_boot_opt_data(int id, void *data)
 {
 	struct efi_load_option lo;
 	char *label, *p;
@@ -643,7 +618,7 @@ static void show_efi_boot_opt_data(int id, void *data, size_t size)
 	utf16_utf8_strncpy(&p, lo.label, label_len16);
 
 	printf("Boot%04X:\n", id);
-	printf("  attributes: %c%c%c (0x%08x)\n",
+	printf("\tattributes: %c%c%c (0x%08x)\n",
 	       /* ACTIVE */
 	       lo.attributes & LOAD_OPTION_ACTIVE ? 'A' : '-',
 	       /* FORCE RECONNECT */
@@ -651,16 +626,14 @@ static void show_efi_boot_opt_data(int id, void *data, size_t size)
 	       /* HIDDEN */
 	       lo.attributes & LOAD_OPTION_HIDDEN ? 'H' : '-',
 	       lo.attributes);
-	printf("  label: %s\n", label);
+	printf("\tlabel: %s\n", label);
 
 	dp_str = efi_dp_str(lo.file_path);
-	printf("  file_path: %ls\n", dp_str);
+	printf("\tfile_path: %ls\n", dp_str);
 	efi_free_pool(dp_str);
 
-	printf("  data:\n");
-	print_hex_dump("    ", DUMP_PREFIX_OFFSET, 16, 1,
-		       lo.optional_data, size + (u8 *)data -
-		       (u8 *)lo.optional_data, true);
+	printf("\tdata: %s\n", lo.optional_data);
+
 	free(label);
 }
 
@@ -693,22 +666,11 @@ static void show_efi_boot_opt(int id)
 						data));
 	}
 	if (ret == EFI_SUCCESS)
-		show_efi_boot_opt_data(id, data, size);
+		show_efi_boot_opt_data(id, data);
 	else if (ret == EFI_NOT_FOUND)
 		printf("Boot%04X: not found\n", id);
 
 	free(data);
-}
-
-static int u16_tohex(u16 c)
-{
-	if (c >= '0' && c <= '9')
-		return c - '0';
-	if (c >= 'A' && c <= 'F')
-		return c - 'A' + 10;
-
-	/* not hexadecimal */
-	return -1;
 }
 
 /**
@@ -727,58 +689,38 @@ static int u16_tohex(u16 c)
 static int do_efi_boot_dump(cmd_tbl_t *cmdtp, int flag,
 			    int argc, char * const argv[])
 {
-	u16 *var_name16, *p;
-	efi_uintn_t buf_size, size;
-	efi_guid_t guid;
-	int id, i, digit;
-	efi_status_t ret;
+	char regex[256];
+	char * const regexlist[] = {regex};
+	char *variables = NULL, *boot, *value;
+	int len;
+	int id;
 
 	if (argc > 1)
 		return CMD_RET_USAGE;
 
-	buf_size = 128;
-	var_name16 = malloc(buf_size);
-	if (!var_name16)
+	snprintf(regex, 256, "efi_.*-.*-.*-.*-.*_Boot[0-9A-F]+");
+
+	/* TODO: use GetNextVariableName? */
+	len = hexport_r(&env_htab, '\n', H_MATCH_REGEX | H_MATCH_KEY,
+			&variables, 0, 1, regexlist);
+
+	if (!len)
+		return CMD_RET_SUCCESS;
+
+	if (len < 0)
 		return CMD_RET_FAILURE;
 
-	var_name16[0] = 0;
-	for (;;) {
-		size = buf_size;
-		ret = EFI_CALL(efi_get_next_variable_name(&size, var_name16,
-							  &guid));
-		if (ret == EFI_NOT_FOUND)
+	boot = variables;
+	while (*boot) {
+		value = strstr(boot, "Boot") + 4;
+		id = (int)simple_strtoul(value, NULL, 16);
+		show_efi_boot_opt(id);
+		boot = strchr(boot, '\n');
+		if (!*boot)
 			break;
-		if (ret == EFI_BUFFER_TOO_SMALL) {
-			buf_size = size;
-			p = realloc(var_name16, buf_size);
-			if (!p) {
-				free(var_name16);
-				return CMD_RET_FAILURE;
-			}
-			var_name16 = p;
-			ret = EFI_CALL(efi_get_next_variable_name(&size,
-								  var_name16,
-								  &guid));
-		}
-		if (ret != EFI_SUCCESS) {
-			free(var_name16);
-			return CMD_RET_FAILURE;
-		}
-
-		if (memcmp(var_name16, L"Boot", 8))
-			continue;
-
-		for (id = 0, i = 0; i < 4; i++) {
-			digit = u16_tohex(var_name16[4 + i]);
-			if (digit < 0)
-				break;
-			id = (id << 4) + digit;
-		}
-		if (i == 4 && !var_name16[8])
-			show_efi_boot_opt(id);
+		boot++;
 	}
-
-	free(var_name16);
+	free(variables);
 
 	return CMD_RET_SUCCESS;
 }

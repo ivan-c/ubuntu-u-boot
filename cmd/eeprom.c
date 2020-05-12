@@ -59,10 +59,6 @@
 #endif
 #endif
 
-#if defined(CONFIG_DM_I2C)
-int eeprom_i2c_bus;
-#endif
-
 __weak int eeprom_write_enable(unsigned dev_addr, int state)
 {
 	return 0;
@@ -71,9 +67,7 @@ __weak int eeprom_write_enable(unsigned dev_addr, int state)
 void eeprom_init(int bus)
 {
 	/* I2C EEPROM */
-#if defined(CONFIG_DM_I2C)
-	eeprom_i2c_bus = bus;
-#elif defined(CONFIG_SYS_I2C)
+#if defined(CONFIG_SYS_I2C)
 	if (bus >= 0)
 		i2c_set_bus_num(bus);
 	i2c_init(CONFIG_SYS_I2C_SPEED, CONFIG_SYS_I2C_SLAVE);
@@ -130,14 +124,14 @@ static int eeprom_rw_block(unsigned offset, uchar *addr, unsigned alen,
 {
 	int ret = 0;
 
-#if defined(CONFIG_DM_I2C)
+#if defined(CONFIG_DM_I2C) && defined(CONFIG_SYS_I2C_EEPROM_BUS)
 	struct udevice *dev;
 
-	ret = i2c_get_chip_for_busnum(eeprom_i2c_bus, addr[0],
+	ret = i2c_get_chip_for_busnum(CONFIG_SYS_I2C_EEPROM_BUS, addr[0],
 				      alen - 1, &dev);
 	if (ret) {
 		printf("%s: Cannot find udev for a bus %d\n", __func__,
-		       eeprom_i2c_bus);
+		       CONFIG_SYS_I2C_EEPROM_BUS);
 		return CMD_RET_FAILURE;
 	}
 
@@ -147,12 +141,15 @@ static int eeprom_rw_block(unsigned offset, uchar *addr, unsigned alen,
 		ret = dm_i2c_write(dev, offset, buffer, len);
 
 #else /* Non DM I2C support - will be removed */
+#if defined(CONFIG_SYS_I2C_EEPROM_BUS)
+	i2c_set_bus_num(CONFIG_SYS_I2C_EEPROM_BUS);
+#endif
 
 	if (read)
 		ret = i2c_read(addr[0], offset, alen - 1, buffer, len);
 	else
 		ret = i2c_write(addr[0], offset, alen - 1, buffer, len);
-#endif /* CONFIG_DM_I2C */
+#endif /* CONFIG_DM_I2C && CONFIG_SYS_I2C_EEPROM_BUS */
 	if (ret)
 		ret = CMD_RET_FAILURE;
 
@@ -166,10 +163,6 @@ static int eeprom_rw(unsigned dev_addr, unsigned offset, uchar *buffer,
 	unsigned alen, len;
 	int rcode = 0;
 	uchar addr[3];
-
-#if defined(CONFIG_SYS_I2C_EEPROM_BUS)
-	eeprom_init(CONFIG_SYS_I2C_EEPROM_BUS);
-#endif
 
 	while (offset < end) {
 		alen = eeprom_addr(dev_addr, offset, addr);

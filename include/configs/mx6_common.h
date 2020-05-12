@@ -57,6 +57,9 @@
 /* MMC */
 #define CONFIG_FSL_USDHC
 
+/* Fuses */
+#define CONFIG_MXC_OCOTP
+
 /* Secure boot (HAB) support */
 #ifdef CONFIG_SECURE_BOOT
 #define CONFIG_CSF_SIZE			0x2000

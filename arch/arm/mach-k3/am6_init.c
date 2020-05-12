@@ -49,16 +49,11 @@ static void ctrl_mmr_unlock(void)
 	mmr_unlock(CTRL_MMR0_BASE, 7);
 }
 
-/*
- * This uninitialized global variable would normal end up in the .bss section,
- * but the .bss is cleared between writing and reading this variable, so move
- * it to the .data section.
- */
-u32 bootindex __attribute__((section(".data")));
-
 static void store_boot_index_from_rom(void)
 {
-	bootindex = *(u32 *)(CONFIG_SYS_K3_BOOT_PARAM_TABLE_INDEX);
+	u32 *boot_index = (u32 *)K3_BOOT_PARAM_TABLE_INDEX_VAL;
+
+	*boot_index = *(u32 *)(CONFIG_SYS_K3_BOOT_PARAM_TABLE_INDEX);
 }
 
 void board_init_f(ulong dummy)
@@ -88,8 +83,10 @@ void board_init_f(ulong dummy)
 
 #ifdef CONFIG_K3_AM654_DDRSS
 	ret = uclass_get_device(UCLASS_RAM, 0, &dev);
-	if (ret)
-		panic("DRAM init failed: %d\n", ret);
+	if (ret) {
+		printf("DRAM init failed: %d\n", ret);
+		return;
+	}
 #endif
 }
 
@@ -97,6 +94,7 @@ u32 spl_boot_mode(const u32 boot_device)
 {
 #if defined(CONFIG_SUPPORT_EMMC_BOOT)
 	u32 devstat = readl(CTRLMMR_MAIN_DEVSTAT);
+	u32 bootindex = readl(K3_BOOT_PARAM_TABLE_INDEX_VAL);
 
 	u32 bootmode = (devstat & CTRLMMR_MAIN_DEVSTAT_BOOTMODE_MASK) >>
 			CTRLMMR_MAIN_DEVSTAT_BOOTMODE_SHIFT;
@@ -172,6 +170,7 @@ static u32 __get_primary_bootmedia(u32 devstat)
 u32 spl_boot_device(void)
 {
 	u32 devstat = readl(CTRLMMR_MAIN_DEVSTAT);
+	u32 bootindex = readl(K3_BOOT_PARAM_TABLE_INDEX_VAL);
 
 	if (bootindex == K3_PRIMARY_BOOTMODE)
 		return __get_primary_bootmedia(devstat);

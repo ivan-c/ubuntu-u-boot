@@ -44,6 +44,7 @@
 
 /* MMC SPL */
 #define COPY_BL2_FNPTR_ADDR	0x02020030
+#define CONFIG_SUPPORT_EMMC_BOOT
 
 /* specific .lds file */
 

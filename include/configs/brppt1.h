@@ -31,6 +31,11 @@
 /*#define CONFIG_MACH_TYPE		3589*/
 #define CONFIG_MACH_TYPE		0xFFFFFFFF /* TODO: check with kernel*/
 
+/* MMC/SD IP block */
+#if defined(CONFIG_EMMC_BOOT)
+ #define CONFIG_SUPPORT_EMMC_BOOT
+#endif /* CONFIG_EMMC_BOOT */
+
 /*
  * When we have NAND flash we expect to be making use of mtdparts,
  * both for ease of use in U-Boot and for passing information on to
@@ -176,6 +181,9 @@ NANDTGTS \
 
 #define CONFIG_NAND_OMAP_GPMC_WSCFG	1
 #endif /* CONFIG_NAND */
+
+/* USB configuration */
+#define CONFIG_USB_MUSB_DISABLE_BULK_COMBINE_SPLIT
 
 #if defined(CONFIG_SPI)
 /* SPI Flash */

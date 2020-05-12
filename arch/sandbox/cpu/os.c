@@ -209,8 +209,8 @@ void os_tty_raw(int fd, bool allow_sigs)
 
 void *os_malloc(size_t length)
 {
-	int page_size = getpagesize();
 	struct os_mem_hdr *hdr;
+	int page_size = getpagesize();
 
 	/*
 	 * Use an address that is hopefully available to us so that pointers
@@ -229,34 +229,30 @@ void *os_malloc(size_t length)
 
 void os_free(void *ptr)
 {
-	int page_size = getpagesize();
-	struct os_mem_hdr *hdr;
+	struct os_mem_hdr *hdr = ptr;
 
-	if (ptr) {
-		hdr = ptr - page_size;
-		munmap(hdr, hdr->length + page_size);
-	}
+	hdr--;
+	if (ptr)
+		munmap(hdr, hdr->length + sizeof(*hdr));
 }
 
 void *os_realloc(void *ptr, size_t length)
 {
-	int page_size = getpagesize();
-	struct os_mem_hdr *hdr;
+	struct os_mem_hdr *hdr = ptr;
 	void *buf = NULL;
 
-	if (length) {
+	hdr--;
+	if (length != 0) {
 		buf = os_malloc(length);
 		if (!buf)
 			return buf;
 		if (ptr) {
-			hdr = ptr - page_size;
 			if (length > hdr->length)
 				length = hdr->length;
 			memcpy(buf, ptr, length);
 		}
 	}
-	if (ptr)
-		os_free(ptr);
+	os_free(ptr);
 
 	return buf;
 }
@@ -789,41 +785,4 @@ int os_mprotect_allow(void *start, size_t len)
 	len = (len + page_size * 2) & ~(page_size - 1);
 
 	return mprotect(start, len, PROT_READ | PROT_WRITE);
-}
-
-void *os_find_text_base(void)
-{
-	char line[500];
-	void *base = NULL;
-	int len;
-	int fd;
-
-	/*
-	 * This code assumes that the first line of /proc/self/maps holds
-	 * information about the text, for example:
-	 *
-	 * 5622d9907000-5622d9a55000 r-xp 00000000 08:01 15067168   u-boot
-	 *
-	 * The first hex value is assumed to be the address.
-	 *
-	 * This is tested in Linux 4.15.
-	 */
-	fd = open("/proc/self/maps", O_RDONLY);
-	if (fd == -1)
-		return NULL;
-	len = read(fd, line, sizeof(line));
-	if (len > 0) {
-		char *end = memchr(line, '-', len);
-
-		if (end) {
-			unsigned long long addr;
-
-			*end = '\0';
-			if (sscanf(line, "%llx", &addr) == 1)
-				base = (void *)addr;
-		}
-	}
-	close(fd);
-
-	return base;
 }

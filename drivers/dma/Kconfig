@@ -57,6 +57,4 @@ config APBH_DMA_BURST8
 
 endif
 
-source "drivers/dma/ti/Kconfig"
-
 endmenu # menu "DMA Support"

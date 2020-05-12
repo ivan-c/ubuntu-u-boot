@@ -15,9 +15,6 @@
 
 DECLARE_GLOBAL_DATA_PTR;
 
-/* Magic number identifying memory allocated from pool */
-#define EFI_ALLOC_POOL_MAGIC 0x1fe67ddf6491caa2
-
 efi_uintn_t efi_memory_map_key;
 
 struct efi_mem_list {
@@ -36,12 +33,7 @@ LIST_HEAD(efi_mem);
 void *efi_bounce_buffer;
 #endif
 
-/**
- * efi_pool_allocation - memory block allocated from pool
- *
- * @num_pages:	number of pages allocated
- * @checksum:	checksum
- *
+/*
  * U-Boot services each EFI AllocatePool request as a separate
  * (multiple) page allocation.  We have to track the number of pages
  * to be able to free the correct amount later.
@@ -51,25 +43,8 @@ void *efi_bounce_buffer;
  */
 struct efi_pool_allocation {
 	u64 num_pages;
-	u64 checksum;
 	char data[] __aligned(ARCH_DMA_MINALIGN);
 };
-
-/**
- * checksum() - calculate checksum for memory allocated from pool
- *
- * @alloc:	allocation header
- * Return:	checksum, always non-zero
- */
-static u64 checksum(struct efi_pool_allocation *alloc)
-{
-	u64 addr = (uintptr_t)alloc;
-	u64 ret = (addr >> 32) ^ (addr << 32) ^ alloc->num_pages ^
-		  EFI_ALLOC_POOL_MAGIC;
-	if (!ret)
-		++ret;
-	return ret;
-}
 
 /*
  * Sorts the memory list from highest address to lowest address
@@ -193,7 +168,6 @@ static s64 efi_mem_carve_out(struct efi_mem_list *map,
 			free(map);
 		} else {
 			map->desc.physical_start = carve_end;
-			map->desc.virtual_start = carve_end;
 			map->desc.num_pages = (map_end - carve_end)
 					      >> EFI_PAGE_SHIFT;
 		}
@@ -212,7 +186,6 @@ static s64 efi_mem_carve_out(struct efi_mem_list *map,
 	newmap = calloc(1, sizeof(*newmap));
 	newmap->desc = map->desc;
 	newmap->desc.physical_start = carve_start;
-	newmap->desc.virtual_start = carve_start;
 	newmap->desc.num_pages = (map_end - carve_start) >> EFI_PAGE_SHIFT;
 	/* Insert before current entry (descending address order) */
 	list_add_tail(&newmap->link, &map->link);
@@ -231,8 +204,8 @@ uint64_t efi_add_memory_map(uint64_t start, uint64_t pages, int memory_type,
 	bool carve_again;
 	uint64_t carved_pages = 0;
 
-	EFI_PRINT("%s: 0x%llx 0x%llx %d %s\n", __func__,
-		  start, pages, memory_type, overlap_only_ram ? "yes" : "no");
+	debug("%s: 0x%llx 0x%llx %d %s\n", __func__,
+	      start, pages, memory_type, overlap_only_ram ? "yes" : "no");
 
 	if (memory_type >= EFI_MAX_MEMORY_TYPE)
 		return EFI_INVALID_PARAMETER;
@@ -318,44 +291,6 @@ uint64_t efi_add_memory_map(uint64_t start, uint64_t pages, int memory_type,
 	return start;
 }
 
-/**
- * efi_check_allocated() - validate address to be freed
- *
- * Check that the address is within allocated memory:
- *
- * * The address cannot be NULL.
- * * The address must be in a range of the memory map.
- * * The address may not point to EFI_CONVENTIONAL_MEMORY.
- *
- * Page alignment is not checked as this is not a requirement of
- * efi_free_pool().
- *
- * @addr:		address of page to be freed
- * @must_be_allocated:	return success if the page is allocated
- * Return:		status code
- */
-static efi_status_t efi_check_allocated(u64 addr, bool must_be_allocated)
-{
-	struct efi_mem_list *item;
-
-	if (!addr)
-		return EFI_INVALID_PARAMETER;
-	list_for_each_entry(item, &efi_mem, link) {
-		u64 start = item->desc.physical_start;
-		u64 end = start + (item->desc.num_pages << EFI_PAGE_SHIFT);
-
-		if (addr >= start && addr < end) {
-			if (must_be_allocated ^
-			    (item->desc.type == EFI_CONVENTIONAL_MEMORY))
-				return EFI_SUCCESS;
-			else
-				return EFI_NOT_FOUND;
-		}
-	}
-
-	return EFI_NOT_FOUND;
-}
-
 static uint64_t efi_find_free_memory(uint64_t len, uint64_t max_addr)
 {
 	struct list_head *lhandle;
@@ -411,13 +346,9 @@ efi_status_t efi_allocate_pages(int type, int memory_type,
 				efi_uintn_t pages, uint64_t *memory)
 {
 	u64 len = pages << EFI_PAGE_SHIFT;
-	efi_status_t ret;
+	efi_status_t r = EFI_SUCCESS;
 	uint64_t addr;
 
-	/* Check import parameters */
-	if (memory_type >= EFI_PERSISTENT_MEMORY_TYPE &&
-	    memory_type <= 0x6FFFFFFF)
-		return EFI_INVALID_PARAMETER;
 	if (!memory)
 		return EFI_INVALID_PARAMETER;
 
@@ -425,35 +356,43 @@ efi_status_t efi_allocate_pages(int type, int memory_type,
 	case EFI_ALLOCATE_ANY_PAGES:
 		/* Any page */
 		addr = efi_find_free_memory(len, -1ULL);
-		if (!addr)
-			return EFI_OUT_OF_RESOURCES;
+		if (!addr) {
+			r = EFI_NOT_FOUND;
+			break;
+		}
 		break;
 	case EFI_ALLOCATE_MAX_ADDRESS:
 		/* Max address */
 		addr = efi_find_free_memory(len, *memory);
-		if (!addr)
-			return EFI_OUT_OF_RESOURCES;
+		if (!addr) {
+			r = EFI_NOT_FOUND;
+			break;
+		}
 		break;
 	case EFI_ALLOCATE_ADDRESS:
 		/* Exact address, reserve it. The addr is already in *memory. */
-		ret = efi_check_allocated(*memory, false);
-		if (ret != EFI_SUCCESS)
-			return EFI_NOT_FOUND;
 		addr = *memory;
 		break;
 	default:
 		/* UEFI doesn't specify other allocation types */
-		return EFI_INVALID_PARAMETER;
+		r = EFI_INVALID_PARAMETER;
+		break;
 	}
 
-	/* Reserve that map in our memory maps */
-	if (efi_add_memory_map(addr, pages, memory_type, true) != addr)
-		/* Map would overlap, bail out */
-		return  EFI_OUT_OF_RESOURCES;
+	if (r == EFI_SUCCESS) {
+		uint64_t ret;
 
-	*memory = addr;
+		/* Reserve that map in our memory maps */
+		ret = efi_add_memory_map(addr, pages, memory_type, true);
+		if (ret == addr) {
+			*memory = addr;
+		} else {
+			/* Map would overlap, bail out */
+			r = EFI_OUT_OF_RESOURCES;
+		}
+	}
 
-	return EFI_SUCCESS;
+	return r;
 }
 
 void *efi_alloc(uint64_t len, int memory_type)
@@ -470,28 +409,16 @@ void *efi_alloc(uint64_t len, int memory_type)
 	return NULL;
 }
 
-/**
- * efi_free_pages() - free memory pages
+/*
+ * Free memory pages.
  *
- * @memory:	start of the memory area to be freed
- * @pages:	number of pages to be freed
- * Return:	status code
+ * @memory	start of the memory area to be freed
+ * @pages	number of pages to be freed
+ * @return	status code
  */
 efi_status_t efi_free_pages(uint64_t memory, efi_uintn_t pages)
 {
 	uint64_t r = 0;
-	efi_status_t ret;
-
-	ret = efi_check_allocated(memory, true);
-	if (ret != EFI_SUCCESS)
-		return ret;
-
-	/* Sanity check */
-	if (!memory || (memory & EFI_PAGE_MASK) || !pages) {
-		printf("%s: illegal free 0x%llx, 0x%zx\n", __func__,
-		       memory, pages);
-		return EFI_INVALID_PARAMETER;
-	}
 
 	r = efi_add_memory_map(memory, pages, EFI_CONVENTIONAL_MEMORY, false);
 	/* Merging of adjacent free regions is missing */
@@ -502,13 +429,13 @@ efi_status_t efi_free_pages(uint64_t memory, efi_uintn_t pages)
 	return EFI_NOT_FOUND;
 }
 
-/**
- * efi_allocate_pool - allocate memory from pool
+/*
+ * Allocate memory from pool.
  *
- * @pool_type:	type of the pool from which memory is to be allocated
- * @size:	number of bytes to be allocated
- * @buffer:	allocated memory
- * Return:	status code
+ * @pool_type	type of the pool from which memory is to be allocated
+ * @size	number of bytes to be allocated
+ * @buffer	allocated memory
+ * @return	status code
  */
 efi_status_t efi_allocate_pool(int pool_type, efi_uintn_t size, void **buffer)
 {
@@ -531,42 +458,33 @@ efi_status_t efi_allocate_pool(int pool_type, efi_uintn_t size, void **buffer)
 	if (r == EFI_SUCCESS) {
 		alloc = (struct efi_pool_allocation *)(uintptr_t)addr;
 		alloc->num_pages = num_pages;
-		alloc->checksum = checksum(alloc);
 		*buffer = alloc->data;
 	}
 
 	return r;
 }
 
-/**
- * efi_free_pool() - free memory from pool
+/*
+ * Free memory from pool.
  *
- * @buffer:	start of memory to be freed
- * Return:	status code
+ * @buffer	start of memory to be freed
+ * @return	status code
  */
 efi_status_t efi_free_pool(void *buffer)
 {
-	efi_status_t ret;
+	efi_status_t r;
 	struct efi_pool_allocation *alloc;
 
-	ret = efi_check_allocated((uintptr_t)buffer, true);
-	if (ret != EFI_SUCCESS)
-		return ret;
+	if (buffer == NULL)
+		return EFI_INVALID_PARAMETER;
 
 	alloc = container_of(buffer, struct efi_pool_allocation, data);
+	/* Sanity check, was the supplied address returned by allocate_pool */
+	assert(((uintptr_t)alloc & EFI_PAGE_MASK) == 0);
 
-	/* Check that this memory was allocated by efi_allocate_pool() */
-	if (((uintptr_t)alloc & EFI_PAGE_MASK) ||
-	    alloc->checksum != checksum(alloc)) {
-		printf("%s: illegal free 0x%p\n", __func__, buffer);
-		return EFI_INVALID_PARAMETER;
-	}
-	/* Avoid double free */
-	alloc->checksum = 0;
+	r = efi_free_pages((uintptr_t)alloc, alloc->num_pages);
 
-	ret = efi_free_pages((uintptr_t)alloc, alloc->num_pages);
-
-	return ret;
+	return r;
 }
 
 /*

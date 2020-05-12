@@ -493,7 +493,6 @@
 			compatible = "denx,u-boot-probe-test";
 			first-syscon = <&syscon0>;
 			second-sys-ctrl = <&another_system_controller>;
-			third-syscon = <&syscon2>;
 		};
 	};
 
@@ -579,7 +578,7 @@
 		cs-gpios = <0>, <&gpio_a 0>;
 		spi.bin@0 {
 			reg = <0>;
-			compatible = "spansion,m25p16", "jedec,spi-nor";
+			compatible = "spansion,m25p16", "spi-flash";
 			spi-max-frequency = <40000000>;
 			sandbox,filename = "spi.bin";
 		};
@@ -598,7 +597,7 @@
 			0x38 8>;
 	};
 
-	syscon2: syscon@2 {
+	syscon@2 {
 		compatible = "simple-mfd", "syscon";
 		reg = <0x40 5
 			0x48 6

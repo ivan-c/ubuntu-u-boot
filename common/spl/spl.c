@@ -22,7 +22,6 @@
 #include <linux/compiler.h>
 #include <fdt_support.h>
 #include <bootcount.h>
-#include <wdt.h>
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -599,10 +598,6 @@ void board_init_r(gd_t *dummy1, ulong dummy2)
 
 #if CONFIG_IS_ENABLED(BOARD_INIT)
 	spl_board_init();
-#endif
-
-#if defined(CONFIG_SPL_WATCHDOG_SUPPORT) && defined(CONFIG_WDT)
-	initr_watchdog();
 #endif
 
 	if (IS_ENABLED(CONFIG_SPL_OS_BOOT) || CONFIG_IS_ENABLED(HANDOFF))

@@ -1051,13 +1051,13 @@ static int mtd_check_oob_ops(struct mtd_info *mtd, loff_t offs,
 		return -EINVAL;
 
 	if (ops->ooblen) {
-		size_t maxooblen;
+		u64 maxooblen;
 
 		if (ops->ooboffs >= mtd_oobavail(mtd, ops))
 			return -EINVAL;
 
-		maxooblen = ((size_t)(mtd_div_by_ws(mtd->size, mtd) -
-				      mtd_div_by_ws(offs, mtd)) *
+		maxooblen = ((mtd_div_by_ws(mtd->size, mtd) -
+			      mtd_div_by_ws(offs, mtd)) *
 			     mtd_oobavail(mtd, ops)) - ops->ooboffs;
 		if (ops->ooblen > maxooblen)
 			return -EINVAL;

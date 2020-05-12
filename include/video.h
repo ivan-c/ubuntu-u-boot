@@ -70,7 +70,6 @@ enum video_log2_bpp {
  *		the LCD is updated
  * @cmap:	Colour map for 8-bit-per-pixel displays
  * @fg_col_idx:	Foreground color code (bit 3 = bold, bit 0-2 = color)
- * @bg_col_idx:	Background color code (bit 3 = bold, bit 0-2 = color)
  */
 struct video_priv {
 	/* Things set up by the driver: */
@@ -93,7 +92,6 @@ struct video_priv {
 	bool flush_dcache;
 	ushort *cmap;
 	u8 fg_col_idx;
-	u8 bg_col_idx;
 };
 
 /* Placeholder - there are no video operations at present */

@@ -450,9 +450,8 @@ class DtbPlatdata(object):
             self.out('};\n')
 
         for alias, struct_name in self._aliases.iteritems():
-            if alias not in sorted(structs):
-                self.out('#define %s%s %s%s\n'% (STRUCT_PREFIX, alias,
-                                                 STRUCT_PREFIX, struct_name))
+            self.out('#define %s%s %s%s\n'% (STRUCT_PREFIX, alias,
+                                             STRUCT_PREFIX, struct_name))
 
     def output_node(self, node):
         """Output the C code for a node

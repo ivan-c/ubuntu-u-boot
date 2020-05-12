@@ -11,7 +11,6 @@ This test verifies extended write operation on file system.
 import pytest
 import re
 from fstest_defs import *
-from fstest_helpers import assert_fs_integrity
 
 @pytest.mark.boardspec('sandbox')
 @pytest.mark.slow
@@ -37,7 +36,6 @@ class TestFsExt(object):
                 'md5sum %x $filesize' % ADDR,
                 'setenv filesize'])
             assert(md5val[0] in ''.join(output))
-            assert_fs_integrity(fs_type, fs_img)
 
     def test_fs_ext2(self, u_boot_console, fs_obj_ext):
         """
@@ -60,7 +58,6 @@ class TestFsExt(object):
                 'md5sum %x $filesize' % ADDR,
                 'setenv filesize'])
             assert(md5val[0] in ''.join(output))
-            assert_fs_integrity(fs_type, fs_img)
 
     def test_fs_ext3(self, u_boot_console, fs_obj_ext):
         """
@@ -75,7 +72,6 @@ class TestFsExt(object):
                 '%swrite host 0:0 %x /dir1/none/%s.w3 $filesize'
                     % (fs_type, ADDR, MIN_FILE)])
             assert('Unable to write "/dir1/none/' in ''.join(output))
-            assert_fs_integrity(fs_type, fs_img)
 
     def test_fs_ext4(self, u_boot_console, fs_obj_ext):
         """
@@ -108,7 +104,6 @@ class TestFsExt(object):
                 'md5sum %x $filesize' % ADDR,
                 'setenv filesize'])
             assert(md5val[1] in ''.join(output))
-            assert_fs_integrity(fs_type, fs_img)
 
     def test_fs_ext5(self, u_boot_console, fs_obj_ext):
         """
@@ -141,7 +136,6 @@ class TestFsExt(object):
                 'md5sum %x $filesize' % ADDR,
                 'setenv filesize'])
             assert(md5val[2] in ''.join(output))
-            assert_fs_integrity(fs_type, fs_img)
 
     def test_fs_ext6(self, u_boot_console, fs_obj_ext):
         """
@@ -166,7 +160,6 @@ class TestFsExt(object):
                 'printenv filesize',
                 'setenv filesize'])
             assert('filesize=0' in ''.join(output))
-            assert_fs_integrity(fs_type, fs_img)
 
     def test_fs_ext7(self, u_boot_console, fs_obj_ext):
         """
@@ -199,7 +192,6 @@ class TestFsExt(object):
                 'md5sum %x $filesize' % ADDR,
                 'setenv filesize'])
             assert(md5val[3] in ''.join(output))
-            assert_fs_integrity(fs_type, fs_img)
 
     def test_fs_ext8(self, u_boot_console, fs_obj_ext):
         """
@@ -217,7 +209,6 @@ class TestFsExt(object):
                 '%swrite host 0:0 %x /dir1/%s.w8 0x1400 %x'
                     % (fs_type, ADDR, MIN_FILE, 0x100000 + 0x1400))
             assert('Unable to write "/dir1' in output)
-            assert_fs_integrity(fs_type, fs_img)
 
     def test_fs_ext9(self, u_boot_console, fs_obj_ext):
         """
@@ -232,4 +223,3 @@ class TestFsExt(object):
                 '%swrite host 0:0 %x /dir1/%s.w9 0x1400 0x1400'
                     % (fs_type, ADDR, MIN_FILE)])
             assert('Unable to write "/dir1' in ''.join(output))
-            assert_fs_integrity(fs_type, fs_img)

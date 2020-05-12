@@ -214,7 +214,7 @@ int spi_mem_exec_op(struct spi_slave *slave, const struct spi_mem_op *op)
 	if (ret < 0)
 		return ret;
 
-	if (ops->mem_ops && ops->mem_ops->exec_op) {
+	if (ops->mem_ops) {
 #ifndef __UBOOT__
 		/*
 		 * Flush the message queue before executing our SPI memory
