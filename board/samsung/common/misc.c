@@ -14,7 +14,6 @@
 #include <malloc.h>
 #include <linux/sizes.h>
 #include <asm/arch/cpu.h>
-#include <asm/arch/gpio.h>
 #include <asm/gpio.h>
 #include <linux/input.h>
 #include <power/pmic.h>
@@ -23,7 +22,7 @@
 DECLARE_GLOBAL_DATA_PTR;
 
 #ifdef CONFIG_SET_DFU_ALT_INFO
-void set_dfu_alt_info(void)
+void set_dfu_alt_info(char *interface, char *devstr)
 {
 	size_t buf_size = CONFIG_SET_DFU_ALT_BUF_LEN;
 	ALLOC_CACHE_ALIGN_BUFFER(char, buf, buf_size);
@@ -35,13 +34,13 @@ void set_dfu_alt_info(void)
 
 	puts("DFU alt info setting: ");
 
-	alt_setting = get_dfu_alt_boot();
+	alt_setting = get_dfu_alt_boot(interface, devstr);
 	if (alt_setting) {
 		setenv("dfu_alt_boot", alt_setting);
 		offset = snprintf(buf, buf_size, "%s", alt_setting);
 	}
 
-	alt_setting = get_dfu_alt_system();
+	alt_setting = get_dfu_alt_system(interface, devstr);
 	if (alt_setting) {
 		if (offset)
 			alt_sep = ";";
@@ -412,6 +411,8 @@ void check_boot_mode(void)
 void keys_init(void)
 {
 	/* Set direction to input */
+	gpio_request(KEY_VOL_UP_GPIO, "volume-up");
+	gpio_request(KEY_VOL_DOWN_GPIO, "volume-down");
 	gpio_direction_input(KEY_VOL_UP_GPIO);
 	gpio_direction_input(KEY_VOL_DOWN_GPIO);
 }

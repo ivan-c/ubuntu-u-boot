@@ -108,8 +108,8 @@ static int do_sdhci_init(struct sdhci_host *host)
 	flag = host->bus_width == 8 ? PINMUX_FLAG_8BIT_MODE : PINMUX_FLAG_NONE;
 	dev_id = host->index + PERIPH_ID_SDMMC0;
 
-	if (fdt_gpio_isvalid(&host->pwr_gpio)) {
-		gpio_direction_output(host->pwr_gpio.gpio, 1);
+	if (dm_gpio_is_valid(&host->pwr_gpio)) {
+		dm_gpio_set_value(&host->pwr_gpio, 1);
 		err = exynos_pinmux_config(dev_id, flag);
 		if (err) {
 			debug("MMC not configured\n");
@@ -117,9 +117,8 @@ static int do_sdhci_init(struct sdhci_host *host)
 		}
 	}
 
-	if (fdt_gpio_isvalid(&host->cd_gpio)) {
-		gpio_direction_output(host->cd_gpio.gpio, 0xf);
-		if (gpio_get_value(host->cd_gpio.gpio))
+	if (dm_gpio_is_valid(&host->cd_gpio)) {
+		if (dm_gpio_get_value(&host->cd_gpio))
 			return -ENODEV;
 
 		err = exynos_pinmux_config(dev_id, flag);
@@ -161,8 +160,10 @@ static int sdhci_get_config(const void *blob, int node, struct sdhci_host *host)
 	}
 	host->ioaddr = (void *)base;
 
-	fdtdec_decode_gpio(blob, node, "pwr-gpios", &host->pwr_gpio);
-	fdtdec_decode_gpio(blob, node, "cd-gpios", &host->cd_gpio);
+	gpio_request_by_name_nodev(blob, node, "pwr-gpios", 0, &host->pwr_gpio,
+				   GPIOD_IS_OUT);
+	gpio_request_by_name_nodev(blob, node, "cd-gpios", 0, &host->cd_gpio,
+				   GPIOD_IS_IN);
 
 	return 0;
 }

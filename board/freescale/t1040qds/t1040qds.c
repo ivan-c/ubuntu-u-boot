@@ -19,8 +19,8 @@
 #include <asm/fsl_liodn.h>
 #include <fm_eth.h>
 #include <hwconfig.h>
-#include <asm/mpc85xx_gpio.h>
 
+#include "../common/sleep.h"
 #include "../common/qixis.h"
 #include "t1040qds.h"
 #include "t1040qds_qixis.h"
@@ -113,6 +113,16 @@ static void qe_board_setup(void)
 		QIXIS_WRITE(brdcfg[15], brdcfg15 | 2);
 		QIXIS_WRITE(brdcfg[9], brdcfg9 | 4);
 	}
+}
+
+int board_early_init_f(void)
+{
+#if defined(CONFIG_DEEP_SLEEP)
+	if (is_warm_boot())
+		fsl_dp_disable_console();
+#endif
+
+	return 0;
 }
 
 int board_early_init_r(void)
@@ -233,7 +243,7 @@ int misc_init_r(void)
 	return 0;
 }
 
-void ft_board_setup(void *blob, bd_t *bd)
+int ft_board_setup(void *blob, bd_t *bd)
 {
 	phys_addr_t base;
 	phys_size_t size;
@@ -259,6 +269,8 @@ void ft_board_setup(void *blob, bd_t *bd)
 	fdt_fixup_fman_ethernet(blob);
 	fdt_fixup_board_enet(blob);
 #endif
+
+	return 0;
 }
 
 void qixis_dump_switch(void)
@@ -279,14 +291,3 @@ int board_need_mem_reset(void)
 {
 	return 1;
 }
-
-#ifdef CONFIG_DEEP_SLEEP
-void board_mem_sleep_setup(void)
-{
-	/* does not provide HW signals for power management */
-	QIXIS_WRITE(pwr_ctl[1], (QIXIS_READ(pwr_ctl[1]) & ~0x2));
-	/* Disable MCKE isolation */
-	gpio_set_value(2, 0);
-	udelay(1);
-}
-#endif

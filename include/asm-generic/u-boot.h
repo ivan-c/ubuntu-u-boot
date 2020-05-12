@@ -32,6 +32,10 @@ typedef struct bd_info {
 	unsigned long	bi_flashoffset; /* reserved area for startup monitor */
 	unsigned long	bi_sramstart;	/* start of SRAM memory */
 	unsigned long	bi_sramsize;	/* size	 of SRAM memory */
+#ifdef CONFIG_AVR32
+	unsigned char   bi_phy_id[4];   /* PHY address for ATAG_ETHERNET */
+	unsigned long   bi_board_number;/* ATAG_BOARDINFO */
+#endif
 #ifdef CONFIG_ARM
 	unsigned long	bi_arm_freq; /* arm frequency */
 	unsigned long	bi_dsp_freq; /* dsp core frequency */
@@ -78,9 +82,6 @@ typedef struct bd_info {
 	unsigned int	bi_plb_busfreq;	/* PLB Bus speed, in Hz */
 	unsigned int	bi_pci_busfreq;	/* PCI Bus speed, in Hz */
 	unsigned char	bi_pci_enetaddr[6];	/* PCI Ethernet MAC address */
-#endif
-#if defined(CONFIG_HYMOD)
-	hymod_conf_t	bi_hymod_conf;	/* hymod configuration information */
 #endif
 
 #ifdef CONFIG_HAS_ETH1

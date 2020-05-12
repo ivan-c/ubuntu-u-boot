@@ -140,6 +140,9 @@ struct dfu_entity {
 	unsigned int inited:1;
 };
 
+#ifdef CONFIG_SET_DFU_ALT_INFO
+void set_dfu_alt_info(char *interface, char *devstr);
+#endif
 int dfu_config_entities(char *s, char *interface, char *devstr);
 void dfu_free_entities(void);
 void dfu_show_entities(void);
@@ -150,9 +153,6 @@ struct dfu_entity *dfu_get_entity(int alt);
 char *dfu_extract_token(char** e, int *n);
 void dfu_trigger_reset(void);
 int dfu_get_alt(char *name);
-bool dfu_detach(void);
-void dfu_trigger_detach(void);
-void dfu_clear_detach(void);
 int dfu_init_env_entities(char *interface, char *devstr);
 unsigned char *dfu_get_buf(struct dfu_entity *dfu);
 unsigned char *dfu_free_buf(void);

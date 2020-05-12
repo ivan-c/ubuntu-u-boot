@@ -85,6 +85,7 @@ static const table_entry_t uimage_arch[] = {
 	{	IH_ARCH_SANDBOX,	"sandbox",	"Sandbox",	},
 	{	IH_ARCH_ARM64,		"arm64",	"AArch64",	},
 	{	IH_ARCH_ARC,		"arc",		"ARC",		},
+	{	IH_ARCH_X86_64,		"x86_64",	"AMD x86_64",	},
 	{	-1,			"",		"",		},
 };
 
@@ -119,6 +120,10 @@ static const table_entry_t uimage_os[] = {
 	{	IH_OS_SOLARIS,	"solaris",	"Solaris",		},
 	{	IH_OS_SVR4,	"svr4",		"SVR4",			},
 #endif
+#if defined(CONFIG_BOOTM_OPENRTOS) || defined(USE_HOSTCC)
+	{	IH_OS_OPENRTOS,	"openrtos",	"OpenRTOS",		},
+#endif
+
 	{	-1,		"",		"",			},
 };
 
@@ -143,6 +148,7 @@ static const table_entry_t uimage_type[] = {
 	{	IH_TYPE_UBLIMAGE,   "ublimage",   "Davinci UBL image",},
 	{	IH_TYPE_MXSIMAGE,   "mxsimage",   "Freescale MXS Boot Image",},
 	{	IH_TYPE_ATMELIMAGE, "atmelimage", "ATMEL ROM-Boot Image",},
+	{	IH_TYPE_X86_SETUP,  "x86_setup",  "x86 setup.bin",    },
 	{	-1,		    "",		  "",			},
 };
 
@@ -483,12 +489,22 @@ void memmove_wd(void *to, void *from, size_t len, ulong chunksz)
 		return;
 
 #if defined(CONFIG_HW_WATCHDOG) || defined(CONFIG_WATCHDOG)
+	if (to > from) {
+		from += len;
+		to += len;
+	}
 	while (len > 0) {
 		size_t tail = (len > chunksz) ? chunksz : len;
 		WATCHDOG_RESET();
+		if (to > from) {
+			to -= tail;
+			from -= tail;
+		}
 		memmove(to, from, tail);
-		to += tail;
-		from += tail;
+		if (to < from) {
+			to += tail;
+			from += tail;
+		}
 		len -= tail;
 	}
 #else	/* !(CONFIG_HW_WATCHDOG || CONFIG_WATCHDOG) */
@@ -740,7 +756,7 @@ int genimg_get_format(const void *img_addr)
  * genimg_get_image - get image from special storage (if necessary)
  * @img_addr: image start address
  *
- * genimg_get_image() checks if provided image start adddress is located
+ * genimg_get_image() checks if provided image start address is located
  * in a dataflash storage. If so, image is moved to a system RAM memory.
  *
  * returns:
@@ -1009,7 +1025,8 @@ int boot_get_ramdisk(int argc, char * const argv[], bootm_headers_t *images,
 		image_multi_getimg(images->legacy_hdr_os, 1, &rd_data, &rd_len);
 	}
 #ifdef CONFIG_ANDROID_BOOT_IMAGE
-	else if ((genimg_get_format(images) == IMAGE_FORMAT_ANDROID) &&
+	else if ((genimg_get_format((void *)images->os.start)
+			== IMAGE_FORMAT_ANDROID) &&
 		 (!android_image_get_ramdisk((void *)images->os.start,
 		 &rd_data, &rd_len))) {
 		/* empty */
@@ -1135,6 +1152,16 @@ error:
 	return -1;
 }
 #endif /* CONFIG_SYS_BOOT_RAMDISK_HIGH */
+
+int boot_get_setup(bootm_headers_t *images, uint8_t arch,
+		   ulong *setup_start, ulong *setup_len)
+{
+#if defined(CONFIG_FIT)
+	return boot_get_setup_fit(images, arch, setup_start, setup_len);
+#else
+	return -ENOENT;
+#endif
+}
 
 #ifdef CONFIG_SYS_BOOT_GET_CMDLINE
 /**

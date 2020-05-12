@@ -78,6 +78,15 @@
 #define CONFIG_CMD_FAT
 #define CONFIG_DOS_PARTITION
 
+/* USB Configs */
+#define CONFIG_CMD_USB
+#define CONFIG_USB_EHCI
+#define CONFIG_USB_EHCI_MX6
+#define CONFIG_USB_STORAGE
+#define CONFIG_USB_MAX_CONTROLLER_COUNT	2
+#define CONFIG_MXC_USB_PORTSC		(PORT_PTS_UTMI | PORT_PTS_PTW)
+#define CONFIG_MXC_USB_FLAGS		0
+
 /* Ethernet Configuration */
 #define CONFIG_CMD_PING
 #define CONFIG_CMD_DHCP
@@ -166,7 +175,7 @@
 		"if i2c probe 0x10; then " \
 			"setenv bootargs ${bootargs} " \
 				"video=mxcfb${nextcon}:dev=lcd,800x480@60," \
-					"if=RGB666; " \
+					"if=RGB666,bpp=32; " \
 			"if test 0 -eq ${nextcon}; then " \
 				"setenv fbmem fbmem=10M; " \
 			"else " \

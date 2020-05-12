@@ -18,13 +18,6 @@
 
 #include <asm/arch/tegra.h>		/* get chip and board defs */
 
-#define CONFIG_DM
-#define CONFIG_CMD_DM
-#define CONFIG_DM_GPIO
-#ifndef CONFIG_SPL_BUILD
-#define CONFIG_DM_SERIAL
-#endif
-
 #define CONFIG_SYS_TIMER_RATE		1000000
 #define CONFIG_SYS_TIMER_COUNTER	NV_PA_TMRUS_BASE
 
@@ -44,7 +37,8 @@
  * Size of malloc() pool
  */
 #define CONFIG_SYS_MALLOC_LEN		(4 << 20)	/* 4MB  */
-#define CONFIG_SYS_MALLOC_F_LEN	(1 << 10)
+
+#define CONFIG_SYS_NONCACHED_MEMORY	(1 << 20)       /* 1 MiB */
 
 /*
  * NS16550 Configuration
@@ -116,6 +110,10 @@
 #define CONFIG_SYS_MEMTEST_START	(NV_PA_SDRC_CS0 + 0x600000)
 #define CONFIG_SYS_MEMTEST_END		(CONFIG_SYS_MEMTEST_START + 0x100000)
 
+#ifndef CONFIG_SPL_BUILD
+#define CONFIG_USE_ARCH_MEMCPY
+#endif
+
 /*-----------------------------------------------------------------------
  * Physical Memory Map
  */
@@ -151,10 +149,6 @@
 #define CONFIG_SPL_LIBGENERIC_SUPPORT
 #define CONFIG_SPL_SERIAL_SUPPORT
 #define CONFIG_SPL_GPIO_SUPPORT
-
-#ifdef CONFIG_SPL_BUILD
-# define CONFIG_USE_PRIVATE_LIBGCC
-#endif
 
 #define CONFIG_SYS_GENERIC_BOARD
 

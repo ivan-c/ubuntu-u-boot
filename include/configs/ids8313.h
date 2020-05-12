@@ -484,7 +484,6 @@
  * Miscellaneous configurable options
  */
 #define CONFIG_SYS_LONGHELP
-#define CONFIG_SYS_PROMPT		"=> "
 #define CONFIG_SYS_CBSIZE		1024
 #define CONFIG_SYS_PBSIZE		(CONFIG_SYS_CBSIZE \
 					 + sizeof(CONFIG_SYS_PROMPT)+16)
@@ -576,12 +575,9 @@
 
 #define CONFIG_VERSION_VARIABLE
 
-#define CONFIG_FIT
-#define CONFIG_FIT_SIGNATURE
 #define CONFIG_IMAGE_FORMAT_LEGACY
 #define CONFIG_CMD_FDT
 #define CONFIG_CMD_HASH
-#define CONFIG_RSA
 #define CONFIG_SHA1
 #define CONFIG_SHA256
 

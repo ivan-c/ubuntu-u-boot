@@ -17,6 +17,14 @@ struct arch_global_data {
 #if defined(CONFIG_FSL_ESDHC)
 	u32 sdhc_clk;
 #endif
+
+#if defined(CONFIG_U_QE)
+	u32 qe_clk;
+	u32 brg_clk;
+	uint mp_alloc_base;
+	uint mp_alloc_top;
+#endif /* CONFIG_U_QE */
+
 #ifdef CONFIG_AT91FAMILY
 	/* "static data" needed by at91's clock.c */
 	unsigned long	cpu_clk_rate_hz;
@@ -39,6 +47,9 @@ struct arch_global_data {
 
 #ifdef CONFIG_OMAP
 	struct omap_boot_parameters omap_boot_params;
+#endif
+#ifdef CONFIG_FSL_LSCH3
+	unsigned long mem2_clk;
 #endif
 };
 

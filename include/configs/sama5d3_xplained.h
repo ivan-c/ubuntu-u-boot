@@ -169,13 +169,14 @@
 				"bootz 0x22000000 - 0x21000000"
 #elif CONFIG_SYS_USE_MMC
 /* bootstrap + u-boot + env in sd card */
-#define CONFIG_ENV_IS_IN_MMC
-#define CONFIG_ENV_OFFSET	0x2000
-#define CONFIG_ENV_SIZE		0x1000
+#define CONFIG_ENV_IS_IN_FAT
+#define FAT_ENV_INTERFACE	"mmc"
+#define FAT_ENV_FILE		"uboot.env"
+#define FAT_ENV_DEVICE_AND_PART	"0"
+#define CONFIG_ENV_SIZE		0x4000
 #define CONFIG_BOOTCOMMAND	"fatload mmc 0:1 0x21000000 at91-sama5d3_xplained.dtb; " \
 				"fatload mmc 0:1 0x22000000 zImage; " \
 				"bootz 0x22000000 - 0x21000000"
-#define CONFIG_SYS_MMC_ENV_DEV	0
 #else
 #define CONFIG_ENV_IS_NOWHERE
 #endif
@@ -226,12 +227,12 @@
 #define CONFIG_SYS_MONITOR_LEN		(512 << 10)
 
 #ifdef CONFIG_SYS_USE_MMC
-#define CONFIG_SPL_LDSCRIPT		arch/arm/cpu/at91-common/u-boot-spl.lds
+#define CONFIG_SPL_LDSCRIPT		arch/arm/mach-at91/u-boot-spl.lds
 #define CONFIG_SPL_MMC_SUPPORT
 #define CONFIG_SYS_U_BOOT_MAX_SIZE_SECTORS	0x400
 #define CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR 0x200
-#define CONFIG_SYS_MMC_SD_FAT_BOOT_PARTITION	1
-#define CONFIG_SPL_FAT_LOAD_PAYLOAD_NAME	"u-boot.img"
+#define CONFIG_SYS_MMCSD_FS_BOOT_PARTITION	1
+#define CONFIG_SPL_FS_LOAD_PAYLOAD_NAME	"u-boot.img"
 #define CONFIG_SPL_FAT_SUPPORT
 #define CONFIG_SPL_LIBDISK_SUPPORT
 
@@ -246,6 +247,7 @@
 #define CONFIG_SYS_NAND_OOBSIZE		64
 #define CONFIG_SYS_NAND_BLOCK_SIZE	0x20000
 #define CONFIG_SYS_NAND_BAD_BLOCK_POS	0x0
+#define CONFIG_SPL_GENERATE_ATMEL_PMECC_HEADER
 
 #endif
 

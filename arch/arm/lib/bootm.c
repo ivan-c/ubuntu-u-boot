@@ -22,6 +22,8 @@
 #include <asm/bootm.h>
 #include <asm/secure.h>
 #include <linux/compiler.h>
+#include <bootm.h>
+#include <vxworks.h>
 
 #if defined(CONFIG_ARMV7_NONSEC) || defined(CONFIG_ARMV7_VIRT)
 #include <asm/armv7.h>
@@ -189,7 +191,7 @@ __weak void setup_board_tags(struct tag **in_params) {}
 static void do_nonsec_virt_switch(void)
 {
 	smp_kick_all_cpus();
-	flush_dcache_all();	/* flush cache before swtiching to EL2 */
+	dcache_disable();	/* flush cache before swtiching to EL2 */
 	armv8_switch_to_el2();
 #ifdef CONFIG_ARMV8_SWITCH_TO_EL1
 	armv8_switch_to_el1();
@@ -234,6 +236,26 @@ static void boot_prep_linux(bootm_headers_t *images)
 		hang();
 	}
 }
+
+#if defined(CONFIG_ARMV7_NONSEC) || defined(CONFIG_ARMV7_VIRT)
+bool armv7_boot_nonsec(void)
+{
+	char *s = getenv("bootm_boot_mode");
+#ifdef CONFIG_ARMV7_BOOT_SEC_DEFAULT
+	bool nonsec = false;
+#else
+	bool nonsec = true;
+#endif
+
+	if (s && !strcmp(s, "sec"))
+		nonsec = false;
+
+	if (s && !strcmp(s, "nonsec"))
+		nonsec = true;
+
+	return nonsec;
+}
+#endif
 
 /* Subcommand: GO */
 static void boot_jump_linux(bootm_headers_t *images, int flag)
@@ -283,12 +305,13 @@ static void boot_jump_linux(bootm_headers_t *images, int flag)
 
 	if (!fake) {
 #if defined(CONFIG_ARMV7_NONSEC) || defined(CONFIG_ARMV7_VIRT)
-		armv7_init_nonsec();
-		secure_ram_addr(_do_nonsec_entry)(kernel_entry,
-						  0, machid, r2);
-#else
-		kernel_entry(0, machid, r2);
+		if (armv7_boot_nonsec()) {
+			armv7_init_nonsec();
+			secure_ram_addr(_do_nonsec_entry)(kernel_entry,
+							  0, machid, r2);
+		} else
 #endif
+			kernel_entry(0, machid, r2);
 	}
 #endif
 }
@@ -299,7 +322,8 @@ static void boot_jump_linux(bootm_headers_t *images, int flag)
  * DIFFERENCE: Instead of calling prep and go at the end
  * they are called if subcommand is equal 0.
  */
-int do_bootm_linux(int flag, int argc, char *argv[], bootm_headers_t *images)
+int do_bootm_linux(int flag, int argc, char * const argv[],
+		   bootm_headers_t *images)
 {
 	/* No need for those on ARM */
 	if (flag & BOOTM_STATE_OS_BD_T || flag & BOOTM_STATE_OS_CMDLINE)

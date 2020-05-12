@@ -12,6 +12,7 @@
 #include <bootm.h>
 #include <command.h>
 #include <environment.h>
+#include <errno.h>
 #include <image.h>
 #include <lmb.h>
 #include <malloc.h>
@@ -184,6 +185,9 @@ static char bootm_help_text[] =
 	"\tcmdline - OS specific command line processing/setup\n"
 	"\tbdt     - OS specific bd_t processing\n"
 	"\tprep    - OS specific prep before relocation or go\n"
+#if defined(CONFIG_TRACE)
+	"\tfake    - OS specific fake start without go\n"
+#endif
 	"\tgo      - start OS";
 #endif
 

@@ -15,6 +15,7 @@
 #include <netdev.h>
 #include <asm/cache.h>
 #include <asm/io.h>
+#include <vsc9953.h>
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -76,6 +77,10 @@ static struct cpu_type cpu_type_list[] = {
 	CPU_TYPE_ENTRY(T1020, T1020, 0),
 	CPU_TYPE_ENTRY(T1021, T1021, 0),
 	CPU_TYPE_ENTRY(T1022, T1022, 0),
+	CPU_TYPE_ENTRY(T1024, T1024, 0),
+	CPU_TYPE_ENTRY(T1023, T1023, 0),
+	CPU_TYPE_ENTRY(T1014, T1014, 0),
+	CPU_TYPE_ENTRY(T1013, T1013, 0),
 	CPU_TYPE_ENTRY(T2080, T2080, 0),
 	CPU_TYPE_ENTRY(T2081, T2081, 0),
 	CPU_TYPE_ENTRY(BSC9130, 9130, 1),
@@ -266,6 +271,10 @@ int cpu_eth_init(bd_t *bis)
 
 #ifdef CONFIG_FMAN_ENET
 	fm_standard_init(bis);
+#endif
+
+#ifdef CONFIG_VSC9953
+	vsc9953_init(bis);
 #endif
 	return 0;
 }

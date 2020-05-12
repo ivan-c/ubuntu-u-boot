@@ -15,9 +15,10 @@
 struct pll_init_data ddr3a_333 = DDR3_PLL_333(A);
 struct pll_init_data ddr3a_400 = DDR3_PLL_400(A);
 
-void ddr3_init(void)
+u32 ddr3_init(void)
 {
 	char dimm_name[32];
+	u32 ddr3_size;
 
 	ddr3_get_dimm_params(dimm_name);
 
@@ -44,12 +45,14 @@ void ddr3_init(void)
 			ddr3_init_ddremif(KS2_DDR3A_EMIF_CTRL_BASE,
 					  &ddr3_1600_8g);
 			printf("DRAM:  Capacity 8 GiB (includes reported below)\n");
+			ddr3_size = 8;
 		} else {
 			ddr3_init_ddrphy(KS2_DDR3A_DDRPHYC, &ddr3phy_1600_8g);
 			ddr3_1600_8g.sdcfg |= 0x1000;
 			ddr3_init_ddremif(KS2_DDR3A_EMIF_CTRL_BASE,
 					  &ddr3_1600_8g);
 			printf("DRAM:  Capacity 4 GiB (includes reported below)\n");
+			ddr3_size = 4;
 		}
 	} else if (!strcmp(dimm_name, "SQR-SD3T-2G1333SED")) {
 		init_pll(&ddr3a_333);
@@ -70,11 +73,15 @@ void ddr3_init(void)
 			}
 			ddr3_init_ddremif(KS2_DDR3A_EMIF_CTRL_BASE,
 					  &ddr3_1333_2g);
+			ddr3_size = 2;
+			printf("DRAM:  2 GiB");
 		} else {
 			ddr3_init_ddrphy(KS2_DDR3A_DDRPHYC, &ddr3phy_1333_2g);
 			ddr3_1333_2g.sdcfg |= 0x1000;
 			ddr3_init_ddremif(KS2_DDR3A_EMIF_CTRL_BASE,
 					  &ddr3_1333_2g);
+			ddr3_size = 1;
+			printf("DRAM:  1 GiB");
 		}
 	} else {
 		printf("Unknown SO-DIMM. Cannot configure DDR3\n");
@@ -85,4 +92,6 @@ void ddr3_init(void)
 	/* Apply the workaround for PG 1.0 and 1.1 Silicons */
 	if (cpu_revision() <= 1)
 		ddr3_err_reset_workaround();
+
+	return ddr3_size;
 }
