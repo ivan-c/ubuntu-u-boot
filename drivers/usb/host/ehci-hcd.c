@@ -15,6 +15,7 @@
 #include <usb.h>
 #include <asm/io.h>
 #include <malloc.h>
+#include <memalign.h>
 #include <watchdog.h>
 #include <linux/compiler.h>
 
@@ -1645,8 +1646,10 @@ int ehci_register(struct udevice *dev, struct ehci_hccr *hccr,
 	ctrl->hcor = hcor;
 	ctrl->priv = ctrl;
 
-	if (init == USB_INIT_DEVICE)
+	ctrl->init = init;
+	if (ctrl->init == USB_INIT_DEVICE)
 		goto done;
+
 	ret = ehci_reset(ctrl);
 	if (ret)
 		goto err;
@@ -1665,6 +1668,9 @@ err:
 int ehci_deregister(struct udevice *dev)
 {
 	struct ehci_ctrl *ctrl = dev_get_priv(dev);
+
+	if (ctrl->init == USB_INIT_DEVICE)
+		return 0;
 
 	ehci_shutdown(ctrl);
 

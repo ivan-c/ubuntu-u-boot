@@ -57,7 +57,7 @@
 #define CONFIG_CMD_GPIO
 
 /* Thermal */
-#define CONFIG_IMX6_THERMAL
+#define CONFIG_IMX_THERMAL
 
 /* Serial */
 #define CONFIG_MXC_UART
@@ -168,7 +168,6 @@
 
 /* Ethernet support */
 #define CONFIG_FEC_MXC
-#define CONFIG_E1000
 #define CONFIG_MII
 #define IMX_FEC_BASE             ENET_BASE_ADDR
 #define CONFIG_FEC_XCV_TYPE      RGMII

@@ -44,6 +44,18 @@ PH1-sLD8:
     $ make ph1_sld8_defconfig
     $ make CROSS_COMPILE=arm-linux-gnueabi-
 
+PH1-Pro5:
+    $ make ph1_pro5_defconfig
+    $ make CROSS_COMPILE=arm-linux-gnueabi-
+
+ProXstream2:
+    $ make pxs2_defconfig
+    $ make CROSS_COMPILE=arm-linux-gnueabi-
+
+PH1-LD6b:
+    $ make ph1_ld6b_defconfig
+    $ make CROSS_COMPILE=arm-linux-gnueabi-
+
 You may wish to change the "CROSS_COMPILE=arm-linux-gnueabi-"
 to use your favorite compiler.
 
@@ -52,12 +64,12 @@ Burn U-Boot images to NAND
 --------------------------
 
 Write two files to the NAND device as follows:
- - spl/u-boot-spl.bin at the offset address 0x00000000
- - u-boot-dtb.img     at the offset address 0x00010000
+ - spl/u-boot-spl-dtb.bin at the offset address 0x00000000
+ - u-boot-dtb.img         at the offset address 0x00010000
 
 If a TFTP server is available, the images can be easily updated.
-Just copy the u-boot-spl.bin and u-boot-dtb.img to the TFTP public directory,
-and then run the following command at the U-Boot command line:
+Just copy the u-boot-spl-dtb.bin and u-boot-dtb.img to the TFTP public
+directory, and then run the following command at the U-Boot command line:
 
   => run nandupdate
 
@@ -129,4 +141,4 @@ newer SoCs.  Even if it is, EA[25] is not connected on most of the boards.
 
 --
 Masahiro Yamada <yamada.masahiro@socionext.com>
-Jul. 2015
+Aug. 2015

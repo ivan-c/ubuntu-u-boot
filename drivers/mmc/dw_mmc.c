@@ -10,6 +10,7 @@
 #include <common.h>
 #include <errno.h>
 #include <malloc.h>
+#include <memalign.h>
 #include <mmc.h>
 #include <dwmmc.h>
 #include <asm-generic/errno.h>
@@ -213,7 +214,7 @@ static int dwmci_send_cmd(struct mmc *mmc, struct mmc_cmd *cmd,
 
 	if (data) {
 		start = get_timer(0);
-		timeout = 1000;
+		timeout = 240000;
 		for (;;) {
 			mask = dwmci_readl(host, DWMCI_RINTSTS);
 			/* Error during data transfer. */
@@ -266,7 +267,7 @@ static int dwmci_setup_bus(struct dwmci_host *host, u32 freq)
 	 * host->bus_hz should be set by user.
 	 */
 	if (host->get_mmc_clk)
-		sclk = host->get_mmc_clk(host);
+		sclk = host->get_mmc_clk(host, freq);
 	else if (host->bus_hz)
 		sclk = host->bus_hz;
 	else {
