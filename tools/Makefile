@@ -15,6 +15,7 @@ CONFIG_SHA1_CHECK_UB_IMG = y
 CONFIG_ARCH_SUNXI = y
 endif
 
+subdir-$(HOST_TOOLS_ALL) += easylogo
 subdir-$(HOST_TOOLS_ALL) += gdb
 
 # Merge all the different vars for envcrc into one
@@ -174,9 +175,6 @@ HOSTCFLAGS_mkexynosspl.o := -pedantic
 ifdtool-objs := $(LIBFDT_OBJS) ifdtool.o
 hostprogs-$(CONFIG_X86) += ifdtool
 
-ifwitool-objs := ifwitool.o
-hostprogs-$(CONFIG_X86)$(CONFIG_SANDBOX) += ifwitool
-
 hostprogs-$(CONFIG_MX23) += mxsboot
 hostprogs-$(CONFIG_MX28) += mxsboot
 HOSTCFLAGS_mxsboot.o := -pedantic
@@ -268,14 +266,8 @@ __build:	$(LOGO-y)
 $(LOGO_H):	$(obj)/bmp_logo $(LOGO_BMP)
 	$(obj)/bmp_logo --gen-info $(LOGO_BMP) > $@
 
-ifeq ($(CONFIG_DM_VIDEO),y)
-$(LOGO_DATA_H):	$(obj)/bmp_logo $(LOGO_BMP)
-	$(obj)/bmp_logo --gen-bmp $(LOGO_BMP) > $@
-else
 $(LOGO_DATA_H):	$(obj)/bmp_logo $(LOGO_BMP)
 	$(obj)/bmp_logo --gen-data $(LOGO_BMP) > $@
-#endif
-endif
 
 # Let clean descend into subdirs
 subdir- += env

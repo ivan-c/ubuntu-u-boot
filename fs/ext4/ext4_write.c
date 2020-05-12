@@ -957,7 +957,7 @@ int ext4fs_write(const char *fname, const char *buffer,
 	ext4fs_allocate_blocks(file_inode, blocks_remaining,
 			       &blks_reqd_for_file);
 	file_inode->blockcnt = cpu_to_le32((blks_reqd_for_file * fs->blksz) >>
-					   LOG2_SECTOR_SIZE);
+		fs->dev_desc->log2blksz);
 
 	temp_ptr = zalloc(fs->blksz);
 	if (!temp_ptr)

@@ -9,7 +9,6 @@
 
 #include <common.h>
 #include <command.h>
-#include <env.h>
 #include <linux/ctype.h>
 #include <linux/types.h>
 #include <asm/global_data.h>

@@ -7,7 +7,6 @@
 #include <dm.h>
 #include <errno.h>
 #include <i2c.h>
-#include <misc.h>
 #include <sysreset.h>
 #include <dm/device.h>
 #include <dm/lists.h>
@@ -70,7 +69,6 @@ static int stpmic1_read(struct udevice *dev, uint reg, uint8_t *buff, int len)
 
 static int stpmic1_bind(struct udevice *dev)
 {
-	int ret;
 #if CONFIG_IS_ENABLED(DM_REGULATOR)
 	ofnode regulators_node;
 	int children;
@@ -87,13 +85,6 @@ static int stpmic1_bind(struct udevice *dev)
 	if (!children)
 		dev_dbg(dev, "no child found\n");
 #endif /* DM_REGULATOR */
-
-	if (!IS_ENABLED(CONFIG_SPL_BUILD)) {
-		ret = device_bind_driver(dev, "stpmic1-nvm",
-					 "stpmic1-nvm", NULL);
-		if (ret)
-			return ret;
-	}
 
 	if (CONFIG_IS_ENABLED(SYSRESET))
 		return device_bind_driver(dev, "stpmic1-sysreset",
@@ -122,38 +113,32 @@ U_BOOT_DRIVER(pmic_stpmic1) = {
 };
 
 #ifndef CONFIG_SPL_BUILD
-static int stpmic1_nvm_rw(struct udevice *dev, u8 addr, u8 *buf, int buf_len,
-			  enum pmic_nvm_op op)
+static int stpmic1_nvm_rw(u8 addr, u8 *buf, int buf_len, enum pmic_nvm_op op)
 {
+	struct udevice *dev;
 	unsigned long timeout;
 	u8 cmd = STPMIC1_NVM_CMD_READ;
-	int ret, len = buf_len;
+	int ret;
+
+	ret = uclass_get_device_by_driver(UCLASS_PMIC,
+					  DM_GET_DRIVER(pmic_stpmic1), &dev);
+	if (ret)
+		/* No PMIC on power discrete board */
+		return -EOPNOTSUPP;
 
 	if (addr < STPMIC1_NVM_START_ADDRESS)
 		return -EACCES;
-	if (addr + buf_len > STPMIC1_NVM_START_ADDRESS + STPMIC1_NVM_SIZE)
-		len = STPMIC1_NVM_START_ADDRESS + STPMIC1_NVM_SIZE - addr;
 
-	if (op == SHADOW_READ) {
-		ret = pmic_read(dev, addr, buf, len);
-		if (ret < 0)
-			return ret;
-		else
-			return len;
-	}
+	if (op == SHADOW_READ)
+		return pmic_read(dev, addr, buf, buf_len);
 
-	if (op == SHADOW_WRITE) {
-		ret = pmic_write(dev, addr, buf, len);
-		if (ret < 0)
-			return ret;
-		else
-			return len;
-	}
+	if (op == SHADOW_WRITE)
+		return pmic_write(dev, addr, buf, buf_len);
 
 	if (op == NVM_WRITE) {
 		cmd = STPMIC1_NVM_CMD_PROGRAM;
 
-		ret = pmic_write(dev, addr, buf, len);
+		ret = pmic_write(dev, addr, buf, buf_len);
 		if (ret < 0)
 			return ret;
 	}
@@ -183,72 +168,75 @@ static int stpmic1_nvm_rw(struct udevice *dev, u8 addr, u8 *buf, int buf_len,
 		return -ETIMEDOUT;
 
 	if (op == NVM_READ) {
-		ret = pmic_read(dev, addr, buf, len);
+		ret = pmic_read(dev, addr, buf, buf_len);
 		if (ret < 0)
 			return ret;
 	}
 
-	return len;
+	return 0;
 }
 
-static int stpmic1_nvm_read(struct udevice *dev, int offset,
-			    void *buf, int size)
+int stpmic1_shadow_read_byte(u8 addr, u8 *buf)
 {
-	enum pmic_nvm_op op = NVM_READ;
-
-	if (offset < 0) {
-		op = SHADOW_READ;
-		offset = -offset;
-	}
-
-	return stpmic1_nvm_rw(dev->parent, offset, buf, size, op);
+	return stpmic1_nvm_rw(addr, buf, 1, SHADOW_READ);
 }
 
-static int stpmic1_nvm_write(struct udevice *dev, int offset,
-			     const void *buf, int size)
+int stpmic1_shadow_write_byte(u8 addr, u8 *buf)
 {
-	enum pmic_nvm_op op = NVM_WRITE;
-
-	if (offset < 0) {
-		op = SHADOW_WRITE;
-		offset = -offset;
-	}
-
-	return stpmic1_nvm_rw(dev->parent, offset, (void *)buf, size, op);
+	return stpmic1_nvm_rw(addr, buf, 1, SHADOW_WRITE);
 }
 
-static const struct misc_ops stpmic1_nvm_ops = {
-	.read = stpmic1_nvm_read,
-	.write = stpmic1_nvm_write,
-};
+int stpmic1_nvm_read_byte(u8 addr, u8 *buf)
+{
+	return stpmic1_nvm_rw(addr, buf, 1, NVM_READ);
+}
 
-U_BOOT_DRIVER(stpmic1_nvm) = {
-	.name = "stpmic1-nvm",
-	.id = UCLASS_MISC,
-	.ops = &stpmic1_nvm_ops,
-};
+int stpmic1_nvm_write_byte(u8 addr, u8 *buf)
+{
+	return stpmic1_nvm_rw(addr, buf, 1, NVM_WRITE);
+}
+
+int stpmic1_nvm_read_all(u8 *buf, int buf_len)
+{
+	if (buf_len != STPMIC1_NVM_SIZE)
+		return -EINVAL;
+
+	return stpmic1_nvm_rw(STPMIC1_NVM_START_ADDRESS,
+			     buf, buf_len, NVM_READ);
+}
+
+int stpmic1_nvm_write_all(u8 *buf, int buf_len)
+{
+	if (buf_len != STPMIC1_NVM_SIZE)
+		return -EINVAL;
+
+	return stpmic1_nvm_rw(STPMIC1_NVM_START_ADDRESS,
+			     buf, buf_len, NVM_WRITE);
+}
 #endif /* CONFIG_SPL_BUILD */
 
 #ifdef CONFIG_SYSRESET
 static int stpmic1_sysreset_request(struct udevice *dev, enum sysreset_t type)
 {
-	struct udevice *pmic_dev = dev->parent;
+	struct udevice *pmic_dev;
 	int ret;
 
-	if (type != SYSRESET_POWER && type != SYSRESET_POWER_OFF)
+	if (type != SYSRESET_POWER)
 		return -EPROTONOSUPPORT;
+
+	ret = uclass_get_device_by_driver(UCLASS_PMIC,
+					  DM_GET_DRIVER(pmic_stpmic1),
+					  &pmic_dev);
+
+	if (ret)
+		return -EOPNOTSUPP;
 
 	ret = pmic_reg_read(pmic_dev, STPMIC1_MAIN_CR);
 	if (ret < 0)
 		return ret;
 
-	ret |= STPMIC1_SWOFF;
-	ret &= ~STPMIC1_RREQ_EN;
-	/* request Power Cycle */
-	if (type == SYSRESET_POWER)
-		ret |= STPMIC1_RREQ_EN;
-
-	ret = pmic_reg_write(pmic_dev, STPMIC1_MAIN_CR, ret);
+	ret = pmic_reg_write(pmic_dev, STPMIC1_MAIN_CR,
+			     ret | STPMIC1_SWOFF | STPMIC1_RREQ_EN);
 	if (ret < 0)
 		return ret;
 

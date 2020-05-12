@@ -16,6 +16,7 @@
 #include <i2c.h>
 #include <miiphy.h>
 #include <netdev.h>
+#include <usb.h>
 #include <power/pmic.h>
 #include <power/pfuze3000_pmic.h>
 #include "../../freescale/common/pfuze.h"
@@ -327,3 +328,15 @@ int board_ehci_hcd_init(int port)
 	return 0;
 }
 
+int board_usb_phy_mode(int port)
+{
+	switch (port) {
+	case 0:
+		return USB_INIT_DEVICE;
+	case 1:
+		return USB_INIT_HOST;
+	default:
+		return -EINVAL;
+	}
+	return 0;
+}

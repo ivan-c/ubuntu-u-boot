@@ -24,7 +24,6 @@
 #include <common.h>
 #include <command.h>
 #include <dm.h>
-#include <env.h>
 #include <errno.h>
 #include <memalign.h>
 #include <asm/processor.h>

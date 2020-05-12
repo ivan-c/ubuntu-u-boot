@@ -5,6 +5,7 @@
 / {
 	chosen {
 		u-boot,spl-boot-order = &emmc;
+		tick-timer = "/timer@ff810000";
 	};
 };
 

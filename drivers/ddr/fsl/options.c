@@ -5,7 +5,6 @@
  */
 
 #include <common.h>
-#include <env.h>
 #include <hwconfig.h>
 #include <fsl_ddr_sdram.h>
 

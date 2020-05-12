@@ -6,7 +6,6 @@
 
 #include <altera.h>
 #include <common.h>
-#include <env.h>
 #include <errno.h>
 #include <fdtdec.h>
 #include <miiphy.h>

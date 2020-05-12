@@ -14,6 +14,7 @@ import fdt_util
 import state
 import tools
 
+import bsection
 
 class Entry_files(Entry_section):
     """Entry containing a set of files
@@ -53,4 +54,4 @@ class Entry_files(Entry_section):
             state.AddString(subnode, 'compress', self._compress)
 
         # Read entries again, now that we have some
-        self._ReadEntries()
+        self._section._ReadEntries()

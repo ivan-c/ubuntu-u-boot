@@ -366,10 +366,8 @@ void k3_nav_ringacc_ring_reset_dma(struct k3_nav_ring *ring, u32 occ)
 	if (!ring || !(ring->flags & KNAV_RING_FLAG_BUSY))
 		return;
 
-	if (!ring->parent->dma_ring_reset_quirk) {
-		k3_nav_ringacc_ring_reset(ring);
+	if (!ring->parent->dma_ring_reset_quirk)
 		return;
-	}
 
 	if (!occ)
 		occ = ringacc_readl(&ring->rt->occ);

@@ -8,7 +8,6 @@
  */
 
 #include <common.h>
-#include <env.h>
 #include <palmas.h>
 #include <sata.h>
 #include <usb.h>
@@ -24,6 +23,7 @@
 #include <asm/arch/sata.h>
 #include <asm/arch/gpio.h>
 #include <asm/arch/omap.h>
+#include <environment.h>
 #include <usb.h>
 #include <linux/usb/gadget.h>
 #include <dwc3-uboot.h>

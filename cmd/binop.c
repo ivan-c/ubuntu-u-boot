@@ -2,7 +2,6 @@
 
 #include <common.h>
 #include <command.h>
-#include <env.h>
 #include <hexdump.h>
 #include <malloc.h>
 #include <mapmem.h>

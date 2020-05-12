@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: GPL-2.0+
 /*
- * EFI application boot time services
+ *  EFI application boot time services
  *
- * Copyright (c) 2016 Alexander Graf
+ *  Copyright (c) 2016 Alexander Graf
  */
 
 #include <common.h>
 #include <div64.h>
 #include <efi_loader.h>
+#include <environment.h>
 #include <malloc.h>
 #include <linux/libfdt_env.h>
 #include <u-boot/crc.h>
@@ -24,7 +25,7 @@ static efi_uintn_t efi_tpl = TPL_APPLICATION;
 LIST_HEAD(efi_obj_list);
 
 /* List of all events */
-__efi_runtime_data LIST_HEAD(efi_events);
+LIST_HEAD(efi_events);
 
 /* List of queued events */
 LIST_HEAD(efi_event_queue);
@@ -37,6 +38,14 @@ LIST_HEAD(efi_register_notify_events);
 
 /* Handle of the currently executing image */
 static efi_handle_t current_image;
+
+/*
+ * If we're running on nasty systems (32bit ARM booting into non-EFI Linux)
+ * we need to do trickery with caches. Since we don't want to break the EFI
+ * aware boot path, only apply hacks when loading exiting directly (breaking
+ * direct Linux EFI booting along the way - oh well).
+ */
+static bool efi_is_direct_boot = true;
 
 #ifdef CONFIG_ARM
 /*
@@ -587,7 +596,7 @@ efi_status_t efi_remove_all_protocols(const efi_handle_t handle)
 /**
  * efi_delete_handle() - delete handle
  *
- * @handle: handle to delete
+ * @obj: handle to delete
  */
 void efi_delete_handle(efi_handle_t handle)
 {
@@ -619,7 +628,6 @@ static efi_status_t efi_is_event(const struct efi_event *event)
 
 /**
  * efi_create_event() - create an event
- *
  * @type:            type of the event to create
  * @notify_tpl:      task priority level of the event
  * @notify_function: notification function of the event
@@ -642,8 +650,6 @@ efi_status_t efi_create_event(uint32_t type, efi_uintn_t notify_tpl,
 			      struct efi_event **event)
 {
 	struct efi_event *evt;
-	efi_status_t ret;
-	int pool_type;
 
 	if (event == NULL)
 		return EFI_INVALID_PARAMETER;
@@ -656,10 +662,7 @@ efi_status_t efi_create_event(uint32_t type, efi_uintn_t notify_tpl,
 	case EVT_NOTIFY_WAIT:
 	case EVT_TIMER | EVT_NOTIFY_WAIT:
 	case EVT_SIGNAL_EXIT_BOOT_SERVICES:
-		pool_type = EFI_BOOT_SERVICES_DATA;
-		break;
 	case EVT_SIGNAL_VIRTUAL_ADDRESS_CHANGE:
-		pool_type = EFI_RUNTIME_SERVICES_DATA;
 		break;
 	default:
 		return EFI_INVALID_PARAMETER;
@@ -669,11 +672,9 @@ efi_status_t efi_create_event(uint32_t type, efi_uintn_t notify_tpl,
 	    (!notify_function || is_valid_tpl(notify_tpl) != EFI_SUCCESS))
 		return EFI_INVALID_PARAMETER;
 
-	ret = efi_allocate_pool(pool_type, sizeof(struct efi_event),
-				(void **)&evt);
-	if (ret != EFI_SUCCESS)
-		return ret;
-	memset(evt, 0, sizeof(struct efi_event));
+	evt = calloc(1, sizeof(struct efi_event));
+	if (!evt)
+		return EFI_OUT_OF_RESOURCES;
 	evt->type = type;
 	evt->notify_tpl = notify_tpl;
 	evt->notify_function = notify_function;
@@ -981,7 +982,7 @@ static efi_status_t EFIAPI efi_close_event(struct efi_event *event)
 		list_del(&event->queue_link);
 
 	list_del(&event->link);
-	efi_free_pool(event);
+	free(event);
 	return EFI_EXIT(EFI_SUCCESS);
 }
 
@@ -1410,9 +1411,9 @@ out:
 
 /**
  * efi_search() - determine if an EFI handle implements a protocol
- *
  * @search_type: selection criterion
  * @protocol:    GUID of the protocol
+ * @search_key:  registration key
  * @handle:      handle
  *
  * See the documentation of the LocateHandle service in the UEFI specification.
@@ -1674,7 +1675,7 @@ static efi_status_t EFIAPI efi_install_configuration_table_ext(efi_guid_t *guid,
  * Initialize a loaded_image_info and loaded_image_info object with correct
  * protocols, boot-device, etc.
  *
- * In case of an error \*handle_ptr and \*info_ptr are set to NULL and an error
+ * In case of an error *handle_ptr and *info_ptr are set to NULL and an error
  * code is returned.
  *
  * @device_path:	device path of the loaded image
@@ -1902,21 +1903,13 @@ error:
  */
 static void efi_exit_caches(void)
 {
-#if defined(CONFIG_EFI_GRUB_ARM32_WORKAROUND)
+#if defined(CONFIG_ARM) && !defined(CONFIG_ARM64)
 	/*
-	 * Boooting Linux via GRUB prior to version 2.04 fails on 32bit ARM if
-	 * caches are enabled.
-	 *
-	 * TODO:
-	 * According to the UEFI spec caches that can be managed via CP15
-	 * operations should be enabled. Caches requiring platform information
-	 * to manage should be disabled. This should not happen in
-	 * ExitBootServices() but before invoking any UEFI binary is invoked.
-	 *
-	 * We want to keep the current workaround while GRUB prior to version
-	 * 2.04 is still in use.
+	 * Grub on 32bit ARM needs to have caches disabled before jumping into
+	 * a zImage, but does not know of all cache layers. Give it a hand.
 	 */
-	cleanup_before_linux();
+	if (efi_is_direct_boot)
+		cleanup_before_linux();
 #endif
 }
 
@@ -1939,7 +1932,7 @@ static void efi_exit_caches(void)
 static efi_status_t EFIAPI efi_exit_boot_services(efi_handle_t image_handle,
 						  efi_uintn_t map_key)
 {
-	struct efi_event *evt, *next_event;
+	struct efi_event *evt;
 	efi_status_t ret = EFI_SUCCESS;
 
 	EFI_ENTRY("%p, %zx", image_handle, map_key);
@@ -1975,19 +1968,9 @@ static efi_status_t EFIAPI efi_exit_boot_services(efi_handle_t image_handle,
 	/* Make sure that notification functions are not called anymore */
 	efi_tpl = TPL_HIGH_LEVEL;
 
-	/* Notify variable services */
-	efi_variables_boot_exit_notify();
-
-	/* Remove all events except EVT_SIGNAL_VIRTUAL_ADDRESS_CHANGE */
-	list_for_each_entry_safe(evt, next_event, &efi_events, link) {
-		if (evt->type != EVT_SIGNAL_VIRTUAL_ADDRESS_CHANGE)
-			list_del(&evt->link);
-	}
+	/* TODO: Should persist EFI variables here */
 
 	board_quiesce_devices();
-
-	/* Patch out unsupported runtime function */
-	efi_runtime_detach();
 
 	/* Fix up caches for EFI payloads if necessary */
 	efi_exit_caches();
@@ -2892,6 +2875,8 @@ efi_status_t EFIAPI efi_start_image(efi_handle_t image_handle,
 	if (ret != EFI_SUCCESS)
 		return EFI_EXIT(EFI_INVALID_PARAMETER);
 
+	efi_is_direct_boot = false;
+
 	image_obj->exit_data_size = exit_data_size;
 	image_obj->exit_data = exit_data;
 
@@ -3045,9 +3030,9 @@ out:
 /**
  * efi_update_exit_data() - fill exit data parameters of StartImage()
  *
- * @image_obj:		image handle
- * @exit_data_size:	size of the exit data buffer
- * @exit_data:		buffer with data returned by UEFI payload
+ * @image_obj		image handle
+ * @exit_data_size	size of the exit data buffer
+ * @exit_data		buffer with data returned by UEFI payload
  * Return:		status code
  */
 static efi_status_t efi_update_exit_data(struct efi_loaded_image_obj *image_obj,
@@ -3249,7 +3234,7 @@ static efi_status_t efi_connect_single_controller(
 	if (r != EFI_SUCCESS)
 		return r;
 
-	/* Context Override */
+	/*  Context Override */
 	if (driver_image_handle) {
 		for (; *driver_image_handle; ++driver_image_handle) {
 			for (i = 0; i < count; ++i) {
@@ -3356,7 +3341,7 @@ static efi_status_t EFIAPI efi_connect_controller(
 			}
 		}
 	}
-	/* Check for child controller specified by end node */
+	/*  Check for child controller specified by end node */
 	if (ret != EFI_SUCCESS && remain_device_path &&
 	    remain_device_path->type == DEVICE_PATH_TYPE_END)
 		ret = EFI_SUCCESS;
@@ -3499,6 +3484,7 @@ static efi_status_t EFIAPI efi_disconnect_controller(
 	efi_handle_t *child_handle_buffer = NULL;
 	size_t number_of_children = 0;
 	efi_status_t r;
+	size_t stop_count = 0;
 	struct efi_object *efiobj;
 
 	EFI_ENTRY("%p, %p, %p", controller_handle, driver_image_handle,
@@ -3538,35 +3524,32 @@ static efi_status_t EFIAPI efi_disconnect_controller(
 				       (void **)&binding_protocol,
 				       driver_image_handle, NULL,
 				       EFI_OPEN_PROTOCOL_GET_PROTOCOL));
-	if (r != EFI_SUCCESS) {
-		r = EFI_INVALID_PARAMETER;
+	if (r != EFI_SUCCESS)
 		goto out;
-	}
 	/* Remove the children */
 	if (number_of_children) {
 		r = EFI_CALL(binding_protocol->stop(binding_protocol,
 						    controller_handle,
 						    number_of_children,
 						    child_handle_buffer));
-		if (r != EFI_SUCCESS) {
-			r = EFI_DEVICE_ERROR;
-			goto out;
-		}
+		if (r == EFI_SUCCESS)
+			++stop_count;
 	}
 	/* Remove the driver */
-	if (!child_handle) {
+	if (!child_handle)
 		r = EFI_CALL(binding_protocol->stop(binding_protocol,
 						    controller_handle,
 						    0, NULL));
-		if (r != EFI_SUCCESS) {
-			r = EFI_DEVICE_ERROR;
-			goto out;
-		}
-	}
+	if (r == EFI_SUCCESS)
+		++stop_count;
 	EFI_CALL(efi_close_protocol(driver_image_handle,
 				    &efi_guid_driver_binding_protocol,
 				    driver_image_handle, NULL));
-	r = EFI_SUCCESS;
+
+	if (stop_count)
+		r = EFI_SUCCESS;
+	else
+		r = EFI_NOT_FOUND;
 out:
 	if (!child_handle)
 		free(child_handle_buffer);
@@ -3637,7 +3620,11 @@ struct efi_system_table __efi_runtime_data systab = {
 	},
 	.fw_vendor = firmware_vendor,
 	.fw_revision = FW_VERSION << 16 | FW_PATCHLEVEL << 8,
+	.con_in = &efi_con_in,
+	.con_out = &efi_con_out,
+	.std_err = &efi_con_out,
 	.runtime = &efi_runtime_services,
+	.boottime = &efi_boot_services,
 	.nr_tables = 0,
 	.tables = NULL,
 };
@@ -3656,15 +3643,6 @@ efi_status_t efi_initialize_system_table(void)
 				EFI_MAX_CONFIGURATION_TABLES *
 				sizeof(struct efi_configuration_table),
 				(void **)&systab.tables);
-
-	/*
-	 * These entries will be set to NULL in ExitBootServices(). To avoid
-	 * relocation in SetVirtualAddressMap(), set them dynamically.
-	 */
-	systab.con_in = &efi_con_in;
-	systab.con_out = &efi_con_out;
-	systab.std_err = &efi_con_out;
-	systab.boottime = &efi_boot_services;
 
 	/* Set CRC32 field in table headers */
 	efi_update_table_header_crc32(&systab.hdr);

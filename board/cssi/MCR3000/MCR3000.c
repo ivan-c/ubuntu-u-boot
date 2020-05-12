@@ -8,7 +8,6 @@
  */
 
 #include <common.h>
-#include <env.h>
 #include <hwconfig.h>
 #include <mpc8xx.h>
 #include <fdt_support.h>

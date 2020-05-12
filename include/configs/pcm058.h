@@ -8,6 +8,7 @@
 #define __PCM058_CONFIG_H
 
 #ifdef CONFIG_SPL
+#define CONFIG_SYS_SPI_U_BOOT_OFFS	(64 * 1024)
 #include "imx6_spl.h"
 #endif
 
@@ -50,6 +51,7 @@
 #define CONFIG_SYS_NAND_BASE		0x40000000
 #define CONFIG_SYS_NAND_5_ADDR_CYCLE
 #define CONFIG_SYS_NAND_ONFI_DETECTION
+#define CONFIG_SYS_NAND_USE_FLASH_BBT
 #endif
 
 /* DMA stuff, needed for GPMI/MXS NAND support */

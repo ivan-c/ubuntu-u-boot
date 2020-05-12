@@ -164,10 +164,8 @@ used to define the state of associated ST32MP1 oscillators:
   - clk-csi
 
 At boot the clock tree initialization will
-  - enable oscillators present in device tree and not disabled
-    (node with status="disabled"),
+  - enable oscillators present in device tree
   - disable HSI oscillator if the node is absent (always activated by bootrom)
-    and not disabled (node with status="disabled").
 
 Optional properties :
 

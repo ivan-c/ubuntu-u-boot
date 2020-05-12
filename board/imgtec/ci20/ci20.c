@@ -7,7 +7,7 @@
  */
 
 #include <common.h>
-#include <env.h>
+#include <environment.h>
 #include <net.h>
 #include <netdev.h>
 #include <asm/io.h>

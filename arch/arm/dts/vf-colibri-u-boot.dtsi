@@ -21,7 +21,3 @@
 &uart0 {
 	u-boot,dm-pre-reloc;
 };
-
-&dcu0 {
-	u-boot,dm-pre-reloc;
-};

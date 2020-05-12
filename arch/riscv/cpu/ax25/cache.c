@@ -5,24 +5,17 @@
  */
 
 #include <common.h>
-#include <dm.h>
-#include <dm/uclass-internal.h>
-#include <cache.h>
-#include <asm/csr.h>
-
-#ifdef CONFIG_RISCV_NDS_CACHE
-/* mcctlcommand */
-#define CCTL_REG_MCCTLCOMMAND_NUM	0x7cc
-
-/* D-cache operation */
-#define CCTL_L1D_WBINVAL_ALL	6
-#endif
 
 void flush_dcache_all(void)
 {
-#ifdef CONFIG_RISCV_NDS_CACHE
-	csr_write(CCTL_REG_MCCTLCOMMAND_NUM, CCTL_L1D_WBINVAL_ALL);
-#endif
+	/*
+	 * Andes' AX25 does not have a coherence agent. U-Boot must use data
+	 * cache flush and invalidate functions to keep data in the system
+	 * coherent.
+	 * The implementation of the fence instruction in the AX25 flushes the
+	 * data cache and is used for this purpose.
+	 */
+	asm volatile ("fence" ::: "memory");
 }
 
 void flush_dcache_range(unsigned long start, unsigned long end)
@@ -66,18 +59,11 @@ void dcache_enable(void)
 {
 #if !CONFIG_IS_ENABLED(SYS_DCACHE_OFF)
 #ifdef CONFIG_RISCV_NDS_CACHE
-	struct udevice *dev = NULL;
-
 	asm volatile (
 		"csrr t1, mcache_ctl\n\t"
 		"ori t0, t1, 0x2\n\t"
 		"csrw mcache_ctl, t0\n\t"
 	);
-
-	uclass_find_first_device(UCLASS_CACHE, &dev);
-
-	if (dev)
-		cache_enable(dev);
 #endif
 #endif
 }
@@ -86,19 +72,12 @@ void dcache_disable(void)
 {
 #if !CONFIG_IS_ENABLED(SYS_DCACHE_OFF)
 #ifdef CONFIG_RISCV_NDS_CACHE
-	struct udevice *dev = NULL;
-
-	csr_write(CCTL_REG_MCCTLCOMMAND_NUM, CCTL_L1D_WBINVAL_ALL);
 	asm volatile (
+		"fence\n\t"
 		"csrr t1, mcache_ctl\n\t"
 		"andi t0, t1, ~0x2\n\t"
 		"csrw mcache_ctl, t0\n\t"
 	);
-
-	uclass_find_first_device(UCLASS_CACHE, &dev);
-
-	if (dev)
-		cache_disable(dev);
 #endif
 #endif
 }

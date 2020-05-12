@@ -4,7 +4,6 @@
  */
 
 #include <common.h>
-#include <env.h>
 #include <linux/ctype.h>
 #include <errno.h>
 #include <common.h>
@@ -241,25 +240,25 @@ void uuid_bin_to_str(unsigned char *uuid_bin, char *uuid_str, int str_format)
 #if defined(CONFIG_RANDOM_UUID) || defined(CONFIG_CMD_UUID)
 void gen_rand_uuid(unsigned char *uuid_bin)
 {
-	u32 ptr[4];
-	struct uuid *uuid = (struct uuid *)ptr;
+	struct uuid uuid;
+	unsigned int *ptr = (unsigned int *)&uuid;
 	int i;
 
 	srand(get_ticks() + rand());
 
 	/* Set all fields randomly */
-	for (i = 0; i < 4; i++)
-		ptr[i] = rand();
+	for (i = 0; i < sizeof(struct uuid) / sizeof(*ptr); i++)
+		*(ptr + i) = cpu_to_be32(rand());
 
-	clrsetbits_be16(&uuid->time_hi_and_version,
+	clrsetbits_be16(&uuid.time_hi_and_version,
 			UUID_VERSION_MASK,
 			UUID_VERSION << UUID_VERSION_SHIFT);
 
-	clrsetbits_8(&uuid->clock_seq_hi_and_reserved,
+	clrsetbits_8(&uuid.clock_seq_hi_and_reserved,
 		     UUID_VARIANT_MASK,
 		     UUID_VARIANT << UUID_VARIANT_SHIFT);
 
-	memcpy(uuid_bin, uuid, 16);
+	memcpy(uuid_bin, &uuid, sizeof(struct uuid));
 }
 
 /*

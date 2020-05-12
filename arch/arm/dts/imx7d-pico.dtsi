@@ -10,7 +10,6 @@
 / {
 	aliases {
 		mmc0 = &usdhc3;
-		usb0 = &usbotg1;
 	};
 
 	/* Will be filled by the bootloader */
@@ -297,7 +296,6 @@
 
 &usbotg1 {
 	vbus-supply = <&reg_usb_otg1_vbus>;
-	dr_mode = "peripheral";
 	status = "okay";
 };
 

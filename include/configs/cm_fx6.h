@@ -144,6 +144,8 @@
 			"echo WARNING: Could not determine dtb to use; fi; \0" \
 	BOOTENV
 
+#define CONFIG_PREBOOT		"usb start;sf probe"
+
 #define BOOT_TARGET_DEVICES(func) \
 	func(USB, usb, 0) \
 	func(MMC, mmc, 2) \
@@ -207,6 +209,7 @@
 
 /* SPL */
 #include "imx6_spl.h"
+#define CONFIG_SYS_SPI_U_BOOT_OFFS	(64 * 1024)
 
 /* Display */
 #define CONFIG_IMX_HDMI

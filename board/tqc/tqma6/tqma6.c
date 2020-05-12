@@ -12,14 +12,13 @@
 #include <asm/arch/imx-regs.h>
 #include <asm/arch/iomux.h>
 #include <asm/arch/sys_proto.h>
-#include <env.h>
 #include <linux/errno.h>
 #include <asm/gpio.h>
 #include <asm/io.h>
 #include <asm/mach-imx/mxc_i2c.h>
 #include <asm/mach-imx/spi.h>
 #include <common.h>
-#include <fsl_esdhc_imx.h>
+#include <fsl_esdhc.h>
 #include <linux/libfdt.h>
 #include <i2c.h>
 #include <mmc.h>

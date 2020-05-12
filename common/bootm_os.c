@@ -6,7 +6,6 @@
 
 #include <common.h>
 #include <bootm.h>
-#include <env.h>
 #include <fdt_support.h>
 #include <linux/libfdt.h>
 #include <malloc.h>

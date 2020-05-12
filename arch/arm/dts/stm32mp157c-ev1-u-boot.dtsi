@@ -17,7 +17,12 @@
 };
 
 &flash0 {
+	compatible = "jedec,spi-nor";
 	u-boot,dm-spl;
+};
+
+&flash1 {
+	compatible = "jedec,spi-nor";
 };
 
 &qspi {
@@ -51,3 +56,6 @@
 	};
 };
 
+&v3v3 {
+	regulator-always-on;
+};

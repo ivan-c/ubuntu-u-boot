@@ -40,17 +40,6 @@ enum cbfs_filetype {
 	CBFS_TYPE_CMOS_LAYOUT = 0x01aa
 };
 
-enum {
-	CBFS_HEADER_MAGIC	= 0x4f524243,
-};
-
-/**
- * struct cbfs_header - header at the start of a CBFS region
- *
- * All fields use big-endian format.
- *
- * @magic: Magic number (CBFS_HEADER_MAGIC)
- */
 struct cbfs_header {
 	u32 magic;
 	u32 version;
@@ -65,8 +54,7 @@ struct cbfs_fileheader {
 	u8 magic[8];
 	u32 len;
 	u32 type;
-	/* offset to struct cbfs_file_attribute or 0 */
-	u32 attributes_offset;
+	u32 checksum;
 	u32 offset;
 } __packed;
 
@@ -77,7 +65,7 @@ struct cbfs_cachenode {
 	u32 data_length;
 	char *name;
 	u32 name_length;
-	u32 attributes_offset;
+	u32 checksum;
 } __packed;
 
 extern enum cbfs_result file_cbfs_result;
@@ -89,13 +77,6 @@ extern enum cbfs_result file_cbfs_result;
  * @return A pointer to the constant string.
  */
 const char *file_cbfs_error(void);
-
-/**
- * cbfs_get_result() - Get the result of the last CBFS operation
- *
- *@return last result
- */
-enum cbfs_result cbfs_get_result(void);
 
 /**
  * file_cbfs_init() - Initialize the CBFS driver and load metadata into RAM.
@@ -134,28 +115,6 @@ void file_cbfs_get_next(const struct cbfs_cachenode **file);
  * @return A handle to the file, or NULL on error.
  */
 const struct cbfs_cachenode *file_cbfs_find(const char *name);
-
-struct cbfs_priv *priv;
-
-/**
- * cbfs_find_file() - Find a file in a given CBFS
- *
- * @cbfs: CBFS to look in (use cbfs_init_mem() to set it up)
- * @name: Filename to look for
- * @return pointer to CBFS node if found, else NULL
- */
-const struct cbfs_cachenode *cbfs_find_file(struct cbfs_priv *cbfs,
-					    const char *name);
-
-/**
- * cbfs_init_mem() - Set up a new CBFS
- *
- * @base: Base address of CBFS
- * @size: Size of CBFS in bytes
- * @cbfsp: Returns a pointer to CBFS on success
- * @return 0 if OK, -ve on error
- */
-int cbfs_init_mem(ulong base, ulong size, struct cbfs_priv **privp);
 
 
 /***************************************************************************/

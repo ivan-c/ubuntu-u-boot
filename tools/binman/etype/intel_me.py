@@ -22,8 +22,6 @@ class Entry_intel_me(Entry_blob):
 
     A typical filename is 'me.bin'.
 
-    The position of this entry is generally set by the intel-descriptor entry.
-
     See README.x86 for information about x86 binary blobs.
     """
     def __init__(self, section, etype, node):

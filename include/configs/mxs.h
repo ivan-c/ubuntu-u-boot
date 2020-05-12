@@ -94,6 +94,12 @@
 /*
  * Drivers
  */
+
+/* APBH DMA */
+
+/* GPIO */
+#define CONFIG_MXS_GPIO
+
 /*
  * DUART Serial Driver.
  * Conflicts with AUART driver which can be set by board.

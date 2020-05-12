@@ -10,8 +10,7 @@
 #include <asm/arch/sys_proto.h>
 #include <asm/gpio.h>
 #include <asm/mach-imx/mxc_i2c.h>
-#include <env.h>
-#include <fsl_esdhc_imx.h>
+#include <fsl_esdhc.h>
 #include <hwconfig.h>
 #include <power/pmic.h>
 #include <power/ltc3676_pmic.h>
@@ -1657,7 +1656,7 @@ void setup_pmic(void)
 	}
 }
 
-#ifdef CONFIG_FSL_ESDHC_IMX
+#ifdef CONFIG_FSL_ESDHC
 static struct fsl_esdhc_cfg usdhc_cfg[2];
 
 int board_mmc_init(bd_t *bis)
@@ -1754,4 +1753,4 @@ int board_mmc_getcd(struct mmc *mmc)
 	return -1;
 }
 
-#endif /* CONFIG_FSL_ESDHC_IMX */
+#endif /* CONFIG_FSL_ESDHC */

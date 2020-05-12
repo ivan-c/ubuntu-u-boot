@@ -96,6 +96,8 @@
  * Environment
  */
 
+#define CONFIG_ENV_SIZE		(128 * 1024)
+
 #define CONFIG_ENV_OVERWRITE
 
 #define CONFIG_EXTRA_ENV_SETTINGS \

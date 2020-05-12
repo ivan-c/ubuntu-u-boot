@@ -10,7 +10,6 @@
  */
 #include <version.h>
 #include <common.h>
-#include <env.h>
 #include <fdtdec.h>
 #include <i2c.h>
 #include <lcd.h>

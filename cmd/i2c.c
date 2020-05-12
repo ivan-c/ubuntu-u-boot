@@ -71,6 +71,7 @@
 #include <console.h>
 #include <dm.h>
 #include <edid.h>
+#include <environment.h>
 #include <errno.h>
 #include <i2c.h>
 #include <malloc.h>

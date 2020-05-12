@@ -4,7 +4,6 @@
  */
 
 #include <common.h>
-#include <env.h>
 #include <malloc.h>
 #include <asm/unaligned.h>
 #include <tpm-common.h>

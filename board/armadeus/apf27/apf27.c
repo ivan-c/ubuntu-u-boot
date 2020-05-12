@@ -7,6 +7,7 @@
  */
 
 #include <common.h>
+#include <environment.h>
 #include <jffs2/jffs2.h>
 #include <nand.h>
 #include <netdev.h>

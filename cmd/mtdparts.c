@@ -72,7 +72,6 @@
 
 #include <common.h>
 #include <command.h>
-#include <env.h>
 #include <malloc.h>
 #include <jffs2/load_kernel.h>
 #include <linux/list.h>

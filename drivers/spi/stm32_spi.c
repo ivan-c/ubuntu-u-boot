@@ -99,8 +99,8 @@ struct stm32_spi_priv {
 	unsigned int cur_bpw;
 	unsigned int cur_hz;
 	unsigned int cur_xferlen; /* current transfer length in bytes */
-	unsigned int tx_len;	  /* number of data to be written in bytes */
-	unsigned int rx_len;	  /* number of data to be read in bytes */
+	int tx_len;		  /* number of data to be written in bytes */
+	int rx_len;		  /* number of data to be read in bytes */
 	const void *tx_buf;	  /* data to be written, or NULL */
 	void *rx_buf;		  /* data to be read, or NULL */
 	u32 cur_mode;
@@ -322,8 +322,7 @@ static int stm32_spi_set_fthlv(struct udevice *dev, u32 xfer_len)
 static int stm32_spi_set_speed(struct udevice *bus, uint hz)
 {
 	struct stm32_spi_priv *priv = dev_get_priv(bus);
-	u32 mbrdiv;
-	long div;
+	u32 div, mbrdiv;
 
 	debug("%s: hz=%d\n", __func__, hz);
 
@@ -342,7 +341,7 @@ static int stm32_spi_set_speed(struct udevice *bus, uint hz)
 	else
 		mbrdiv = fls(div) - 1;
 
-	if (!mbrdiv)
+	if ((mbrdiv - 1) < 0)
 		return -EINVAL;
 
 	clrsetbits_le32(priv->base + STM32_SPI_CFG1, SPI_CFG1_MBR,
@@ -482,7 +481,7 @@ static int stm32_spi_probe(struct udevice *dev)
 	struct stm32_spi_priv *priv = dev_get_priv(dev);
 	unsigned long clk_rate;
 	int ret;
-	unsigned int i;
+	int i;
 
 	priv->base = dev_remap_addr(dev);
 	if (!priv->base)

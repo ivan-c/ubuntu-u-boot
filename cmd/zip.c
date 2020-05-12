@@ -6,7 +6,6 @@
 
 #include <common.h>
 #include <command.h>
-#include <env.h>
 
 static int do_zip(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 {

@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0+
 /*
- * Copyright 2019 NXP
  * Copyright 2013 Freescale Semiconductor, Inc.
  */
 
@@ -106,7 +105,7 @@ u32 __weak get_lpuart_clk(void)
 	return CONFIG_SYS_CLK_FREQ;
 }
 
-#if CONFIG_IS_ENABLED(CLK)
+#if IS_ENABLED(CONFIG_CLK)
 static int get_lpuart_clk_rate(struct udevice *dev, u32 *clk)
 {
 	struct clk per_clk;
@@ -148,7 +147,7 @@ static void _lpuart_serial_setbrg(struct udevice *dev,
 	u16 sbr;
 	int ret;
 
-	if (CONFIG_IS_ENABLED(CLK)) {
+	if (IS_ENABLED(CONFIG_CLK)) {
 		ret = get_lpuart_clk_rate(dev, &clk);
 		if (ret)
 			return;
@@ -237,7 +236,7 @@ static void _lpuart32_serial_setbrg_7ulp(struct udevice *dev,
 	u32 clk;
 	int ret;
 
-	if (CONFIG_IS_ENABLED(CLK)) {
+	if (IS_ENABLED(CONFIG_CLK)) {
 		ret = get_lpuart_clk_rate(dev, &clk);
 		if (ret)
 			return;
@@ -306,7 +305,7 @@ static void _lpuart32_serial_setbrg(struct udevice *dev,
 	u32 sbr;
 	int ret;
 
-	if (CONFIG_IS_ENABLED(CLK)) {
+	if (IS_ENABLED(CONFIG_CLK)) {
 		ret = get_lpuart_clk_rate(dev, &clk);
 		if (ret)
 			return;
@@ -502,9 +501,6 @@ static int lpuart_serial_ofdata_to_platdata(struct udevice *dev)
 
 	plat->reg = (void *)addr;
 	plat->flags = dev_get_driver_data(dev);
-
-	if (fdtdec_get_bool(blob, node, "little-endian"))
-		plat->flags &= ~LPUART_FLAG_REGMAP_ENDIAN_BIG;
 
 	if (!fdt_node_check_compatible(blob, node, "fsl,ls1021a-lpuart"))
 		plat->devtype = DEV_LS1021A;

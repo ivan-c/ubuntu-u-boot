@@ -29,6 +29,7 @@
 #define CONFIG_KW88F6281		/* SOC Name */
 
 #define CONFIG_SKIP_LOWLEVEL_INIT	/* disable board lowlevel_init */
+#define CONFIG_SHOW_BOOT_PROGRESS
 
 #define CONFIG_KIRKWOOD_GPIO
 

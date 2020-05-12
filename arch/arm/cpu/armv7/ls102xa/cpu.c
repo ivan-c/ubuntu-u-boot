@@ -296,7 +296,7 @@ int cpu_mmc_init(bd_t *bis)
 
 int cpu_eth_init(bd_t *bis)
 {
-#if defined(CONFIG_TSEC_ENET) && !defined(CONFIG_DM_ETH)
+#ifdef CONFIG_TSEC_ENET
 	tsec_standard_init(bis);
 #endif
 

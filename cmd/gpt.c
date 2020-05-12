@@ -11,7 +11,6 @@
  */
 
 #include <common.h>
-#include <env.h>
 #include <malloc.h>
 #include <command.h>
 #include <part_efi.h>

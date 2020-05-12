@@ -228,26 +228,6 @@ static int setup(const efi_handle_t handle,
 		efi_st_error("WaitForPacket event missing\n");
 		return EFI_ST_FAILURE;
 	}
-	if (net->mode->state == EFI_NETWORK_INITIALIZED) {
-		/*
-		 * Shut down network adapter.
-		 */
-		ret = net->shutdown(net);
-		if (ret != EFI_SUCCESS) {
-			efi_st_error("Failed to shut down network adapter\n");
-			return EFI_ST_FAILURE;
-		}
-	}
-	if (net->mode->state == EFI_NETWORK_STARTED) {
-		/*
-		 * Stop network adapter.
-		 */
-		ret = net->stop(net);
-		if (ret != EFI_SUCCESS) {
-			efi_st_error("Failed to stop network adapter\n");
-			return EFI_ST_FAILURE;
-		}
-	}
 	/*
 	 * Start network adapter.
 	 */
@@ -256,19 +236,11 @@ static int setup(const efi_handle_t handle,
 		efi_st_error("Failed to start network adapter\n");
 		return EFI_ST_FAILURE;
 	}
-	if (net->mode->state != EFI_NETWORK_STARTED) {
-		efi_st_error("Failed to start network adapter\n");
-		return EFI_ST_FAILURE;
-	}
 	/*
 	 * Initialize network adapter.
 	 */
 	ret = net->initialize(net, 0, 0);
 	if (ret != EFI_SUCCESS) {
-		efi_st_error("Failed to initialize network adapter\n");
-		return EFI_ST_FAILURE;
-	}
-	if (net->mode->state != EFI_NETWORK_INITIALIZED) {
 		efi_st_error("Failed to initialize network adapter\n");
 		return EFI_ST_FAILURE;
 	}
@@ -296,7 +268,6 @@ static int execute(void)
 	struct efi_mac_address destaddr;
 	size_t buffer_size;
 	u8 *addr;
-
 	/*
 	 * The timeout is to occur after 10 s.
 	 */
@@ -327,8 +298,6 @@ static int execute(void)
 	events[0] = timer;
 	events[1] = net->wait_for_packet;
 	for (;;) {
-		u32 int_status;
-
 		/*
 		 * Wait for packet to be received or timer event.
 		 */
@@ -354,17 +323,8 @@ static int execute(void)
 		 * Receive packet
 		 */
 		buffer_size = sizeof(buffer);
-		ret = net->get_status(net, &int_status, NULL);
-		if (ret != EFI_SUCCESS) {
-			efi_st_error("Failed to get status");
-			return EFI_ST_FAILURE;
-		}
-		if (!(int_status & EFI_SIMPLE_NETWORK_RECEIVE_INTERRUPT)) {
-			efi_st_error("RX interrupt not set");
-			return EFI_ST_FAILURE;
-		}
-		ret = net->receive(net, NULL, &buffer_size, &buffer,
-				   &srcaddr, &destaddr, NULL);
+		net->receive(net, NULL, &buffer_size, &buffer,
+			     &srcaddr, &destaddr, NULL);
 		if (ret != EFI_SUCCESS) {
 			efi_st_error("Failed to receive packet");
 			return EFI_ST_FAILURE;
@@ -440,18 +400,6 @@ static int teardown(void)
 	}
 	if (net) {
 		/*
-		 * Shut down network adapter.
-		 */
-		ret = net->shutdown(net);
-		if (ret != EFI_SUCCESS) {
-			efi_st_error("Failed to shut down network adapter\n");
-			exit_status = EFI_ST_FAILURE;
-		}
-		if (net->mode->state != EFI_NETWORK_STARTED) {
-			efi_st_error("Failed to shutdown network adapter\n");
-			return EFI_ST_FAILURE;
-		}
-		/*
 		 * Stop network adapter.
 		 */
 		ret = net->stop(net);
@@ -459,9 +407,13 @@ static int teardown(void)
 			efi_st_error("Failed to stop network adapter\n");
 			exit_status = EFI_ST_FAILURE;
 		}
-		if (net->mode->state != EFI_NETWORK_STOPPED) {
-			efi_st_error("Failed to stop network adapter\n");
-			return EFI_ST_FAILURE;
+		/*
+		 * Shut down network adapter.
+		 */
+		ret = net->shutdown(net);
+		if (ret != EFI_SUCCESS) {
+			efi_st_error("Failed to shut down network adapter\n");
+			exit_status = EFI_ST_FAILURE;
 		}
 	}
 

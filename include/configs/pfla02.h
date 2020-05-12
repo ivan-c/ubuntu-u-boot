@@ -8,6 +8,7 @@
 #define __PCM058_CONFIG_H
 
 #ifdef CONFIG_SPL
+#define CONFIG_SYS_SPI_U_BOOT_OFFS	(64 * 1024)
 #include "imx6_spl.h"
 #endif
 

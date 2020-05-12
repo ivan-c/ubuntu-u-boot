@@ -4,7 +4,7 @@
  */
 
 #include <common.h>
-#include <env.h>
+#include <environment.h>
 #include <malloc.h>
 #include <asm/processor.h>
 #include <asm/io.h>

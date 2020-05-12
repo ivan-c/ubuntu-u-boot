@@ -31,7 +31,7 @@ int usb_disable_asynch(int disable)
 }
 
 int submit_int_msg(struct usb_device *udev, unsigned long pipe, void *buffer,
-		   int length, int interval, bool nonblock)
+		   int length, int interval)
 {
 	struct udevice *bus = udev->controller_dev;
 	struct dm_usb_ops *ops = usb_get_ops(bus);
@@ -39,8 +39,7 @@ int submit_int_msg(struct usb_device *udev, unsigned long pipe, void *buffer,
 	if (!ops->interrupt)
 		return -ENOSYS;
 
-	return ops->interrupt(bus, udev, pipe, buffer, length, interval,
-			      nonblock);
+	return ops->interrupt(bus, udev, pipe, buffer, length, interval);
 }
 
 int submit_control_msg(struct usb_device *udev, unsigned long pipe,

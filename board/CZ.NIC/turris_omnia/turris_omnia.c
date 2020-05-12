@@ -8,7 +8,7 @@
  */
 
 #include <common.h>
-#include <env.h>
+#include <environment.h>
 #include <i2c.h>
 #include <miiphy.h>
 #include <netdev.h>
@@ -340,8 +340,7 @@ static int set_regdomain(void)
 	"i2c mw 0x2a.1 0x4 0x1c 1; " \
 	"mw.l 0x01000000 0x00ff000c; " \
 	"i2c write 0x01000000 0x2a.1 0x5 4 -s; " \
-	"setenv bootargs \"earlyprintk console=ttyS0,115200" \
-			" omniarescue=$omnia_reset\"; " \
+	"setenv bootargs \"$bootargs omniarescue=$omnia_reset\"; " \
 	"sf probe; " \
 	"sf read 0x1000000 0x100000 0x700000; " \
 	"bootm 0x1000000; " \
@@ -413,7 +412,6 @@ int board_late_init(void)
 	set_regdomain();
 	handle_reset_button();
 #endif
-	pci_init();
 
 	return 0;
 }
@@ -516,17 +514,17 @@ int misc_init_r(void)
 	mac[5] = mac1[3];
 
 	if (is_valid_ethaddr(mac))
+		eth_env_set_enetaddr("ethaddr", mac);
+
+	increment_mac(mac);
+
+	if (is_valid_ethaddr(mac))
 		eth_env_set_enetaddr("eth1addr", mac);
 
 	increment_mac(mac);
 
 	if (is_valid_ethaddr(mac))
 		eth_env_set_enetaddr("eth2addr", mac);
-
-	increment_mac(mac);
-
-	if (is_valid_ethaddr(mac))
-		eth_env_set_enetaddr("ethaddr", mac);
 
 out:
 	return 0;

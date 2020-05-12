@@ -8,7 +8,6 @@
 #include <common.h>
 #include <board.h>
 #include <dm.h>
-#include <env.h>
 #include <fdt_support.h>
 #include <fsl_esdhc.h>
 #include <miiphy.h>

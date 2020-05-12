@@ -55,6 +55,7 @@
 #define CONFIG_SYS_MAXARGS	32
 
 /* MMC */
+#define CONFIG_FSL_USDHC
 
 /* Secure boot (HAB) support */
 #ifdef CONFIG_SECURE_BOOT

@@ -6,7 +6,6 @@
 
 #include <common.h>
 #include <dm/uclass.h>
-#include <env.h>
 #include <fdtdec.h>
 #include <fpga.h>
 #include <malloc.h>

@@ -9,7 +9,6 @@
 #include <common.h>
 #include <console.h>
 #include <dm.h>
-#include <env.h>
 #include <errno.h>
 #include <stdio_dev.h>
 #include <input.h>

@@ -69,7 +69,7 @@
 	"run run_mon_hs; "						\
 	"run init_${boot}; "						\
 	"run get_fit_${boot}; "						\
-	"bootm ${addr_fit}#${name_fdt}"
+	"bootm ${fit_loadaddr}#${name_fdt}"
 #endif
 
 /* NAND Configuration */

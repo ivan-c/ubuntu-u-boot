@@ -7,6 +7,7 @@
 
 #include <common.h>
 #include <dm.h>
+#include <environment.h>
 #include <fdt_support.h>
 #include <asm/io.h>
 #include <cpsw.h>

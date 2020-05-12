@@ -13,7 +13,6 @@
 #include <dm/read.h>
 #include <dt-structs.h>
 #include <errno.h>
-#include <linux/clk-provider.h>
 
 static inline const struct clk_ops *clk_dev_ops(struct udevice *dev)
 {
@@ -51,8 +50,6 @@ static int clk_of_xlate_default(struct clk *clk,
 		clk->id = args->args[0];
 	else
 		clk->id = 0;
-
-	clk->data = 0;
 
 	return 0;
 }
@@ -285,9 +282,6 @@ int clk_set_defaults(struct udevice *dev)
 {
 	int ret;
 
-	if (!dev_of_valid(dev))
-		return 0;
-
 	/* If this not in SPL and pre-reloc state, don't take any action. */
 	if (!(IS_ENABLED(CONFIG_SPL_BUILD) || (gd->flags & GD_FLG_RELOC)))
 		return 0;
@@ -385,43 +379,6 @@ ulong clk_get_rate(struct clk *clk)
 	return ops->get_rate(clk);
 }
 
-struct clk *clk_get_parent(struct clk *clk)
-{
-	struct udevice *pdev;
-	struct clk *pclk;
-
-	debug("%s(clk=%p)\n", __func__, clk);
-
-	pdev = dev_get_parent(clk->dev);
-	pclk = dev_get_clk_ptr(pdev);
-	if (!pclk)
-		return ERR_PTR(-ENODEV);
-
-	return pclk;
-}
-
-long long clk_get_parent_rate(struct clk *clk)
-{
-	const struct clk_ops *ops;
-	struct clk *pclk;
-
-	debug("%s(clk=%p)\n", __func__, clk);
-
-	pclk = clk_get_parent(clk);
-	if (IS_ERR(pclk))
-		return -ENODEV;
-
-	ops = clk_dev_ops(pclk->dev);
-	if (!ops->get_rate)
-		return -ENOSYS;
-
-	/* Read the 'rate' if not already set or if proper flag set*/
-	if (!pclk->rate || pclk->flags & CLK_GET_RATE_NOCACHE)
-		pclk->rate = clk_get_rate(pclk);
-
-	return pclk->rate;
-}
-
 ulong clk_set_rate(struct clk *clk, ulong rate)
 {
 	const struct clk_ops *ops = clk_dev_ops(clk->dev);
@@ -449,45 +406,13 @@ int clk_set_parent(struct clk *clk, struct clk *parent)
 int clk_enable(struct clk *clk)
 {
 	const struct clk_ops *ops = clk_dev_ops(clk->dev);
-	struct clk *clkp = NULL;
-	int ret;
 
 	debug("%s(clk=%p)\n", __func__, clk);
 
-	if (CONFIG_IS_ENABLED(CLK_CCF)) {
-		/* Take id 0 as a non-valid clk, such as dummy */
-		if (clk->id && !clk_get_by_id(clk->id, &clkp)) {
-			if (clkp->enable_count) {
-				clkp->enable_count++;
-				return 0;
-			}
-			if (clkp->dev->parent &&
-			    device_get_uclass_id(clkp->dev) == UCLASS_CLK) {
-				ret = clk_enable(dev_get_clk_ptr(clkp->dev->parent));
-				if (ret) {
-					printf("Enable %s failed\n",
-					       clkp->dev->parent->name);
-					return ret;
-				}
-			}
-		}
+	if (!ops->enable)
+		return -ENOSYS;
 
-		if (ops->enable) {
-			ret = ops->enable(clk);
-			if (ret) {
-				printf("Enable %s failed\n", clk->dev->name);
-				return ret;
-			}
-		}
-		if (clkp)
-			clkp->enable_count++;
-	} else {
-		if (!ops->enable)
-			return -ENOSYS;
-		return ops->enable(clk);
-	}
-
-	return 0;
+	return ops->enable(clk);
 }
 
 int clk_enable_bulk(struct clk_bulk *bulk)
@@ -506,46 +431,13 @@ int clk_enable_bulk(struct clk_bulk *bulk)
 int clk_disable(struct clk *clk)
 {
 	const struct clk_ops *ops = clk_dev_ops(clk->dev);
-	struct clk *clkp = NULL;
-	int ret;
 
 	debug("%s(clk=%p)\n", __func__, clk);
 
-	if (CONFIG_IS_ENABLED(CLK_CCF)) {
-		if (clk->id && !clk_get_by_id(clk->id, &clkp)) {
-			if (clkp->enable_count == 0) {
-				printf("clk %s already disabled\n",
-				       clkp->dev->name);
-				return 0;
-			}
+	if (!ops->disable)
+		return -ENOSYS;
 
-			if (--clkp->enable_count > 0)
-				return 0;
-		}
-
-		if (ops->disable) {
-			ret = ops->disable(clk);
-			if (ret)
-				return ret;
-		}
-
-		if (clkp && clkp->dev->parent &&
-		    device_get_uclass_id(clkp->dev) == UCLASS_CLK) {
-			ret = clk_disable(dev_get_clk_ptr(clkp->dev->parent));
-			if (ret) {
-				printf("Disable %s failed\n",
-				       clkp->dev->parent->name);
-				return ret;
-			}
-		}
-	} else {
-		if (!ops->disable)
-			return -ENOSYS;
-
-		return ops->disable(clk);
-	}
-
-	return 0;
+	return ops->disable(clk);
 }
 
 int clk_disable_bulk(struct clk_bulk *bulk)
@@ -559,41 +451,6 @@ int clk_disable_bulk(struct clk_bulk *bulk)
 	}
 
 	return 0;
-}
-
-int clk_get_by_id(ulong id, struct clk **clkp)
-{
-	struct udevice *dev;
-	struct uclass *uc;
-	int ret;
-
-	ret = uclass_get(UCLASS_CLK, &uc);
-	if (ret)
-		return ret;
-
-	uclass_foreach_dev(dev, uc) {
-		struct clk *clk = dev_get_clk_ptr(dev);
-
-		if (clk && clk->id == id) {
-			*clkp = clk;
-			return 0;
-		}
-	}
-
-	return -ENOENT;
-}
-
-bool clk_is_match(const struct clk *p, const struct clk *q)
-{
-	/* trivial case: identical struct clk's or both NULL */
-	if (p == q)
-		return true;
-
-	/* same device, id and data */
-	if (p->dev == q->dev && p->id == q->id && p->data == q->data)
-		return true;
-
-	return false;
 }
 
 UCLASS_DRIVER(clk) = {

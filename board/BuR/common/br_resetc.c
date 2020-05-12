@@ -6,7 +6,6 @@
  * B&R Industrial Automation GmbH - http://www.br-automation.com/ *
  */
 #include <common.h>
-#include <env.h>
 #include <errno.h>
 #include <i2c.h>
 #include <dm/uclass.h>

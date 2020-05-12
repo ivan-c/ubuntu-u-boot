@@ -14,7 +14,6 @@
 
 	aliases {
 		usb0 = &ehci0; /* required for ums */
-		display1 = &dcu0;
 	};
 
 	reg_usbh_vbus: regulator-usbh-vbus {
@@ -240,9 +239,5 @@
 &uart0 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_uart0>;
-	status = "okay";
-};
-
-&dcu0 {
 	status = "okay";
 };

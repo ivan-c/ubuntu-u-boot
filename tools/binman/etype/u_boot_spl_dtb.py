@@ -23,6 +23,3 @@ class Entry_u_boot_spl_dtb(Entry_blob_dtb):
 
     def GetDefaultFilename(self):
         return 'spl/u-boot-spl.dtb'
-
-    def GetFdtEtype(self):
-        return 'u-boot-spl-dtb'

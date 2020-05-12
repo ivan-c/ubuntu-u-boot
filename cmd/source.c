@@ -16,7 +16,6 @@
 
 #include <common.h>
 #include <command.h>
-#include <env.h>
 #include <image.h>
 #include <malloc.h>
 #include <mapmem.h>
@@ -45,7 +44,7 @@ int
 source (ulong addr, const char *fit_uname)
 {
 	ulong		len;
-#if defined(CONFIG_LEGACY_IMAGE_FORMAT)
+#if defined(CONFIG_IMAGE_FORMAT_LEGACY)
 	const image_header_t *hdr;
 #endif
 	u32		*data;
@@ -62,7 +61,7 @@ source (ulong addr, const char *fit_uname)
 
 	buf = map_sysmem(addr, 0);
 	switch (genimg_get_format(buf)) {
-#if defined(CONFIG_LEGACY_IMAGE_FORMAT)
+#if defined(CONFIG_IMAGE_FORMAT_LEGACY)
 	case IMAGE_FORMAT_LEGACY:
 		hdr = buf;
 

@@ -10,7 +10,6 @@
 #include <spi.h>
 #include <asm/io.h>
 #include <linux/sizes.h>
-#include <linux/iopoll.h>
 #include <dm.h>
 #include <errno.h>
 #include <watchdog.h>
@@ -151,13 +150,20 @@ static void qspi_write32(u32 flags, u32 *addr, u32 val)
 static inline int is_controller_busy(const struct fsl_qspi_priv *priv)
 {
 	u32 val;
-	u32 mask = QSPI_SR_BUSY_MASK | QSPI_SR_AHB_ACC_MASK |
-		   QSPI_SR_IP_ACC_MASK;
+	const u32 mask = QSPI_SR_BUSY_MASK | QSPI_SR_AHB_ACC_MASK |
+			 QSPI_SR_IP_ACC_MASK;
+	unsigned int retry = 5;
 
-	if (priv->flags & QSPI_FLAG_REGMAP_ENDIAN_BIG)
-		mask = (u32)cpu_to_be32(mask);
+	do {
+		val = qspi_read32(priv->flags, &priv->regs->sr);
 
-	return readl_poll_timeout(&priv->regs->sr, val, !(val & mask), 1000);
+		if ((~val & mask) == mask)
+			return 0;
+
+		udelay(1);
+	} while (--retry);
+
+	return -ETIMEDOUT;
 }
 
 /* QSPI support swapping the flash read/write data

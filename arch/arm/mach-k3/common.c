@@ -13,14 +13,13 @@
 #include <remoteproc.h>
 #include <linux/soc/ti/ti_sci_protocol.h>
 #include <fdt_support.h>
-#include <asm/arch/sys_proto.h>
 
 struct ti_sci_handle *get_ti_sci_handle(void)
 {
 	struct udevice *dev;
 	int ret;
 
-	ret = uclass_get_device(UCLASS_FIRMWARE, 0, &dev);
+	ret = uclass_get_device_by_name(UCLASS_FIRMWARE, "dmsc", &dev);
 	if (ret)
 		panic("Failed to get SYSFW (%d)\n", ret);
 
@@ -30,11 +29,7 @@ struct ti_sci_handle *get_ti_sci_handle(void)
 #ifdef CONFIG_SYS_K3_SPL_ATF
 void __noreturn jump_to_image_no_args(struct spl_image_info *spl_image)
 {
-	struct ti_sci_handle *ti_sci = get_ti_sci_handle();
 	int ret;
-
-	/* Release all the exclusive devices held by SPL before starting ATF */
-	ti_sci->ops.dev_ops.release_exclusive_devices(ti_sci);
 
 	/*
 	 * It is assumed that remoteproc device 1 is the corresponding
@@ -56,10 +51,7 @@ void __noreturn jump_to_image_no_args(struct spl_image_info *spl_image)
 	if (ret)
 		panic("%s: ATF failed to start on rproc (%d)\n", __func__, ret);
 
-	debug("Releasing resources...\n");
-	release_resources_for_core_shutdown();
-
-	debug("Finalizing core shutdown...\n");
+	debug("ATF started. Waiting indefinitely...\n");
 	while (1)
 		asm volatile("wfe");
 }
@@ -136,11 +128,5 @@ int fdt_fixup_msmc_ram(void *blob, char *parent_path, char *node_name)
 	}
 
 	return 0;
-}
-#endif
-
-#ifndef CONFIG_SYSRESET
-void reset_cpu(ulong ignored)
-{
 }
 #endif

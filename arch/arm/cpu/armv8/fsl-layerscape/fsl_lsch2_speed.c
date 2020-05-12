@@ -22,12 +22,10 @@ DECLARE_GLOBAL_DATA_PTR;
 void get_sys_info(struct sys_info *sys_info)
 {
 	struct ccsr_gur __iomem *gur = (void *)(CONFIG_SYS_FSL_GUTS_ADDR);
-/* rcw_tmp is needed to get FMAN clock, or to get cluster group A
- * mux 2 clock for LS1043A/LS1046A.
- */
-#if defined(CONFIG_SYS_DPAA_FMAN) || \
-	    defined(CONFIG_TARGET_LS1046ARDB) || \
-	    defined(CONFIG_TARGET_LS1043ARDB)
+#if (defined(CONFIG_FSL_ESDHC) &&\
+	defined(CONFIG_FSL_ESDHC_USE_PERIPHERAL_CLK)) ||\
+	defined(CONFIG_SYS_DPAA_FMAN)
+
 	u32 rcw_tmp;
 #endif
 	struct ccsr_clk *clk = (void *)(CONFIG_SYS_FSL_CLK_ADDR);
@@ -124,32 +122,32 @@ void get_sys_info(struct sys_info *sys_info)
 	}
 #endif
 
-#ifdef CONFIG_FSL_ESDHC
 #define HWA_CGA_M2_CLK_SEL	0x00000007
 #define HWA_CGA_M2_CLK_SHIFT	0
-#if defined(CONFIG_TARGET_LS1046ARDB) || defined(CONFIG_TARGET_LS1043ARDB)
+#ifdef CONFIG_FSL_ESDHC
+#ifdef CONFIG_FSL_ESDHC_USE_PERIPHERAL_CLK
 	rcw_tmp = in_be32(&gur->rcwsr[15]);
 	switch ((rcw_tmp & HWA_CGA_M2_CLK_SEL) >> HWA_CGA_M2_CLK_SHIFT) {
 	case 1:
-		sys_info->freq_cga_m2 = freq_c_pll[1];
+		sys_info->freq_sdhc = freq_c_pll[1];
 		break;
-#if defined(CONFIG_TARGET_LS1046ARDB)
 	case 2:
-		sys_info->freq_cga_m2 = freq_c_pll[1] / 2;
+		sys_info->freq_sdhc = freq_c_pll[1] / 2;
 		break;
-#endif
 	case 3:
-		sys_info->freq_cga_m2 = freq_c_pll[1] / 3;
+		sys_info->freq_sdhc = freq_c_pll[1] / 3;
 		break;
-#if defined(CONFIG_TARGET_LS1046ARDB)
 	case 6:
-		sys_info->freq_cga_m2 = freq_c_pll[0] / 2;
+		sys_info->freq_sdhc = freq_c_pll[0] / 2;
 		break;
-#endif
 	default:
-		printf("Error: Unknown peripheral clock select!\n");
+		printf("Error: Unknown ESDHC clock select!\n");
 		break;
 	}
+#else
+	sys_info->freq_sdhc = (sys_info->freq_systembus /
+				CONFIG_SYS_FSL_PCLK_DIV) /
+				CONFIG_SYS_FSL_SDHC_CLK_DIV;
 #endif
 #endif
 
@@ -185,22 +183,9 @@ int get_clocks(void)
 	gd->mem_clk = sys_info.freq_ddrbus;
 
 #ifdef CONFIG_FSL_ESDHC
-#if defined(CONFIG_FSL_ESDHC_USE_PERIPHERAL_CLK)
-#if defined(CONFIG_TARGET_LS1046ARDB)
-	gd->arch.sdhc_clk = sys_info.freq_cga_m2 / 2;
+	gd->arch.sdhc_clk = sys_info.freq_sdhc;
 #endif
-#if defined(CONFIG_TARGET_LS1043ARDB)
-	gd->arch.sdhc_clk = sys_info.freq_cga_m2;
-#endif
-#if defined(CONFIG_TARGET_LS1012ARDB)
-	gd->arch.sdhc_clk = sys_info.freq_systembus;
-#endif
-#else
-	gd->arch.sdhc_clk = (sys_info.freq_systembus /
-			CONFIG_SYS_FSL_PCLK_DIV) /
-			CONFIG_SYS_FSL_SDHC_CLK_DIV;
-#endif
-#endif
+
 	if (gd->cpu_clk != 0)
 		return 0;
 	else

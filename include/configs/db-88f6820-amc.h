@@ -32,6 +32,7 @@
 #endif
 
 /* NAND */
+#define CONFIG_SYS_NAND_USE_FLASH_BBT
 #define CONFIG_SYS_NAND_ONFI_DETECTION
 
 /* Keep device tree and initrd in lower memory so the kernel can access them */
@@ -68,6 +69,7 @@
 
 #if CONFIG_SPL_BOOT_DEVICE == SPL_BOOT_SPI_NOR_FLASH
 /* SPL related SPI defines */
+#define CONFIG_SYS_SPI_U_BOOT_OFFS	0x24000
 #define CONFIG_SYS_U_BOOT_OFFS		CONFIG_SYS_SPI_U_BOOT_OFFS
 #endif
 

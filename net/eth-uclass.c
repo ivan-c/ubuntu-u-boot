@@ -7,11 +7,10 @@
 
 #include <common.h>
 #include <dm.h>
-#include <env.h>
+#include <environment.h>
 #include <net.h>
 #include <dm/device-internal.h>
 #include <dm/uclass-internal.h>
-#include <net/pcap.h>
 #include "eth_internal.h"
 
 DECLARE_GLOBAL_DATA_PTR;
@@ -345,10 +344,6 @@ int eth_send(void *packet, int length)
 		/* We cannot completely return the error at present */
 		debug("%s: send() returned error %d\n", __func__, ret);
 	}
-#if defined(CONFIG_CMD_PCAP)
-	if (ret >= 0)
-		pcap_post(packet, length, true);
-#endif
 	return ret;
 }
 

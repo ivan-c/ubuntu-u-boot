@@ -6,7 +6,7 @@
 
 #include <common.h>
 #include <dm.h>
-#include <env.h>
+#include <environment.h>
 #include <asm/io.h>
 #include <asm/arch/gx.h>
 #include <asm/arch/sm.h>
@@ -32,8 +32,6 @@ int misc_init_r(void)
 					  mac_addr, EFUSE_MAC_SIZE);
 		if (len == EFUSE_MAC_SIZE && is_valid_ethaddr(mac_addr))
 			eth_env_set_enetaddr("ethaddr", mac_addr);
-		else
-			meson_generate_serial_ethaddr();
 	}
 
 	if (!env_get("serial#")) {

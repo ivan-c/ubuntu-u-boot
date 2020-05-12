@@ -21,6 +21,7 @@
 
 #include <configs/ti_am335x_common.h>
 
+#define CONFIG_ENV_SIZE			(128 << 10)	/* 128 KiB */
 #define CONFIG_MACH_TYPE		MACH_TYPE_PCM051
 
 /* set to negative value for no autoboot */
@@ -117,6 +118,7 @@
 /* CPU */
 
 #ifdef CONFIG_SPI_BOOT
+#define CONFIG_SYS_SPI_U_BOOT_OFFS	0x20000
 #define CONFIG_SYS_SPI_U_BOOT_SIZE	0x40000
 #endif
 

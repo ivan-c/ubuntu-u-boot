@@ -480,15 +480,17 @@ static int _dw_free_pkt(struct dw_eth_dev *priv)
 static int dw_phy_init(struct dw_eth_dev *priv, void *dev)
 {
 	struct phy_device *phydev;
-	int phy_addr = -1, ret;
+	int mask = 0xffffffff, ret;
 
 #ifdef CONFIG_PHY_ADDR
-	phy_addr = CONFIG_PHY_ADDR;
+	mask = 1 << CONFIG_PHY_ADDR;
 #endif
 
-	phydev = phy_connect(priv->bus, phy_addr, dev, priv->interface);
+	phydev = phy_find_by_mask(priv->bus, mask, priv->interface);
 	if (!phydev)
 		return -ENODEV;
+
+	phy_connect_dev(phydev, dev);
 
 	phydev->supported &= PHY_GBIT_FEATURES;
 	if (priv->max_speed) {
@@ -675,10 +677,10 @@ int designware_eth_probe(struct udevice *dev)
 	struct dw_eth_dev *priv = dev_get_priv(dev);
 	u32 iobase = pdata->iobase;
 	ulong ioaddr;
-	int ret, err;
+	int ret;
 	struct reset_ctl_bulk reset_bulk;
 #ifdef CONFIG_CLK
-	int i, clock_nb;
+	int i, err, clock_nb;
 
 	priv->clock_count = 0;
 	clock_nb = dev_count_phandle_with_args(dev, "clocks", "#clock-cells");
@@ -751,23 +753,13 @@ int designware_eth_probe(struct udevice *dev)
 	priv->interface = pdata->phy_interface;
 	priv->max_speed = pdata->max_speed;
 
-	ret = dw_mdio_init(dev->name, dev);
-	if (ret) {
-		err = ret;
-		goto mdio_err;
-	}
+	dw_mdio_init(dev->name, dev);
 	priv->bus = miiphy_get_dev_by_name(dev->name);
 
 	ret = dw_phy_init(priv, dev);
 	debug("%s, ret=%d\n", __func__, ret);
-	if (!ret)
-		return 0;
 
-	/* continue here for cleanup if no PHY found */
-	err = ret;
-	mdio_unregister(priv->bus);
-	mdio_free(priv->bus);
-mdio_err:
+	return ret;
 
 #ifdef CONFIG_CLK
 clk_err:
@@ -775,8 +767,8 @@ clk_err:
 	if (ret)
 		pr_err("failed to disable all clocks\n");
 
-#endif
 	return err;
+#endif
 }
 
 static int designware_eth_remove(struct udevice *dev)
@@ -847,6 +839,7 @@ int designware_eth_ofdata_to_platdata(struct udevice *dev)
 
 static const struct udevice_id designware_eth_ids[] = {
 	{ .compatible = "allwinner,sun7i-a20-gmac" },
+	{ .compatible = "altr,socfpga-stmmac" },
 	{ .compatible = "amlogic,meson6-dwmac" },
 	{ .compatible = "amlogic,meson-gx-dwmac" },
 	{ .compatible = "amlogic,meson-gxbb-dwmac" },

@@ -7,7 +7,6 @@
 #include <common.h>
 #include <dm.h>
 #include <efi_loader.h>
-#include <env.h>
 #include <errno.h>
 #include <ns16550.h>
 #include <usb.h>

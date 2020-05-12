@@ -42,6 +42,5 @@ endchoice
 
 source "board/mediatek/mt7623/Kconfig"
 source "board/mediatek/mt7629/Kconfig"
-source "board/mediatek/pumpkin/Kconfig"
 
 endif

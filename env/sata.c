@@ -8,8 +8,7 @@
 #include <common.h>
 
 #include <command.h>
-#include <env.h>
-#include <env_internal.h>
+#include <environment.h>
 #include <linux/stddef.h>
 #include <errno.h>
 #include <memalign.h>
@@ -107,7 +106,7 @@ static void env_sata_load(void)
 	}
 
 	if (read_env(sata, CONFIG_ENV_SIZE, CONFIG_ENV_OFFSET, buf)) {
-		env_set_default(NULL, 0);
+		set_default_env(NULL, 0);
 		return -EIO;
 	}
 

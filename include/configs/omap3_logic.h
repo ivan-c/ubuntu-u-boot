@@ -30,13 +30,6 @@
 /* I2C */
 #define CONFIG_SYS_I2C_EEPROM_ADDR	0x50	/* EEPROM AT24C64      */
 
-#ifdef CONFIG_SPL_BUILD
-#undef CONFIG_USB_EHCI_OMAP
-#endif
-#ifdef CONFIG_USB_EHCI_OMAP
-#define CONFIG_OMAP_EHCI_PHY1_RESET_GPIO	4
-#endif
-
 /* Board NAND Info. */
 #ifdef CONFIG_NAND
 #define CONFIG_SYS_MAX_NAND_DEVICE	1	  /* Max number of */
@@ -62,6 +55,10 @@
 #endif
 
 /* Environment information */
+
+#define CONFIG_PREBOOT \
+	"setenv preboot;"						\
+	"saveenv;"
 
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	DEFAULT_LINUX_BOOT_ENV \
@@ -197,7 +194,10 @@
 /* Monitor at start of flash */
 #define CONFIG_SYS_MONITOR_BASE		CONFIG_SYS_FLASH_BASE
 
+#define CONFIG_ENV_SIZE			(128 << 10)	/* 128 KiB */
+
 #define CONFIG_SYS_ENV_SECT_SIZE	(128 << 10)	/* 128 KiB */
+#define CONFIG_ENV_OFFSET		0x260000
 #define CONFIG_ENV_ADDR			0x260000
 
 /* Defines for SPL */

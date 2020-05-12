@@ -405,7 +405,6 @@ static struct clk_ops meson_clk_ops = {
 
 static const struct udevice_id meson_clk_ids[] = {
 	{ .compatible = "amlogic,g12a-clkc" },
-	{ .compatible = "amlogic,g12b-clkc" },
 	{ }
 };
 

@@ -8,8 +8,7 @@
  */
 
 #include <common.h>
-#include <env.h>
-#include <env_internal.h>
+#include <environment.h>
 #include <malloc.h>
 #include <netdev.h>
 #include <dm.h>

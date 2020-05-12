@@ -54,7 +54,7 @@ struct bd_info;
 #define SPL_BUILD	0
 #endif
 
-#ifdef CONFIG_OF_PRIOR_STAGE
+#if CONFIG_IS_ENABLED(OF_PRIOR_STAGE)
 extern phys_addr_t prior_stage_fdt_address;
 #endif
 

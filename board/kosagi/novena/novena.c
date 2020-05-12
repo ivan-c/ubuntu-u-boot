@@ -9,7 +9,6 @@
 #include <dm.h>
 #include <dm/device-internal.h>
 #include <ahci.h>
-#include <env.h>
 #include <linux/errno.h>
 #include <asm/gpio.h>
 #include <asm/io.h>
@@ -25,7 +24,8 @@
 #include <asm/mach-imx/sata.h>
 #include <asm/mach-imx/video.h>
 #include <dwc_ahsata.h>
-#include <fsl_esdhc_imx.h>
+#include <environment.h>
+#include <fsl_esdhc.h>
 #include <i2c.h>
 #include <input.h>
 #include <ipu_pixfmt.h>

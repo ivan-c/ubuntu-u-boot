@@ -4,7 +4,6 @@
  * ISEE 2007 SL, <www.iseebcn.com>
  */
 #include <common.h>
-#include <env.h>
 #include <status_led.h>
 #include <dm.h>
 #include <ns16550.h>

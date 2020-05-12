@@ -9,7 +9,6 @@
 
 #include <common.h>
 #include <dm.h>
-#include <env.h>
 #include <errno.h>
 #include <spl.h>
 #include <serial.h>
@@ -34,8 +33,9 @@
 #include <cpsw.h>
 #include <power/tps65217.h>
 #include <power/tps65910.h>
-#include <env_internal.h>
+#include <environment.h>
 #include <watchdog.h>
+#include <environment.h>
 #include "../common/board_detect.h"
 #include "board.h"
 

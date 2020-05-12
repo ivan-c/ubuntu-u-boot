@@ -11,7 +11,6 @@
 #include <dm.h>
 #include <efi_loader.h>
 #include <efi_selftest.h>
-#include <env.h>
 #include <errno.h>
 #include <linux/libfdt.h>
 #include <linux/libfdt_env.h>
@@ -25,7 +24,7 @@ DECLARE_GLOBAL_DATA_PTR;
 static struct efi_device_path *bootefi_image_path;
 static struct efi_device_path *bootefi_device_path;
 
-/**
+/*
  * Set the load options of an image from an environment variable.
  *
  * @handle:	the image handle
@@ -144,7 +143,7 @@ done:
 	return ret;
 }
 
-/**
+/*
  * efi_carve_out_dt_rsv() - Carve out DT reserved memory ranges
  *
  * The mem_rsv entries of the FDT are added to the memory map. Any failures are
@@ -170,8 +169,8 @@ static void efi_carve_out_dt_rsv(void *fdt)
 
 		pages = efi_size_in_pages(size + (addr & EFI_PAGE_MASK));
 		addr &= ~EFI_PAGE_MASK;
-		if (efi_add_memory_map(addr, pages, EFI_RESERVED_MEMORY_TYPE,
-				       false) != EFI_SUCCESS)
+		if (!efi_add_memory_map(addr, pages, EFI_RESERVED_MEMORY_TYPE,
+					false))
 			printf("FDT memrsv map %d: Failed to add to map\n", i);
 	}
 }
@@ -343,7 +342,7 @@ static int do_efibootmgr(void)
 	return CMD_RET_SUCCESS;
 }
 
-/**
+/*
  * do_bootefi_image() - execute EFI binary
  *
  * Set up memory image for the binary to be loaded, prepare device path, and
@@ -613,16 +612,6 @@ U_BOOT_CMD(
 	bootefi_help_text
 );
 
-/**
- * efi_set_bootdev() - set boot device
- *
- * This function is called when a file is loaded, e.g. via the 'load' command.
- * We use the path to this file to inform the UEFI binary about the boot device.
- *
- * @dev:	device, e.g. "MMC"
- * @devnr:	number of the device, e.g. "1:2"
- * @path:	path to file loaded
- */
 void efi_set_bootdev(const char *dev, const char *devnr, const char *path)
 {
 	struct efi_device_path *device, *image;

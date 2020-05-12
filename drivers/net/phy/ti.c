@@ -103,7 +103,7 @@ struct dp83867_private {
 	int io_impedance;
 	bool rxctrl_strap_quirk;
 	int port_mirroring;
-	unsigned int clk_output_sel;
+	int clk_output_sel;
 };
 
 static int dp83867_config_port_mirroring(struct phy_device *phydev)
@@ -136,11 +136,17 @@ static int dp83867_of_init(struct phy_device *phydev)
 	ofnode node;
 	u16 val;
 
+	/* Optional configuration */
+
 	node = phy_get_ofnode(phydev);
 	if (!ofnode_valid(node))
 		return -EINVAL;
 
-	/* Keep the default value if ti,clk-output-sel is not set */
+	/*
+	 * Keep the default value if ti,clk-output-sel is not set
+	 * or to high
+	 */
+
 	dp83867->clk_output_sel =
 		ofnode_read_u32_default(node, "ti,clk-output-sel",
 					DP83867_CLK_O_SEL_REF_CLK);
@@ -156,14 +162,14 @@ static int dp83867_of_init(struct phy_device *phydev)
 		dp83867->rxctrl_strap_quirk = true;
 	dp83867->rx_id_delay = ofnode_read_u32_default(node,
 						       "ti,rx-internal-delay",
-						       DEFAULT_RX_ID_DELAY);
+						       -1);
 
 	dp83867->tx_id_delay = ofnode_read_u32_default(node,
 						       "ti,tx-internal-delay",
-						       DEFAULT_TX_ID_DELAY);
+						       -1);
 
 	dp83867->fifo_depth = ofnode_read_u32_default(node, "ti,fifo-depth",
-						      DEFAULT_FIFO_DEPTH);
+						      -1);
 	if (ofnode_read_bool(node, "enet-phy-lane-swap"))
 		dp83867->port_mirroring = DP83867_PORT_MIRRORING_EN;
 

@@ -9,10 +9,8 @@
  */
 #include <common.h>
 #include <command.h>
-#include <env.h>
 #include <fpga.h>
 #include <fs.h>
-#include <gzip.h>
 #include <malloc.h>
 
 static long do_fpga_get_device(char *arg)
@@ -282,7 +280,7 @@ static int do_fpga_loadmk(cmd_tbl_t *cmdtp, int flag, int argc,
 	}
 
 	switch (genimg_get_format(fpga_data)) {
-#if defined(CONFIG_LEGACY_IMAGE_FORMAT)
+#if defined(CONFIG_IMAGE_FORMAT_LEGACY)
 	case IMAGE_FORMAT_LEGACY:
 	{
 		image_header_t *hdr = (image_header_t *)fpga_data;
@@ -460,7 +458,7 @@ U_BOOT_CMD(fpga, 6, 1, do_fpga_wrapper,
 	   "0-device key, 1-user key, 2-no encryption.\n"
 	   "The optional Userkey address specifies from which address key\n"
 	   "has to be used for decryption if user key is selected.\n"
-	   "NOTE: the secure bitstream has to be created using Xilinx\n"
+	   "NOTE: the sceure bitstream has to be created using xilinx\n"
 	   "bootgen tool only.\n"
 #endif
 );

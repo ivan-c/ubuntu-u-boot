@@ -6,7 +6,6 @@
  */
 
 #include <common.h>
-#include <env.h>
 #include <hwconfig.h>
 #include <i2c.h>
 #include <asm/io.h>

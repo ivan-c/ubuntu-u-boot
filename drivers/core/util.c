@@ -31,7 +31,6 @@ int list_count_items(struct list_head *head)
 	return count;
 }
 
-#if CONFIG_IS_ENABLED(OF_CONTROL) && !CONFIG_IS_ENABLED(OF_PLATDATA)
 bool dm_ofnode_pre_reloc(ofnode node)
 {
 #if defined(CONFIG_SPL_BUILD) || defined(CONFIG_TPL_BUILD)
@@ -42,8 +41,6 @@ bool dm_ofnode_pre_reloc(ofnode node)
 	return true;
 #else
 	if (ofnode_read_bool(node, "u-boot,dm-pre-reloc"))
-		return true;
-	if (ofnode_read_bool(node, "u-boot,dm-pre-proper"))
 		return true;
 
 	/*
@@ -57,4 +54,3 @@ bool dm_ofnode_pre_reloc(ofnode node)
 	return false;
 #endif
 }
-#endif

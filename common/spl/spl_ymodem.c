@@ -9,7 +9,6 @@
  * Matt Porter <mporter@ti.com>
  */
 #include <common.h>
-#include <gzip.h>
 #include <spl.h>
 #include <xyzModem.h>
 #include <asm/u-boot.h>

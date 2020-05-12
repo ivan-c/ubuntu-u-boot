@@ -1109,8 +1109,7 @@ unknown:
  * @return 0
  */
 static int _xhci_submit_int_msg(struct usb_device *udev, unsigned long pipe,
-				void *buffer, int length, int interval,
-				bool nonblock)
+				void *buffer, int length, int interval)
 {
 	if (usb_pipetype(pipe) != PIPE_INTERRUPT) {
 		printf("non-interrupt pipe (type=%lu)", usb_pipetype(pipe));
@@ -1278,10 +1277,9 @@ int submit_bulk_msg(struct usb_device *udev, unsigned long pipe, void *buffer,
 }
 
 int submit_int_msg(struct usb_device *udev, unsigned long pipe, void *buffer,
-		   int length, int interval, bool nonblock)
+		   int length, int interval)
 {
-	return _xhci_submit_int_msg(udev, pipe, buffer, length, interval,
-				    nonblock);
+	return _xhci_submit_int_msg(udev, pipe, buffer, length, interval);
 }
 
 /**
@@ -1388,11 +1386,10 @@ static int xhci_submit_bulk_msg(struct udevice *dev, struct usb_device *udev,
 
 static int xhci_submit_int_msg(struct udevice *dev, struct usb_device *udev,
 			       unsigned long pipe, void *buffer, int length,
-			       int interval, bool nonblock)
+			       int interval)
 {
 	debug("%s: dev='%s', udev=%p\n", __func__, dev->name, udev);
-	return _xhci_submit_int_msg(udev, pipe, buffer, length, interval,
-				    nonblock);
+	return _xhci_submit_int_msg(udev, pipe, buffer, length, interval);
 }
 
 static int xhci_alloc_device(struct udevice *dev, struct usb_device *udev)

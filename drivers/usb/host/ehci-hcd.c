@@ -1482,8 +1482,7 @@ out:
 }
 
 static int _ehci_submit_int_msg(struct usb_device *dev, unsigned long pipe,
-				void *buffer, int length, int interval,
-				bool nonblock)
+				void *buffer, int length, int interval)
 {
 	void *backbuffer;
 	struct int_queue *queue;
@@ -1533,10 +1532,9 @@ int submit_control_msg(struct usb_device *dev, unsigned long pipe, void *buffer,
 }
 
 int submit_int_msg(struct usb_device *dev, unsigned long pipe,
-		   void *buffer, int length, int interval, bool nonblock)
+		   void *buffer, int length, int interval)
 {
-	return _ehci_submit_int_msg(dev, pipe, buffer, length, interval,
-				    nonblock);
+	return _ehci_submit_int_msg(dev, pipe, buffer, length, interval);
 }
 
 struct int_queue *create_int_queue(struct usb_device *dev,
@@ -1578,11 +1576,10 @@ static int ehci_submit_bulk_msg(struct udevice *dev, struct usb_device *udev,
 
 static int ehci_submit_int_msg(struct udevice *dev, struct usb_device *udev,
 			       unsigned long pipe, void *buffer, int length,
-			       int interval, bool nonblock)
+			       int interval)
 {
 	debug("%s: dev='%s', udev=%p\n", __func__, dev->name, udev);
-	return _ehci_submit_int_msg(udev, pipe, buffer, length, interval,
-				    nonblock);
+	return _ehci_submit_int_msg(udev, pipe, buffer, length, interval);
 }
 
 static struct int_queue *ehci_create_int_queue(struct udevice *dev,

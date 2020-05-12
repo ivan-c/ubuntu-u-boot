@@ -6,7 +6,6 @@
 #include <common.h>
 #include <command.h>
 #include <dm.h>
-#include <env.h>
 #include <i2c.h>
 #include <wdt.h>
 #include <asm/gpio.h>

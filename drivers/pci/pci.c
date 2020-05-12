@@ -17,7 +17,6 @@
 #include <common.h>
 
 #include <command.h>
-#include <env.h>
 #include <errno.h>
 #include <asm/processor.h>
 #include <asm/io.h>
