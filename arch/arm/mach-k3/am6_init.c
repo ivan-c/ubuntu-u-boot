@@ -17,6 +17,7 @@
 #include <dm/uclass-internal.h>
 #include <dm/pinctrl.h>
 #include <linux/soc/ti/ti_sci_protocol.h>
+#include <mmc.h>
 
 #ifdef CONFIG_SPL_BUILD
 #ifdef CONFIG_K3_LOAD_SYSFW
@@ -86,6 +87,33 @@ static void store_boot_index_from_rom(void)
 	bootindex = *(u32 *)(CONFIG_SYS_K3_BOOT_PARAM_TABLE_INDEX);
 }
 
+#if defined(CONFIG_K3_LOAD_SYSFW)
+void k3_mmc_stop_clock(void)
+{
+	if (spl_boot_device() == BOOT_DEVICE_MMC1) {
+		struct mmc *mmc = find_mmc_device(0);
+
+		if (!mmc)
+			return;
+
+		mmc->saved_clock = mmc->clock;
+		mmc_set_clock(mmc, 0, true);
+	}
+}
+
+void k3_mmc_restart_clock(void)
+{
+	if (spl_boot_device() == BOOT_DEVICE_MMC1) {
+		struct mmc *mmc = find_mmc_device(0);
+
+		if (!mmc)
+			return;
+
+		mmc_set_clock(mmc, mmc->saved_clock, false);
+	}
+}
+#endif
+
 void board_init_f(ulong dummy)
 {
 #if defined(CONFIG_K3_LOAD_SYSFW) || defined(CONFIG_K3_AM654_DDRSS)
@@ -109,6 +137,16 @@ void board_init_f(ulong dummy)
 	/* Init DM early in-order to invoke system controller */
 	spl_early_init();
 
+#ifdef CONFIG_K3_EARLY_CONS
+	/*
+	 * Allow establishing an early console as required for example when
+	 * doing a UART-based boot. Note that this console may not "survive"
+	 * through a SYSFW PM-init step and will need a re-init in some way
+	 * due to changing module clock frequencies.
+	 */
+	early_console_init();
+#endif
+
 #ifdef CONFIG_K3_LOAD_SYSFW
 	/*
 	 * Process pinctrl for the serial0 a.k.a. WKUP_UART0 module and continue
@@ -128,7 +166,10 @@ void board_init_f(ulong dummy)
 	 * callback hook, effectively switching on (or over) the console
 	 * output.
 	 */
-	k3_sysfw_loader(preloader_console_init);
+	k3_sysfw_loader(k3_mmc_stop_clock, k3_mmc_restart_clock);
+
+	/* Prepare console output */
+	preloader_console_init();
 
 	/* Disable ROM configured firewalls right after loading sysfw */
 #ifdef CONFIG_TI_SECURE_DEVICE
