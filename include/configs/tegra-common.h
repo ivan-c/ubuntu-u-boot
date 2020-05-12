@@ -14,7 +14,6 @@
  * High Level Configuration Options
  */
 #define CONFIG_ARMCORTEXA9		/* This is an ARM V7 CPU core */
-#define CONFIG_TEGRA			/* which is a Tegra generic machine */
 #define CONFIG_SYS_L2CACHE_OFF		/* No L2 cache */
 
 #include <asm/arch/tegra.h>		/* get chip and board defs */
@@ -131,7 +130,6 @@
 #define CONFIG_CMD_ENTERRCM
 
 /* Defines for SPL */
-#define CONFIG_SPL
 #define CONFIG_SPL_FRAMEWORK
 #define CONFIG_SPL_RAM_DEVICE
 #define CONFIG_SPL_BOARD_INIT
