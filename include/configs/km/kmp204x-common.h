@@ -255,18 +255,6 @@ unsigned long get_board_sys_clk(unsigned long dummy);
 
 #define CONFIG_KM_CONSOLE_TTY	"ttyS0"
 
-/* Use the HUSH parser */
-#define CONFIG_SYS_HUSH_PARSER
-
-/* pass open firmware flat tree */
-#define CONFIG_OF_LIBFDT
-#define CONFIG_OF_BOARD_SETUP
-#define CONFIG_OF_STDOUT_VIA_ALIAS
-
-/* new uImage format support */
-#define CONFIG_FIT
-#define CONFIG_FIT_VERBOSE	/* enable fit_format_{error,warning}() */
-
 /* I2C */
 
 #define CONFIG_SYS_I2C
@@ -297,7 +285,6 @@ int get_scl(void);
  * eSPI - Enhanced SPI
  */
 #define CONFIG_SPI_FLASH_BAR	/* 4 byte-addressing */
-#define CONFIG_CMD_SF
 #define CONFIG_SF_DEFAULT_SPEED         20000000
 #define CONFIG_SF_DEFAULT_MODE          0
 
