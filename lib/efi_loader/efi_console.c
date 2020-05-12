@@ -136,6 +136,11 @@ static efi_status_t EFIAPI efi_cout_output_string(
 
 	EFI_ENTRY("%p, %p", this, string);
 
+	if (!this || !string) {
+		ret = EFI_INVALID_PARAMETER;
+		goto out;
+	}
+
 	buf = malloc(utf16_utf8_strlen(string) + 1);
 	if (!buf) {
 		ret = EFI_OUT_OF_RESOURCES;
@@ -425,6 +430,7 @@ static efi_status_t EFIAPI efi_cout_enable_cursor(
 	EFI_ENTRY("%p, %d", this, enable);
 
 	printf(ESC"[?25%c", enable ? 'h' : 'l');
+	efi_con_mode.cursor_visible = !!enable;
 
 	return EFI_EXIT(EFI_SUCCESS);
 }
@@ -797,9 +803,26 @@ static efi_status_t EFIAPI efi_cin_read_key_stroke_ex(
 		ret = EFI_NOT_READY;
 		goto out;
 	}
+	/*
+	 * CTRL+A - CTRL+Z have to be signaled as a - z.
+	 * SHIFT+CTRL+A - SHIFT+CTRL+Z have to be signaled as A - Z.
+	 */
+	switch (next_key.key.unicode_char) {
+	case 0x01 ... 0x07:
+	case 0x0b ... 0x0c:
+	case 0x0e ... 0x1a:
+		if (!(next_key.key_state.key_toggle_state &
+		      EFI_CAPS_LOCK_ACTIVE) ^
+		    !(next_key.key_state.key_shift_state &
+		      (EFI_LEFT_SHIFT_PRESSED | EFI_RIGHT_SHIFT_PRESSED)))
+			next_key.key.unicode_char += 0x40;
+		else
+			next_key.key.unicode_char += 0x60;
+	}
 	*key_data = next_key;
 	key_available = false;
 	efi_con_in.wait_for_key->is_signaled = false;
+
 out:
 	return EFI_EXIT(ret);
 }
@@ -808,7 +831,7 @@ out:
  * efi_cin_set_state() - set toggle key state
  *
  * @this:		instance of the EFI_SIMPLE_TEXT_INPUT_PROTOCOL
- * @key_toggle_state:	key toggle state
+ * @key_toggle_state:	pointer to key toggle state
  * Return:		status code
  *
  * This function implements the SetState service of the
@@ -819,9 +842,9 @@ out:
  */
 static efi_status_t EFIAPI efi_cin_set_state(
 		struct efi_simple_text_input_ex_protocol *this,
-		u8 key_toggle_state)
+		u8 *key_toggle_state)
 {
-	EFI_ENTRY("%p, %u", this, key_toggle_state);
+	EFI_ENTRY("%p, %p", this, key_toggle_state);
 	/*
 	 * U-Boot supports multiple console input sources like serial and
 	 * net console for which a key toggle state cannot be set at all.

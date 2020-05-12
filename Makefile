@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: GPL-2.0+
 
 VERSION = 2019
-PATCHLEVEL = 04
+PATCHLEVEL = 07
 SUBLEVEL =
-EXTRAVERSION =
+EXTRAVERSION = -rc4
 NAME =
 
 # *DOCUMENTATION*
@@ -336,6 +336,19 @@ endif
 #ifeq ($(MAKECMDGOALS),)
 #  KBUILD_MODULES := 1
 #endif
+
+define size_check
+	actual=$$( wc -c $1 | awk '{print $$1}'); \
+	limit=$$( printf "%d" $2 ); \
+	if test $$actual -gt $$limit; then \
+		echo "$1 exceeds file size limit:" >&2; \
+		echo "  limit:  $$limit bytes" >&2; \
+		echo "  actual: $$actual bytes" >&2; \
+		echo "  excess: $$((actual - limit)) bytes" >&2; \
+		exit 1; \
+	fi
+endef
+export size_check
 
 export KBUILD_MODULES KBUILD_BUILTIN
 export KBUILD_CHECKSRC KBUILD_SRC KBUILD_EXTMOD
@@ -713,7 +726,7 @@ libs-y += drivers/spi/
 libs-$(CONFIG_FMAN_ENET) += drivers/net/fm/
 libs-$(CONFIG_SYS_FSL_DDR) += drivers/ddr/fsl/
 libs-$(CONFIG_SYS_FSL_MMDC) += drivers/ddr/fsl/
-libs-$(CONFIG_ALTERA_SDRAM) += drivers/ddr/altera/
+libs-$(CONFIG_$(SPL_)ALTERA_SDRAM) += drivers/ddr/altera/
 libs-y += drivers/serial/
 libs-y += drivers/usb/dwc3/
 libs-y += drivers/usb/common/
@@ -778,18 +791,15 @@ LDPPFLAGS += \
 #########################################################################
 
 ifneq ($(CONFIG_BOARD_SIZE_LIMIT),)
-BOARD_SIZE_CHECK = \
-	@actual=`wc -c $@ | awk '{print $$1}'`; \
-	limit=`printf "%d" $(CONFIG_BOARD_SIZE_LIMIT)`; \
-	if test $$actual -gt $$limit; then \
-		echo "$@ exceeds file size limit:" >&2 ; \
-		echo "  limit:  $$limit bytes" >&2 ; \
-		echo "  actual: $$actual bytes" >&2 ; \
-		echo "  excess: $$((actual - limit)) bytes" >&2; \
-		exit 1; \
-	fi
+BOARD_SIZE_CHECK= @ $(call size_check,$@,$(CONFIG_BOARD_SIZE_LIMIT))
 else
 BOARD_SIZE_CHECK =
+endif
+
+ifneq ($(CONFIG_SPL_SIZE_LIMIT),0)
+SPL_SIZE_CHECK = @$(call size_check,$@,$$(tools/spl_size_limit))
+else
+SPL_SIZE_CHECK =
 endif
 
 # Statically apply RELA-style relocations (currently arm64 only)
@@ -945,11 +955,22 @@ ifneq ($(CONFIG_DM_USB)$(CONFIG_OF_CONTROL)$(CONFIG_BLK),yyy)
 	@echo >&2 "===================================================="
 endif
 endif
-ifeq ($(CONFIG_LIBATA)$(CONFIG_MVSATA_IDE),y)
-ifneq ($(CONFIG_DM_SCSI),y)
+ifeq ($(CONFIG_MVSATA_IDE),y)
 	@echo >&2 "===================== WARNING ======================"
-	@echo >&2 "This board does not use CONFIG_DM_SCSI. Please update"
-	@echo >&2 "the storage controller to use CONFIG_DM_SCSI before the v2019.07 release."
+	@echo >&2 "This board does use CONFIG_MVSATA_IDE which is not"
+	@echo >&2 "ported to driver-model (DM) yet. Please update the storage"
+	@echo >&2 "controller driver to use CONFIG_AHCI before the v2019.07"
+	@echo >&2 "release."
+	@echo >&2 "Failure to update by the deadline may result in board removal."
+	@echo >&2 "See doc/driver-model/MIGRATION.txt for more info."
+	@echo >&2 "===================================================="
+endif
+ifeq ($(CONFIG_LIBATA),y)
+ifneq ($(CONFIG_AHCI),y)
+	@echo >&2 "===================== WARNING ======================"
+	@echo >&2 "This board does use CONFIG_LIBATA but has CONFIG_AHCI not"
+	@echo >&2 "enabled. Please update the storage controller driver to use"
+	@echo >&2 "CONFIG_AHCI before the v2019.07 release."
 	@echo >&2 "Failure to update by the deadline may result in board removal."
 	@echo >&2 "See doc/driver-model/MIGRATION.txt for more info."
 	@echo >&2 "===================================================="
@@ -1004,6 +1025,17 @@ ifneq ($(CONFIG_DM_SPI_FLASH)$(CONFIG_OF_CONTROL),yy)
 	@echo >&2 "===================================================="
 endif
 endif
+ifneq ($(CONFIG_WATCHDOG)$(CONFIG_HW_WATCHDOG),)
+ifneq ($(CONFIG_WDT),y)
+	@echo >&2 "===================== WARNING ======================"
+	@echo >&2 "This board does not use CONFIG_WDT (DM watchdog support)."
+	@echo >&2 "Please update the board to use CONFIG_WDT before the"
+	@echo >&2 "v2019.10 release."
+	@echo >&2 "Failure to update by the deadline may result in board removal."
+	@echo >&2 "See doc/driver-model/MIGRATION.txt for more info."
+	@echo >&2 "===================================================="
+endif
+endif
 	@# Check that this build does not use CONFIG options that we do not
 	@# know about unless they are in Kconfig. All the existing CONFIG
 	@# options are whitelisted, so new ones should not be added.
@@ -1020,15 +1052,38 @@ quiet_cmd_copy = COPY    $@
 
 ifeq ($(CONFIG_MULTI_DTB_FIT),y)
 
+ifeq ($(CONFIG_MULTI_DTB_FIT_LZO),y)
+FINAL_DTB_CONTAINER = fit-dtb.blob.lzo
+else ifeq ($(CONFIG_MULTI_DTB_FIT_GZIP),y)
+FINAL_DTB_CONTAINER = fit-dtb.blob.gz
+else
+FINAL_DTB_CONTAINER = fit-dtb.blob
+endif
+
+fit-dtb.blob.gz: fit-dtb.blob
+	@gzip -kf9 $< > $@
+
+fit-dtb.blob.lzo: fit-dtb.blob
+	@lzop -f9 $< > $@
+
 fit-dtb.blob: dts/dt.dtb FORCE
 	$(call if_changed,mkimage)
+ifneq ($(SOURCE_DATE_EPOCH),)
+	touch -d @$(SOURCE_DATE_EPOCH) fit-dtb.blob
+	chmod 0600 fit-dtb.blob
+endif
 
 MKIMAGEFLAGS_fit-dtb.blob = -f auto -A $(ARCH) -T firmware -C none -O u-boot \
 	-a 0 -e 0 -E \
 	$(patsubst %,-b arch/$(ARCH)/dts/%.dtb,$(subst ",,$(CONFIG_OF_LIST))) -d /dev/null
 
-u-boot-fit-dtb.bin: u-boot-nodtb.bin fit-dtb.blob
+ifneq ($(EXT_DTB),)
+u-boot-fit-dtb.bin: u-boot-nodtb.bin $(EXT_DTB)
+		$(call if_changed,cat)
+else
+u-boot-fit-dtb.bin: u-boot-nodtb.bin $(FINAL_DTB_CONTAINER)
 	$(call if_changed,cat)
+endif
 
 u-boot.bin: u-boot-fit-dtb.bin FORCE
 	$(call if_changed,copy)
@@ -1045,6 +1100,7 @@ endif
 
 %.imx: %.bin
 	$(Q)$(MAKE) $(build)=arch/arm/mach-imx $@
+	$(BOARD_SIZE_CHECK)
 
 %.vyb: %.imx
 	$(Q)$(MAKE) $(build)=arch/arm/cpu/armv7/vf610 $@
@@ -1071,6 +1127,9 @@ OBJCOPYFLAGS_u-boot-spl.srec = $(OBJCOPYFLAGS_u-boot.srec)
 
 spl/u-boot-spl.srec: spl/u-boot-spl FORCE
 	$(call if_changed,objcopy)
+
+%.scif: %.srec
+	$(Q)$(MAKE) $(build)=arch/arm/mach-rmobile $@
 
 OBJCOPYFLAGS_u-boot-nodtb.bin := -O binary \
 		$(if $(CONFIG_X86_16BIT_INIT),-R .start16 -R .resetvec) \
@@ -1232,9 +1291,11 @@ else
 SPL_PAYLOAD := u-boot.bin
 endif
 
+SPL_IMAGE := $(CONFIG_SPL_IMAGE:"%"=%)
+
 OBJCOPYFLAGS_u-boot-with-spl.bin = -I binary -O binary \
 				   --pad-to=$(CONFIG_SPL_PAD_TO)
-u-boot-with-spl.bin: spl/u-boot-spl.bin $(SPL_PAYLOAD) FORCE
+u-boot-with-spl.bin: $(SPL_IMAGE) $(SPL_PAYLOAD) FORCE
 	$(call if_changed,pad_cat)
 
 ifeq ($(CONFIG_ARCH_LPC32XX)$(CONFIG_SPL),yy)
@@ -1348,6 +1409,7 @@ cmd_ldr = $(LD) $(LDFLAGS_$(@F)) \
 
 u-boot.rom: u-boot-x86-16bit.bin u-boot.bin \
 		$(if $(CONFIG_SPL_X86_16BIT_INIT),spl/u-boot-spl.bin) \
+		$(if $(CONFIG_TPL_X86_16BIT_INIT),tpl/u-boot-tpl.bin) \
 		$(if $(CONFIG_HAVE_REFCODE),refcode.bin) FORCE
 	$(call if_changed,binman)
 
@@ -1656,6 +1718,8 @@ u-boot.lds: $(LDSCRIPT) prepare FORCE
 
 spl/u-boot-spl.bin: spl/u-boot-spl
 	@:
+	$(SPL_SIZE_CHECK)
+
 spl/u-boot-spl: tools prepare \
 		$(if $(CONFIG_OF_SEPARATE)$(CONFIG_OF_EMBED)$(CONFIG_SPL_OF_PLATDATA),dts/dt.dtb) \
 		$(if $(CONFIG_OF_SEPARATE)$(CONFIG_OF_EMBED)$(CONFIG_TPL_OF_PLATDATA),dts/dt.dtb)
@@ -1718,6 +1782,7 @@ checkarmreloc: u-boot
 envtools: scripts_basic $(version_h) $(timestamp_h)
 	$(Q)$(MAKE) $(build)=tools/env
 
+tools-only: export TOOLS_ONLY=y
 tools-only: scripts_basic $(version_h) $(timestamp_h)
 	$(Q)$(MAKE) $(build)=tools
 
@@ -1747,7 +1812,7 @@ CLEAN_DIRS  += $(MODVERDIR) \
 			$(filter-out include, $(shell ls -1 $d 2>/dev/null))))
 
 CLEAN_FILES += include/bmp_logo.h include/bmp_logo_data.h \
-	       boot* u-boot* MLO* SPL System.map fit-dtb.blob
+	       boot* u-boot* MLO* SPL System.map fit-dtb.blob*
 
 # Directories & files removed with 'make mrproper'
 MRPROPER_DIRS  += include/config include/generated spl tpl \
@@ -1944,6 +2009,13 @@ endif
 	$(Q)$(MAKE) KBUILD_MODULES=$(if $(CONFIG_MODULES),1)   \
 	$(build)=$(build-dir) $(@:.ko=.o)
 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
+
+quiet_cmd_genenv = GENENV $@
+cmd_genenv = $(OBJCOPY) --dump-section .rodata.default_environment=$@ env/common.o; \
+	sed --in-place -e 's/\x00/\x0A/g' $@
+
+u-boot-initial-env: u-boot.bin
+	$(call if_changed,genenv)
 
 # Consistency checks
 # ---------------------------------------------------------------------------

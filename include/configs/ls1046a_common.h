@@ -63,7 +63,6 @@
 
 /* SD boot SPL */
 #ifdef CONFIG_SD_BOOT
-#define CONFIG_SPL_TEXT_BASE		0x10000000
 #define CONFIG_SPL_MAX_SIZE		0x1f000		/* 124 KiB */
 #define CONFIG_SPL_STACK		0x10020000
 #define CONFIG_SPL_PAD_TO		0x21000		/* 132 KiB */
@@ -89,7 +88,6 @@
 
 #if defined(CONFIG_QSPI_BOOT) && defined(CONFIG_SPL)
 #define CONFIG_SPL_TARGET		"spl/u-boot-spl.pbl"
-#define CONFIG_SPL_TEXT_BASE		0x10000000
 #define CONFIG_SPL_MAX_SIZE		0x1f000
 #define CONFIG_SPL_STACK		0x10020000
 #define CONFIG_SPL_PAD_TO		0x20000
@@ -114,7 +112,6 @@
 
 #define CONFIG_SPL_NAND_SUPPORT
 #define CONFIG_SPL_DRIVERS_MISC_SUPPORT
-#define CONFIG_SPL_TEXT_BASE		0x10000000
 #define CONFIG_SPL_MAX_SIZE		0x17000		/* 90 KiB */
 #define CONFIG_SPL_STACK		0x1001f000
 #define CONFIG_SYS_NAND_U_BOOT_DST	CONFIG_SYS_TEXT_BASE
@@ -177,16 +174,12 @@
  * about 1MB (2048 blocks), Env is stored after the image, and the env size is
  * 0x2000 (16 blocks), 8 + 2048 + 16 = 2072, enlarge it to 18432(0x4800).
  */
-#define CONFIG_SYS_QE_FMAN_FW_IN_MMC
 #define CONFIG_SYS_FMAN_FW_ADDR		(512 * 0x4800)
 #elif defined(CONFIG_QSPI_BOOT)
-#define CONFIG_SYS_QE_FW_IN_SPIFLASH
 #define CONFIG_SYS_FMAN_FW_ADDR		0x40900000
 #elif defined(CONFIG_NAND_BOOT)
-#define CONFIG_SYS_QE_FMAN_FW_IN_NAND
 #define CONFIG_SYS_FMAN_FW_ADDR		(36 * CONFIG_SYS_NAND_BLOCK_SIZE)
 #else
-#define CONFIG_SYS_QE_FMAN_FW_IN_NOR
 #define CONFIG_SYS_FMAN_FW_ADDR		0x60900000
 #endif
 #endif
@@ -256,8 +249,9 @@
 			"${scriptaddr} ${prefix}${script}; "    \
 		"env exists secureboot && load ${devtype} "     \
 			"${devnum}:${distro_bootpart} "		\
-			"${scripthdraddr} ${prefix}${boot_script_hdr} " \
-			"&& esbc_validate ${scripthdraddr};"    \
+			"${scripthdraddr} ${prefix}${boot_script_hdr}; " \
+			"env exists secureboot "	\
+			"&& esbc_validate ${scripthdraddr};"	\
 		"source ${scriptaddr}\0"	  \
 	"qspi_bootcmd=echo Trying load from qspi..;"      \
 		"sf probe && sf read $load_addr "         \

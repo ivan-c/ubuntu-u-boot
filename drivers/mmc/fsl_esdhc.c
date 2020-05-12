@@ -297,6 +297,13 @@ static int esdhc_setup_data(struct fsl_esdhc_priv *priv, struct mmc *mmc,
 				printf("\nThe SD card is locked. Can not write to a locked card.\n\n");
 				return -ETIMEDOUT;
 			}
+		} else {
+#ifdef CONFIG_DM_GPIO
+			if (dm_gpio_is_valid(&priv->wp_gpio) && dm_gpio_get_value(&priv->wp_gpio)) {
+				printf("\nThe SD card is locked. Can not write to a locked card.\n\n");
+				return -ETIMEDOUT;
+			}
+#endif
 		}
 
 		esdhc_clrsetbits32(&regs->wml, WML_WR_WML_MASK,
@@ -1428,7 +1435,9 @@ void fdt_fixup_esdhc(void *blob, bd_t *bd)
 #endif
 
 #if CONFIG_IS_ENABLED(DM_MMC)
+#ifndef CONFIG_PPC
 #include <asm/arch/clock.h>
+#endif
 __weak void init_clk_usdhc(u32 index)
 {
 }
@@ -1453,8 +1462,11 @@ static int fsl_esdhc_probe(struct udevice *dev)
 	addr = dev_read_addr(dev);
 	if (addr == FDT_ADDR_T_NONE)
 		return -EINVAL;
-
+#ifdef CONFIG_PPC
+	priv->esdhc_regs = (struct fsl_esdhc *)lower_32_bits(addr);
+#else
 	priv->esdhc_regs = (struct fsl_esdhc *)addr;
+#endif
 	priv->dev = dev;
 	priv->mode = -1;
 	if (data) {
@@ -1489,14 +1501,15 @@ static int fsl_esdhc_probe(struct udevice *dev)
 #endif
 	}
 
-	priv->wp_enable = 1;
-
-#ifdef CONFIG_DM_GPIO
-	ret = gpio_request_by_name(dev, "wp-gpios", 0, &priv->wp_gpio,
-				   GPIOD_IS_IN);
-	if (ret)
+	if (dev_read_prop(dev, "fsl,wp-controller", NULL)) {
+		priv->wp_enable = 1;
+	} else {
 		priv->wp_enable = 0;
+#ifdef CONFIG_DM_GPIO
+		gpio_request_by_name(dev, "wp-gpios", 0, &priv->wp_gpio,
+				   GPIOD_IS_IN);
 #endif
+	}
 
 	priv->vs18_enable = 0;
 
@@ -1560,7 +1573,11 @@ static int fsl_esdhc_probe(struct udevice *dev)
 
 		priv->sdhc_clk = clk_get_rate(&priv->per_clk);
 	} else {
+#ifndef CONFIG_PPC
 		priv->sdhc_clk = mxc_get_clock(MXC_ESDHC_CLK + dev->seq);
+#else
+		priv->sdhc_clk = gd->arch.sdhc_clk;
+#endif
 		if (priv->sdhc_clk <= 0) {
 			dev_err(dev, "Unable to get clk for %s\n", dev->name);
 			return -EINVAL;
