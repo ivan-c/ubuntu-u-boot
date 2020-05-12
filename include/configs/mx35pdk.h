@@ -19,6 +19,7 @@
 #define CONFIG_MX35
 
 #define CONFIG_DISPLAY_CPUINFO
+#define CONFIG_SYS_GENERIC_BOARD
 
 /* Set TEXT at the beginning of the NOR flash */
 #define CONFIG_SYS_TEXT_BASE	0xA0000000
@@ -138,8 +139,6 @@
 
 #define CONFIG_AUTO_COMPLETE
 #define CONFIG_SYS_CBSIZE	256	/* Console I/O Buffer Size */
-/* Print Buffer Size */
-#define CONFIG_SYS_PBSIZE (CONFIG_SYS_CBSIZE + sizeof(CONFIG_SYS_PROMPT) + 16)
 #define CONFIG_SYS_MAXARGS	16	/* max number of command args */
 #define CONFIG_SYS_BARGSIZE CONFIG_SYS_CBSIZE /* Boot Argument Buffer Size */
 

@@ -17,9 +17,6 @@ config TEGRA124
 
 endchoice
 
-config SYS_MALLOC_F
-	default y
-
 config SYS_MALLOC_F_LEN
 	default 0x1800
 
@@ -27,6 +24,9 @@ config USE_PRIVATE_LIBGCC
 	default y
 
 config DM
+	default y
+
+config SPL_DM
 	default y
 
 config DM_SERIAL
