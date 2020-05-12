@@ -76,8 +76,6 @@ dumpimage-mkimage-objs := aisimage.o \
 			lib/fdtdec.o \
 			fit_common.o \
 			fit_image.o \
-			gpimage.o \
-			gpimage-common.o \
 			common/image-fit.o \
 			image-host.o \
 			common/image.o \
@@ -100,12 +98,28 @@ dumpimage-mkimage-objs := aisimage.o \
 			zynqimage.o \
 			zynqmpimage.o \
 			$(LIBFDT_OBJS) \
+			gpimage.o \
+			gpimage-common.o \
 			$(RSA_OBJS-y)
 
 dumpimage-objs := $(dumpimage-mkimage-objs) dumpimage.o
 mkimage-objs   := $(dumpimage-mkimage-objs) mkimage.o
 fit_info-objs   := $(dumpimage-mkimage-objs) fit_info.o
 fit_check_sign-objs   := $(dumpimage-mkimage-objs) fit_check_sign.o
+
+# Build a libfdt Python module if swig is available
+# Use 'sudo apt-get install swig libpython-dev' to enable this
+hostprogs-$(CONFIG_SPL_OF_PLATDATA) += \
+	$(if $(shell which swig),_libfdt.so)
+_libfdt.so-sharedobjs += $(LIBFDT_OBJS)
+libfdt:
+
+tools/_libfdt.so: $(patsubst %.o,%.c,$(LIBFDT_OBJS)) tools/libfdt_wrap.c
+	python $(srctree)/lib/libfdt/setup.py "$(_hostc_flags)" $^
+	mv _libfdt.so $@
+
+tools/libfdt_wrap.c: $(srctree)/lib/libfdt/libfdt.swig
+	swig -python -o $@ $<
 
 # TODO(sjg@chromium.org): Is this correct on Mac OS?
 

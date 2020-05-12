@@ -20,6 +20,8 @@
 
 /* The low 8-bits of the 'boot_media' field in the SPL header */
 #define SUNXI_BOOTED_FROM_MMC0	0
+#define SUNXI_BOOTED_FROM_NAND	1
+#define SUNXI_BOOTED_FROM_MMC2	2
 #define SUNXI_BOOTED_FROM_SPI	3
 
 /* boot head definition from sun4i boot code */
@@ -49,7 +51,14 @@ struct boot_file_head {
 		uint8_t spl_signature[4];
 	};
 	uint32_t fel_script_address;
-	uint32_t reserved1[3];
+	/*
+	 * If the fel_uEnv_length member below is set to a non-zero value,
+	 * it specifies the size (byte count) of data at fel_script_address.
+	 * At the same time this indicates that the data is in uEnv.txt
+	 * compatible format, ready to be imported via "env import -t".
+	 */
+	uint32_t fel_uEnv_length;
+	uint32_t reserved1[2];
 	uint32_t boot_media;		/* written here by the boot ROM */
 	uint32_t reserved2[5];		/* padding, align to 64 bytes */
 };
