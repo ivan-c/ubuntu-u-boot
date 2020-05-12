@@ -41,7 +41,6 @@
  * Serial console configuration
  */
 #define CONFIG_PSC_CONSOLE	4	/* console is on PSC4  */
-#define CONFIG_BAUDRATE		115200	/* ... at 115200  bps  */
 #define CONFIG_SYS_BAUDRATE_TABLE	\
 	{ 9600, 19200, 38400, 57600, 115200, 230400 }
 
@@ -61,10 +60,6 @@
 #define CONFIG_PCI_IO_PHYS	CONFIG_PCI_IO_BUS
 #define CONFIG_PCI_IO_SIZE	0x01000000
 
-/*
- *  Partitions
- */
-#define CONFIG_DOS_PARTITION
 #define CONFIG_BZIP2
 
 /*
@@ -214,12 +209,6 @@
 	""
 
 #define CONFIG_BOOTCOMMAND	"run mtcb_start"
-
-/*
- * SPI configuration
- */
-#define CONFIG_HARD_SPI		1
-#define CONFIG_MPC52XX_SPI	1
 
 /*
  * I2C configuration

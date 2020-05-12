@@ -9,7 +9,6 @@
 #ifndef __SH7785LCR_H
 #define __SH7785LCR_H
 
-#undef DEBUG
 #define CONFIG_CPU_SH7785	1
 #define CONFIG_SH7785LCR	1
 
@@ -17,16 +16,13 @@
 #define CONFIG_CMD_SDRAM
 #define CONFIG_CMD_SH_ZIMAGEBOOT
 
-#define CONFIG_DOS_PARTITION
-#define CONFIG_MAC_PARTITION
-
-#define CONFIG_BAUDRATE		115200
 #define CONFIG_BOOTARGS		"console=ttySC1,115200 root=/dev/nfs ip=dhcp"
 
 #define CONFIG_EXTRA_ENV_SETTINGS					\
 	"bootdevice=0:1\0"						\
 	"usbload=usb reset;usbboot;usb stop;bootm\0"
 
+#define CONFIG_DISPLAY_BOARDINFO
 #undef	CONFIG_SHOW_BOOT_PROGRESS
 
 /* MEMORY */

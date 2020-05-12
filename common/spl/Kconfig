@@ -13,6 +13,24 @@ config SPL
 	help
 	  If you want to build SPL as well as the normal image, say Y.
 
+config SPL_RAW_IMAGE_SUPPORT
+	bool "Support SPL loading and booting of RAW images"
+	depends on SPL
+	default n if (ARCH_MX6 && (SPL_MMC_SUPPORT || SPL_SATA_SUPPORT))
+	default y if !TI_SECURE_DEVICE
+	help
+	  SPL will support loading and booting a RAW image when this option
+	  is y. If this is not set, SPL will move on to other available
+	  boot media to find a suitable image.
+
+config SPL_LEGACY_IMAGE_SUPPORT
+	bool "Support SPL loading and booting of Legacy images"
+	default y if !TI_SECURE_DEVICE
+	help
+	  SPL will support loading and booting Legacy images when this option
+	  is y. If this is not set, SPL will move on to other available
+	  boot media to find a suitable image.
+
 config SPL_SYS_MALLOC_SIMPLE
 	bool
 	depends on SPL
@@ -70,6 +88,62 @@ config SPL_DISPLAY_PRINT
 	  banner ("U-Boot SPL ..."). This function should be provided by
 	  the board.
 
+config SYS_MMCSD_RAW_MODE_U_BOOT_USE_SECTOR
+	bool "MMC raw mode: by sector"
+	depends on SPL
+	default y if ARCH_SUNXI || ARCH_DAVINCI || ARCH_UNIPHIER ||ARCH_MX6 || \
+		     ARCH_ROCKCHIP || ARCH_MVEBU ||  ARCH_SOCFPGA || \
+		     ARCH_AT91 || ARCH_ZYNQ || ARCH_KEYSTONE || OMAP34XX || \
+		     OMAP44XX || OMAP54XX || AM33XX || AM43XX
+	help
+	  Use sector number for specifying U-Boot location on MMC/SD in
+	  raw mode.
+
+config SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR
+	hex "Address on the MMC to load U-Boot from"
+	depends on SPL && SYS_MMCSD_RAW_MODE_U_BOOT_USE_SECTOR
+	default 0x50 if ARCH_SUNXI
+	default 0x75 if ARCH_DAVINCI
+	default 0x8a if ARCH_MX6
+	default 0x100 if ARCH_ROCKCHIP || ARCH_UNIPHIER
+	default 0x140 if ARCH_MVEBU
+	default 0x200 if ARCH_SOCFPGA || ARCH_AT91
+	default 0x300 if ARCH_ZYNQ || ARCH_KEYSTONE || OMAP34XX || OMAP44XX || \
+		         OMAP54XX || AM33XX || AM43XX
+	help
+	  Address on the MMC to load U-Boot from, when the MMC is being used
+	  in raw mode. Units: MMC sectors (1 sector = 512 bytes).
+
+config SYS_MMCSD_RAW_MODE_U_BOOT_USE_PARTITION
+	bool "MMC Raw mode: by partition"
+	depends on SPL
+	help
+	  Use a partition for loading U-Boot when using MMC/SD in raw mode.
+
+config SYS_MMCSD_RAW_MODE_U_BOOT_PARTITION
+	hex "Partition to use to load U-Boot from"
+	depends on SPL && SYS_MMCSD_RAW_MODE_U_BOOT_USE_PARTITION
+	default 1
+	help
+	  Partition on the MMC to load U-Boot from when the MMC is being
+	  used in raw mode
+
+config SYS_MMCSD_RAW_MODE_U_BOOT_USE_PARTITION_TYPE
+	bool "MMC raw mode: by partition type"
+	depends on SPL && DOS_PARTITION && \
+		SYS_MMCSD_RAW_MODE_U_BOOT_USE_PARTITION
+	help
+	  Use partition type for specifying U-Boot partition on MMC/SD in
+	  raw mode. U-Boot will be loaded from the first partition of this
+	  type to be found.
+
+config SYS_MMCSD_RAW_MODE_U_BOOT_PARTITION_TYPE
+	hex "Partition Type on the MMC to load U-Boot from"
+	depends on SPL && SYS_MMCSD_RAW_MODE_U_BOOT_USE_PARTITION_TYPE
+	help
+	  Partition Type on the MMC to load U-Boot from, when the MMC is being
+	  used in raw mode.
+
 config TPL
 	bool
 	depends on SPL && SUPPORT_TPL
@@ -122,6 +196,16 @@ config SPL_SHA256_SUPPORT
 	  input data. Use this for the highest security. Note that only the
 	  SHA256 variant is supported: SHA512 and others are not currently
 	  supported in U-Boot.
+
+config SPL_CPU_SUPPORT
+	bool "Support CPU drivers"
+	depends on SPL
+	help
+	  Enable this to support CPU drivers in SPL. These drivers can set
+	  up CPUs and provide information about them such as the model and
+	  name. This can be useful in SPL since setting up the CPUs earlier
+	  may improve boot performance. Enable this option to build the
+	  drivers in drivers/cpu as part of an SPL build.
 
 config SPL_CRYPTO_SUPPORT
 	bool "Support crypto drivers"
@@ -399,6 +483,24 @@ config SYS_OS_BASE
 
 endif # SPL_OS_BOOT
 
+config SPL_PCI_SUPPORT
+	bool "Support PCI drivers"
+	depends on SPL
+	help
+	  Enable support for PCI in SPL. For platforms that need PCI to boot,
+	  or must perform some init using PCI in SPL, this provides the
+	  necessary driver support. This enables the drivers in drivers/pci
+	  as part of an SPL build.
+
+config SPL_PCH_SUPPORT
+	bool "Support PCH drivers"
+	depends on SPL
+	help
+	  Enable support for PCH (Platform Controller Hub) devices in SPL.
+	  These are used to set up GPIOs and the SPI peripheral early in
+	  boot. This enables the drivers in drivers/pch as part of an SPL
+	  build.
+
 config SPL_POST_MEM_SUPPORT
 	bool "Support POST drivers"
 	depends on SPL
@@ -421,6 +523,33 @@ config SPL_POWER_SUPPORT
 	  so that the clock speed can be increased. This enables the drivers
 	  in drivers/power, drivers/power/pmic and drivers/power/regulator
 	  as part of an SPL build.
+
+config SPL_RAM_SUPPORT
+	bool "Support booting from RAM"
+	depends on SPL
+	default y if MICROBLAZE || ARCH_SOCFPGA || TEGRA || ARCH_ZYNQ
+	help
+	  Enable booting of an image in RAM. The image can be preloaded or
+	  it can be loaded by SPL directly into RAM (e.g. using USB).
+
+config SPL_RAM_DEVICE
+	bool "Support booting from preloaded image in RAM"
+	depends on SPL_RAM_SUPPORT
+	default y if MICROBLAZE || ARCH_SOCFPGA || TEGRA || ARCH_ZYNQ
+	help
+	  Enable booting of an image already loaded in RAM. The image has to
+	  be already in memory when SPL takes over, e.g. loaded by the boot
+	  ROM.
+
+config SPL_RTC_SUPPORT
+	bool "Support RTC drivers"
+	depends on SPL
+	help
+	  Enable RTC (Real-time Clock) support in SPL. This includes support
+	  for reading and setting the time. Some RTC devices also have some
+	  non-volatile (battery-backed) memory which is accessible if
+	  needed. This enables the drivers in drivers/rtc as part of an SPL
+	  build.
 
 config SPL_SATA_SUPPORT
 	bool "Support loading from SATA"
@@ -465,16 +594,14 @@ config SPL_SPI_SUPPORT
 	  enable SPI drivers that are needed for other purposes also, such
 	  as a SPI PMIC.
 
-config SPL_USBETH_SUPPORT
-	bool "Support USB Ethernet drivers"
+config SPL_TIMER_SUPPORT
+	bool "Support timer drivers"
 	depends on SPL
 	help
-	  Enable access to the USB network subsystem and associated
-	  drivers in SPL. This permits SPL to load U-Boot over a
-	  USB-connected Ethernet link (such as a USB Ethernet dongle) rather
-	  than from an onboard peripheral. Environment support is required
-	  since the network stack uses a number of environment variables.
-	  See also SPL_NET_SUPPORT and SPL_ETH_SUPPORT.
+	  Enable support for timer drivers in SPL. These can be used to get
+	  a timer value when in SPL, or perhaps for implementing a delay
+	  function. This enables the drivers in drivers/timer as part of an
+	  SPL build.
 
 config SPL_USB_HOST_SUPPORT
 	bool "Support USB host drivers"
@@ -496,6 +623,52 @@ config SPL_USB_SUPPORT
 	  The actual drivers are enabled separately using the normal U-Boot
 	  config options. This enables loading from USB using a configured
 	  device.
+
+config SPL_USB_GADGET_SUPPORT
+	bool "Suppport USB Gadget drivers"
+	depends on SPL
+	help
+	  Enable USB Gadget API which allows to enable USB device functions
+	  in SPL.
+
+if SPL_USB_GADGET_SUPPORT
+
+config SPL_USBETH_SUPPORT
+	bool "Support USB Ethernet drivers"
+	help
+	  Enable access to the USB network subsystem and associated
+	  drivers in SPL. This permits SPL to load U-Boot over a
+	  USB-connected Ethernet link (such as a USB Ethernet dongle) rather
+	  than from an onboard peripheral. Environment support is required
+	  since the network stack uses a number of environment variables.
+	  See also SPL_NET_SUPPORT and SPL_ETH_SUPPORT.
+
+config SPL_DFU_SUPPORT
+	bool "Support DFU (Device Firmware Upgarde)"
+	select SPL_HASH_SUPPORT
+	help
+	  This feature enables the DFU (Device Firmware Upgarde) in SPL with
+	  RAM memory device support. The ROM code will load and execute
+	  the SPL built with dfu. The user can load binaries (u-boot/kernel) to
+	  selected device partition from host-pc using dfu-utils.
+	  This feature is useful to flash the binaries to factory or bare-metal
+	  boards using USB interface.
+
+choice
+	bool "DFU device selection"
+	depends on SPL_DFU_SUPPORT
+
+config SPL_DFU_RAM
+	bool "RAM device"
+	depends on SPL_DFU_SUPPORT && SPL_RAM_SUPPORT
+	help
+	 select RAM/DDR memory device for loading binary images
+	 (u-boot/kernel) to the selected device partition using
+	 DFU and execute the u-boot/kernel from RAM.
+
+endchoice
+
+endif
 
 config SPL_WATCHDOG_SUPPORT
 	bool "Support watchdog drivers"

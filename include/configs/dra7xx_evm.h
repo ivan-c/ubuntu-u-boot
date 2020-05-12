@@ -12,8 +12,9 @@
 #ifndef __CONFIG_DRA7XX_EVM_H
 #define __CONFIG_DRA7XX_EVM_H
 
+#include <environment/ti/dfu.h>
+
 #define CONFIG_DRA7XX
-#define CONFIG_BOARD_EARLY_INIT_F
 
 #ifdef CONFIG_SPL_BUILD
 #define CONFIG_IODELAY_RECALIBRATION
@@ -41,7 +42,6 @@
 #define CONFIG_SYS_NS16550_COM1		UART1_BASE	/* Base EVM has UART0 */
 #define CONFIG_SYS_NS16550_COM2		UART2_BASE	/* UART2 */
 #define CONFIG_SYS_NS16550_COM3		UART3_BASE	/* UART3 */
-#define CONFIG_BAUDRATE			115200
 
 #define CONFIG_SYS_OMAP_ABE_SYSCK
 
@@ -54,11 +54,12 @@
 	/* Android partitions */ \
 	"partitions_android=" \
 	"uuid_disk=${uuid_gpt_disk};" \
-	"name=xloader,start=128K,size=128K,uuid=${uuid_gpt_xloader};" \
-	"name=bootloader,size=384K,uuid=${uuid_gpt_bootloader};" \
+	"name=xloader,start=128K,size=256K,uuid=${uuid_gpt_xloader};" \
+	"name=bootloader,size=768K,uuid=${uuid_gpt_bootloader};" \
 	"name=environment,size=128K,uuid=${uuid_gpt_environment};" \
 	"name=misc,size=128K,uuid=${uuid_gpt_misc};" \
-	"name=efs,start=1280K,size=16M,uuid=${uuid_gpt_efs};" \
+	"name=reserved,size=256K,uuid=${uuid_gpt_reserved};" \
+	"name=efs,size=16M,uuid=${uuid_gpt_efs};" \
 	"name=crypto,size=16K,uuid=${uuid_gpt_crypto};" \
 	"name=recovery,size=10M,uuid=${uuid_gpt_recovery};" \
 	"name=boot,size=10M,uuid=${uuid_gpt_boot};" \
@@ -67,50 +68,6 @@
 	"name=ipu1,size=1M,uuid=${uuid_gpt_ipu1};" \
 	"name=ipu2,size=1M,uuid=${uuid_gpt_ipu2};" \
 	"name=userdata,size=-,uuid=${uuid_gpt_userdata}"
-
-#define DFU_ALT_INFO_MMC \
-	"dfu_alt_info_mmc=" \
-	"boot part 0 1;" \
-	"rootfs part 0 2;" \
-	"MLO fat 0 1;" \
-	"MLO.raw raw 0x100 0x100;" \
-	"u-boot.img.raw raw 0x300 0x400;" \
-	"spl-os-args.raw raw 0x80 0x80;" \
-	"spl-os-image.raw raw 0x900 0x2000;" \
-	"spl-os-args fat 0 1;" \
-	"spl-os-image fat 0 1;" \
-	"u-boot.img fat 0 1;" \
-	"uEnv.txt fat 0 1\0"
-
-#define DFU_ALT_INFO_EMMC \
-	"dfu_alt_info_emmc=" \
-	"rawemmc raw 0 3751936;" \
-	"boot part 1 1;" \
-	"rootfs part 1 2;" \
-	"MLO fat 1 1;" \
-	"MLO.raw raw 0x100 0x100;" \
-	"u-boot.img.raw raw 0x300 0x400;" \
-	"spl-os-args.raw raw 0x80 0x80;" \
-	"spl-os-image.raw raw 0x900 0x2000;" \
-	"spl-os-args fat 1 1;" \
-	"spl-os-image fat 1 1;" \
-	"u-boot.img fat 1 1;" \
-	"uEnv.txt fat 1 1\0"
-
-#define DFU_ALT_INFO_RAM \
-	"dfu_alt_info_ram=" \
-	"kernel ram 0x80200000 0x4000000;" \
-	"fdt ram 0x80f80000 0x80000;" \
-	"ramdisk ram 0x81000000 0x4000000\0"
-
-#define DFU_ALT_INFO_QSPI \
-	"dfu_alt_info_qspi=" \
-	"MLO raw 0x0 0x040000;" \
-	"u-boot.img raw 0x040000 0x0100000;" \
-	"u-boot-spl-os raw 0x140000 0x080000;" \
-	"u-boot-env raw 0x1C0000 0x010000;" \
-	"u-boot-env.backup raw 0x1D0000 0x010000;" \
-	"kernel raw 0x1E0000 0x800000\0"
 
 #define DFUARGS \
 	"dfu_bufsiz=0x10000\0" \
@@ -133,12 +90,6 @@
 #undef CONFIG_CMD_BOOTD
 #ifdef CONFIG_SPL_DFU_SUPPORT
 #define CONFIG_SPL_LOAD_FIT_ADDRESS 0x80200000
-#define CONFIG_SPL_HASH_SUPPORT
-#define DFU_ALT_INFO_RAM \
-	"dfu_alt_info_ram=" \
-	"kernel ram 0x80200000 0x4000000;" \
-	"fdt ram 0x80f80000 0x80000;" \
-	"ramdisk ram 0x81000000 0x4000000\0"
 #define DFUARGS \
 	"dfu_bufsiz=0x10000\0" \
 	DFU_ALT_INFO_RAM
@@ -148,8 +99,6 @@
 #include <configs/ti_omap5_common.h>
 
 /* Enhance our eMMC support / experience. */
-#define CONFIG_CMD_GPT
-#define CONFIG_EFI_PARTITION
 #define CONFIG_RANDOM_UUID
 #define CONFIG_HSMMC2_8BIT
 
@@ -172,11 +121,6 @@
 #define CONFIG_SF_DEFAULT_SPEED                76800000
 #define CONFIG_SF_DEFAULT_MODE                 SPI_MODE_0
 #define CONFIG_QSPI_QUAD_SUPPORT
-
-#ifdef CONFIG_SPL_BUILD
-#undef CONFIG_DM_SPI
-#undef CONFIG_DM_SPI_FLASH
-#endif
 
 /*
  * Default to using SPI for environment, etc.
@@ -216,7 +160,6 @@
 #define CONFIG_OMAP_USB2PHY2_HOST
 
 /* SATA */
-#define CONFIG_BOARD_LATE_INIT
 #define CONFIG_SCSI
 #define CONFIG_LIBATA
 #define CONFIG_SCSI_AHCI
@@ -283,7 +226,6 @@
 #define CONFIG_SYS_FLASH_CFI_WIDTH	FLASH_CFI_16BIT
 #define CONFIG_SYS_FLASH_SIZE		(64 * 1024 * 1024) /* 64 MB */
 /* #define CONFIG_INIT_IGNORE_ERROR */
-#undef CONFIG_SYS_NO_FLASH
 #define CONFIG_SYS_FLASH_USE_BUFFER_WRITE
 #define CONFIG_SYS_FLASH_PROTECTION
 #define CONFIG_SYS_FLASH_CFI
@@ -312,9 +254,5 @@
 #define CONFIG_ENV_OFFSET_REDUND	0x001e0000
 #endif
 #endif  /* NOR support */
-
-/* EEPROM */
-#define CONFIG_EEPROM_CHIP_ADDRESS 0x50
-#define CONFIG_EEPROM_BUS_ADDRESS 0
 
 #endif /* __CONFIG_DRA7XX_EVM_H */

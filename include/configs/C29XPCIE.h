@@ -11,10 +11,6 @@
 #ifndef __CONFIG_H
 #define __CONFIG_H
 
-#ifdef CONFIG_C29XPCIE
-#define CONFIG_PPC_C29X
-#endif
-
 #ifdef CONFIG_SPIFLASH
 #define CONFIG_RAMBOOT_SPIFLASH
 #define CONFIG_SYS_TEXT_BASE		0x11000000
@@ -72,10 +68,6 @@
 #endif
 
 /* High Level Configuration Options */
-#define CONFIG_BOOKE			/* BOOKE */
-#define CONFIG_E500			/* BOOKE e500 family */
-#define CONFIG_FSL_IFC			/* Enable IFC Support */
-#define CONFIG_FSL_CAAM			/* Enable SEC/CAAM */
 #define CONFIG_SYS_HAS_SERDES		/* common SERDES init code */
 
 #ifdef CONFIG_PCI
@@ -103,10 +95,8 @@
 #define CONFIG_SYS_PCIE1_IO_PHYS	0xfffc00000ull
 
 #define CONFIG_PCI_SCAN_SHOW		/* show pci devices on startup */
-#define CONFIG_DOS_PARTITION
 #endif
 
-#define CONFIG_FSL_LAW			/* Use common FSL init code */
 #define CONFIG_TSEC_ENET
 #define CONFIG_ENV_OVERWRITE
 
@@ -133,7 +123,6 @@
 #define CONFIG_PANIC_HANG
 
 /* DDR Setup */
-#define CONFIG_SYS_FSL_DDR3
 #define CONFIG_DDR_SPD
 #define CONFIG_SYS_SPD_BUS_NUM		0
 #define SPD_EEPROM_ADDRESS		0x50
@@ -159,10 +148,6 @@
 #define CONFIG_SYS_PLATFORM_SRAM_BASE_PHYS \
 			(0xf00000000ull | CONFIG_SYS_PLATFORM_SRAM_BASE)
 #define CONFIG_SYS_PLATFORM_SRAM_SIZE	(512 << 10)
-
-#ifdef CONFIG_SPL_BUILD
-#define CONFIG_SYS_NO_FLASH
-#endif
 
 /*
  * IFC Definitions
@@ -499,9 +484,6 @@
 
 /* default location for tftp and bootm */
 #define CONFIG_LOADADDR		1000000
-
-
-#define CONFIG_BAUDRATE		115200
 
 #define CONFIG_DEF_HWCONFIG	fsl_ddr:ecc=on
 

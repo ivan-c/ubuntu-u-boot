@@ -11,6 +11,7 @@
 #include <asm/arch/clock.h>
 #include <asm/arch/fsl_serdes.h>
 #include <asm/arch/fdt.h>
+#include <asm/arch/mmu.h>
 #include <asm/arch/soc.h>
 #include <ahci.h>
 #include <hwconfig.h>
@@ -120,6 +121,13 @@ unsigned long get_board_ddr_clk(void)
 	return 66666666;
 }
 
+#ifdef CONFIG_LPUART
+u32 get_lpuart_clk(void)
+{
+	return gd->bus_clk;
+}
+#endif
+
 int select_i2c_ch_pca9547(u8 ch)
 {
 	int ret;
@@ -142,6 +150,10 @@ int dram_init(void)
 	 */
 	select_i2c_ch_pca9547(I2C_MUX_CH_DEFAULT);
 	gd->ram_size = initdram(0);
+#if !defined(CONFIG_SPL) || defined(CONFIG_SPL_BUILD)
+	/* This will break-before-make MMU for DDR */
+	update_early_mmu_table();
+#endif
 
 	return 0;
 }
@@ -156,6 +168,9 @@ int board_early_init_f(void)
 #ifdef CONFIG_HAS_FSL_XHCI_USB
 	struct ccsr_scfg *scfg = (struct ccsr_scfg *)CONFIG_SYS_FSL_SCFG_ADDR;
 	u32 usb_pwrfault;
+#endif
+#ifdef CONFIG_LPUART
+	u8 uart;
 #endif
 
 #ifdef CONFIG_SYS_I2C_EARLY_INIT
@@ -173,6 +188,14 @@ int board_early_init_f(void)
 			(SCFG_USBPWRFAULT_SHARED <<
 			SCFG_USBPWRFAULT_USB1_SHIFT);
 	out_be32(&scfg->usbpwrfault_selcr, usb_pwrfault);
+#endif
+
+#ifdef CONFIG_LPUART
+	/* We use lpuart0 as system console */
+	uart = QIXIS_READ(brdcfg[14]);
+	uart &= ~CFG_UART_MUX_MASK;
+	uart |= CFG_LPUART_EN << CFG_UART_MUX_SHIFT;
+	QIXIS_WRITE(brdcfg[14], uart);
 #endif
 
 	return 0;

@@ -91,7 +91,6 @@
 
 #include <configs/ti_armv7_omap.h>
 #undef CONFIG_SYS_MONITOR_LEN
-#undef CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR
 
 #define CONFIG_ENV_SIZE			(16 * 1024)
 #define CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
@@ -104,11 +103,7 @@
 #define CONFIG_ENV_OFFSET		(768 * 1024)
 #define CONFIG_ENV_SPI_MAX_HZ           48000000
 
-#define CONFIG_SPL_LDSCRIPT		"$(CPUDIR)/omap-common/u-boot-spl.lds"
-
-/* Enhance our eMMC support / experience. */
-#define CONFIG_CMD_GPT
-#define CONFIG_EFI_PARTITION
+#define CONFIG_SPL_LDSCRIPT		"arch/arm/mach-omap2/u-boot-spl.lds"
 
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	"loadaddr=0x80200000\0" \
@@ -152,7 +147,6 @@
 #define CONFIG_SYS_SPL_ARGS_ADDR	(CONFIG_SYS_SDRAM_BASE + (128 << 20))
 #define CONFIG_SYS_SPI_U_BOOT_OFFS	(256 * 1024)
 #define CONFIG_SYS_MONITOR_LEN		(512 * 1024)
-#define CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR	0x480
 #define CONFIG_SPL_SPI_LOAD
 
 /* EEPROM */

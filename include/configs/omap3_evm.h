@@ -46,20 +46,11 @@
  * ----------------------------------------------------------------------------
  */
 
-/* MMC */
-#define CONFIG_MMC
-#define CONFIG_GENERIC_MMC
-#define CONFIG_OMAP_HSMMC
-
 /* SPL */
-#define CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR	0x300 /* address 0x60000 */
-#define CONFIG_SYS_U_BOOT_MAX_SIZE_SECTORS	0x200 /* 256 KB */
 #define CONFIG_SYS_MMCSD_FS_BOOT_PARTITION	1
 #define CONFIG_SPL_FS_LOAD_PAYLOAD_NAME	"u-boot.img"
 
 /* Partition tables */
-#define CONFIG_EFI_PARTITION
-#define CONFIG_DOS_PARTITION
 
 /* USB
  *
@@ -94,11 +85,6 @@
  */
 #define CONFIG_OMAP			/* This is TI OMAP core */
 #define CONFIG_OMAP_GPIO
-#define CONFIG_OMAP_COMMON
-/* Common ARM Erratas */
-#define CONFIG_ARM_ERRATA_454179
-#define CONFIG_ARM_ERRATA_430973
-#define CONFIG_ARM_ERRATA_621766
 
 #define CONFIG_SDRC			/* The chip has SDRC controller */
 
@@ -162,7 +148,6 @@
 #define CONFIG_CONS_INDEX		1
 #define CONFIG_SERIAL1			1	/* UART1 on OMAP3 EVM */
 #define CONFIG_SYS_NS16550_COM1		OMAP34XX_UART1
-#define CONFIG_BAUDRATE			115200
 #define CONFIG_SYS_BAUDRATE_TABLE	{4800, 9600, 19200, 38400, 57600,\
 					115200}
 
@@ -226,8 +211,6 @@
 #ifdef CONFIG_USB_OMAP3
 
 #ifdef CONFIG_USB_MUSB_HCD
-
-#define CONGIG_CMD_STORAGE
 
 #ifdef CONFIG_USB_KEYBOARD
 #define CONFIG_SYS_USB_EVENT_POLL
@@ -326,7 +309,6 @@
  * Board specific
  * -----------------------------------------------------------------------------
  */
-#define CONFIG_SYS_NO_FLASH
 
 /* Uncomment to define the board revision statically */
 /* #define CONFIG_STATIC_BOARD_REV	OMAP3EVM_BOARD_GEN_2 */
@@ -342,7 +324,7 @@
 
 #define CONFIG_SPL_BOARD_INIT
 #define CONFIG_SPL_OMAP3_ID_NAND
-#define CONFIG_SPL_LDSCRIPT		"$(CPUDIR)/omap-common/u-boot-spl.lds"
+#define CONFIG_SPL_LDSCRIPT		"arch/arm/mach-omap2/u-boot-spl.lds"
 
 /*
  * 1MB into the SDRAM to allow for SPL's bss at the beginning of SDRAM

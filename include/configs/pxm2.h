@@ -15,7 +15,6 @@
 #define __CONFIG_PXM2_H
 
 #define CONFIG_SIEMENS_PXM2
-#define MACH_TYPE_PXM2			4309
 #define CONFIG_SIEMENS_MACH_TYPE	MACH_TYPE_PXM2
 
 #include "siemens-am33x-common.h"
@@ -39,8 +38,6 @@
 /* I2C Configuration */
 #define CONFIG_SYS_I2C_SPEED		400000
 #define CONFIG_SYS_I2C_EEPROM_ADDR	0x50
-
-#define CONFIG_SYS_U_BOOT_MAX_SIZE_SECTORS	0x300
 
 #define CONFIG_PHY_ATHEROS
 

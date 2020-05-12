@@ -31,8 +31,6 @@
 #define CONFIG_SYS_OSCIN_FREQ		24000000
 #define CONFIG_SYS_TIMERBASE		DAVINCI_TIMER0_BASE
 #define CONFIG_SYS_HZ_CLOCK		clk_get(DAVINCI_AUXCLK_CLKID)
-#define CONFIG_SYS_DA850_PLL_INIT
-#define CONFIG_SYS_DA850_DDR_INIT
 
 #ifdef CONFIG_DIRECT_NOR_BOOT
 #define CONFIG_ARCH_CPU_INIT
@@ -137,7 +135,6 @@
 #define CONFIG_SYS_NS16550_COM1	DAVINCI_UART2_BASE /* Base address of UART2 */
 #define CONFIG_SYS_NS16550_CLK	clk_get(DAVINCI_UART2_CLKID)
 #define CONFIG_CONS_INDEX	1		/* use UART0 for console */
-#define CONFIG_BAUDRATE		115200		/* Default baud rate */
 
 #define CONFIG_SPI
 #define CONFIG_DAVINCI_SPI
@@ -167,7 +164,6 @@
 #ifdef CONFIG_USE_NAND
 #undef CONFIG_ENV_IS_IN_FLASH
 #define CONFIG_NAND_DAVINCI
-#define CONFIG_SYS_NO_FLASH
 #define CONFIG_ENV_IS_IN_NAND		/* U-Boot env in NAND Flash  */
 #define CONFIG_ENV_OFFSET		0x0 /* Block 0--not used by bootcode */
 #define CONFIG_ENV_SIZE			(128 << 10)
@@ -244,14 +240,12 @@
 #define CONFIG_ENV_SIZE			(64 << 10)
 #define CONFIG_ENV_OFFSET		(512 << 10)
 #define CONFIG_ENV_SECT_SIZE		(64 << 10)
-#define CONFIG_SYS_NO_FLASH
 #endif
 
 /*
  * U-Boot general configuration
  */
 #define CONFIG_MISC_INIT_R
-#define CONFIG_BOARD_EARLY_INIT_F
 #define CONFIG_BOOTFILE		"uImage" /* Boot file name */
 #define CONFIG_SYS_CBSIZE	1024 /* Console I/O Buffer Size	*/
 #define CONFIG_SYS_PBSIZE	(CONFIG_SYS_CBSIZE+sizeof(CONFIG_SYS_PROMPT)+16)
@@ -308,25 +302,8 @@
 	!defined(CONFIG_USE_NOR) && \
 	!defined(CONFIG_USE_SPIFLASH)
 #define CONFIG_ENV_IS_NOWHERE
-#define CONFIG_SYS_NO_FLASH
 #define CONFIG_ENV_SIZE		(16 << 10)
 #undef CONFIG_CMD_ENV
-#endif
-
-/* SD/MMC configuration */
-#ifndef CONFIG_USE_NOR
-#define CONFIG_MMC
-#define CONFIG_DAVINCI_MMC_SD1
-#define CONFIG_GENERIC_MMC
-#define CONFIG_DAVINCI_MMC
-#endif
-
-/*
- * Enable MMC commands only when
- * MMC support is present
- */
-#ifdef CONFIG_MMC
-#define CONFIG_DOS_PARTITION
 #endif
 
 #ifndef CONFIG_DIRECT_NOR_BOOT
@@ -346,7 +323,6 @@
 
 /* Load U-Boot Image From MMC */
 #ifdef CONFIG_SPL_MMC_LOAD
-#define CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR	0x75
 #undef CONFIG_SPL_SPI_LOAD
 #endif
 

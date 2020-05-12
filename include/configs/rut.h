@@ -15,7 +15,6 @@
 #define __CONFIG_RUT_H
 
 #define CONFIG_SIEMENS_RUT
-#define MACH_TYPE_RUT			4316
 #define CONFIG_SIEMENS_MACH_TYPE	MACH_TYPE_RUT
 
 #include "siemens-am33x-common.h"
@@ -34,8 +33,6 @@
 #define CONFIG_SYS_I2C_EEPROM_ADDR_LEN          2
 #define CONFIG_SYS_EEPROM_PAGE_WRITE_BITS       6       /* 64 byte pages */
 #define CONFIG_SYS_EEPROM_PAGE_WRITE_DELAY_MS   10      /* take up to 10 msec */
-
-#define CONFIG_SYS_U_BOOT_MAX_SIZE_SECTORS	0x200
 
 #define CONFIG_PHY_NATSEMI
 
@@ -132,7 +129,6 @@
 #define CONFIG_OMAP3_SPI
 
 #define BOARD_LCD_RESET		115	/* Bank 3 pin 19 */
-#define CONFIG_ARCH_EARLY_INIT_R
 #define CONFIG_FORMIKE
 #define DISPL_PLL_SPREAD_SPECTRUM
 #endif

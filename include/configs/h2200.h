@@ -9,13 +9,10 @@
 #ifndef __CONFIG_H
 #define __CONFIG_H
 
-#define MACH_TYPE_H2200			341
 #define CONFIG_MACH_TYPE		MACH_TYPE_H2200
 
 #define CONFIG_CPU_PXA25X		1
 #define CONFIG_BOARD_H2200
-
-#define CONFIG_SYS_NO_FLASH
 
 #define CONFIG_NR_DRAM_BANKS		1
 #define PHYS_SDRAM_1			0xa0000000 /* SDRAM Bank #1 */
@@ -107,12 +104,9 @@
 /*
  * Serial port
  */
-
-#define CONFIG_PXA_SERIAL
 #define CONFIG_FFUART
 #define CONFIG_CONS_INDEX		3
 
-#define CONFIG_BAUDRATE			115200
 #define CONFIG_SYS_BAUDRATE_TABLE	{ 9600, 38400, 115200 }
 
 #define CONFIG_FIT_DISABLE_SHA256

@@ -93,9 +93,10 @@ void spl_set_header_raw_uboot(struct spl_image_info *spl_image)
 int spl_parse_image_header(struct spl_image_info *spl_image,
 			   const struct image_header *header)
 {
-	u32 header_size = sizeof(struct image_header);
-
 	if (image_get_magic(header) == IH_MAGIC) {
+#ifdef CONFIG_SPL_LEGACY_IMAGE_SUPPORT
+		u32 header_size = sizeof(struct image_header);
+
 		if (spl_image->flags & SPL_COPY_PAYLOAD_ONLY) {
 			/*
 			 * On some system (e.g. powerpc), the load-address and
@@ -115,9 +116,14 @@ int spl_parse_image_header(struct spl_image_info *spl_image,
 		}
 		spl_image->os = image_get_os(header);
 		spl_image->name = image_get_name(header);
-		debug("spl: payload image: %.*s load addr: 0x%x size: %d\n",
+		debug("spl: payload image: %.*s load addr: 0x%lx size: %d\n",
 			(int)sizeof(spl_image->name), spl_image->name,
 			spl_image->load_addr, spl_image->size);
+#else
+		/* LEGACY image not supported */
+		debug("Legacy boot image support not enabled, proceeding to other boot methods");
+		return -EINVAL;
+#endif
 	} else {
 #ifdef CONFIG_SPL_PANIC_ON_RAW_IMAGE
 		/*
@@ -140,22 +146,24 @@ int spl_parse_image_header(struct spl_image_info *spl_image,
 			spl_image->load_addr = CONFIG_SYS_LOAD_ADDR;
 			spl_image->entry_point = CONFIG_SYS_LOAD_ADDR;
 			spl_image->size = end - start;
-			debug("spl: payload zImage, load addr: 0x%x size: %d\n",
+			debug("spl: payload zImage, load addr: 0x%lx size: %d\n",
 			      spl_image->load_addr, spl_image->size);
 			return 0;
 		}
 #endif
 
-#ifdef CONFIG_SPL_ABORT_ON_RAW_IMAGE
-		/* Signature not found, proceed to other boot methods. */
-		return -EINVAL;
-#else
+#ifdef CONFIG_SPL_RAW_IMAGE_SUPPORT
 		/* Signature not found - assume u-boot.bin */
 		debug("mkimage signature not found - ih_magic = %x\n",
 			header->ih_magic);
 		spl_set_header_raw_uboot(spl_image);
+#else
+		/* RAW image not supported, proceed to other boot methods. */
+		debug("Raw boot image support not enabled, proceeding to other boot methods");
+		return -EINVAL;
 #endif
 	}
+
 	return 0;
 }
 
@@ -164,79 +172,26 @@ __weak void __noreturn jump_to_image_no_args(struct spl_image_info *spl_image)
 	typedef void __noreturn (*image_entry_noargs_t)(void);
 
 	image_entry_noargs_t image_entry =
-		(image_entry_noargs_t)(unsigned long)spl_image->entry_point;
+		(image_entry_noargs_t)spl_image->entry_point;
 
-	debug("image entry point: 0x%X\n", spl_image->entry_point);
+	debug("image entry point: 0x%lX\n", spl_image->entry_point);
 	image_entry();
 }
 
-#ifndef CONFIG_SPL_LOAD_FIT_ADDRESS
-# define CONFIG_SPL_LOAD_FIT_ADDRESS	0
-#endif
-
-#if defined(CONFIG_SPL_RAM_DEVICE) || defined(CONFIG_SPL_DFU_SUPPORT)
-static ulong spl_ram_load_read(struct spl_load_info *load, ulong sector,
-			       ulong count, void *buf)
-{
-	debug("%s: sector %lx, count %lx, buf %lx\n",
-	      __func__, sector, count, (ulong)buf);
-	memcpy(buf, (void *)(CONFIG_SPL_LOAD_FIT_ADDRESS + sector), count);
-	return count;
-}
-
-static int spl_ram_load_image(struct spl_image_info *spl_image,
-			      struct spl_boot_device *bootdev)
-{
-	struct image_header *header;
-
-	header = (struct image_header *)CONFIG_SPL_LOAD_FIT_ADDRESS;
-
-#if defined(CONFIG_SPL_DFU_SUPPORT)
-	if (bootdev->boot_device == BOOT_DEVICE_DFU)
-		spl_dfu_cmd(0, "dfu_alt_info_ram", "ram", "0");
-#endif
-
-	if (IS_ENABLED(CONFIG_SPL_LOAD_FIT) &&
-	    image_get_magic(header) == FDT_MAGIC) {
-		struct spl_load_info load;
-
-		debug("Found FIT\n");
-		load.bl_len = 1;
-		load.read = spl_ram_load_read;
-		spl_load_simple_fit(spl_image, &load, 0, header);
-	} else {
-		debug("Legacy image\n");
-		/*
-		 * Get the header.  It will point to an address defined by
-		 * handoff which will tell where the image located inside
-		 * the flash. For now, it will temporary fixed to address
-		 * pointed by U-Boot.
-		 */
-		header = (struct image_header *)
-			(CONFIG_SYS_TEXT_BASE -	sizeof(struct image_header));
-
-		spl_parse_image_header(spl_image, header);
-	}
-
-	return 0;
-}
-SPL_LOAD_IMAGE_METHOD(0, BOOT_DEVICE_RAM, spl_ram_load_image);
-#if defined(CONFIG_SPL_DFU_SUPPORT)
-SPL_LOAD_IMAGE_METHOD(0, BOOT_DEVICE_DFU, spl_ram_load_image);
-#endif
-#endif
-
-int spl_init(void)
+static int spl_common_init(bool setup_malloc)
 {
 	int ret;
 
-	debug("spl_init()\n");
+	debug("spl_early_init()\n");
+
 #if defined(CONFIG_SYS_MALLOC_F_LEN)
+	if (setup_malloc) {
 #ifdef CONFIG_MALLOC_F_ADDR
-	gd->malloc_base = CONFIG_MALLOC_F_ADDR;
+		gd->malloc_base = CONFIG_MALLOC_F_ADDR;
 #endif
-	gd->malloc_limit = CONFIG_SYS_MALLOC_F_LEN;
-	gd->malloc_ptr = 0;
+		gd->malloc_limit = CONFIG_SYS_MALLOC_F_LEN;
+		gd->malloc_ptr = 0;
+	}
 #endif
 	if (CONFIG_IS_ENABLED(OF_CONTROL) && !CONFIG_IS_ENABLED(OF_PLATDATA)) {
 		ret = fdtdec_setup();
@@ -246,12 +201,39 @@ int spl_init(void)
 		}
 	}
 	if (IS_ENABLED(CONFIG_SPL_DM)) {
-		/* With CONFIG_OF_PLATDATA, bring in all devices */
+		/* With CONFIG_SPL_OF_PLATDATA, bring in all devices */
 		ret = dm_init_and_scan(!CONFIG_IS_ENABLED(OF_PLATDATA));
 		if (ret) {
 			debug("dm_init_and_scan() returned error %d\n", ret);
 			return ret;
 		}
+	}
+
+	return 0;
+}
+
+int spl_early_init(void)
+{
+	int ret;
+
+	ret = spl_common_init(true);
+	if (ret)
+		return ret;
+	gd->flags |= GD_FLG_SPL_EARLY_INIT;
+
+	return 0;
+}
+
+int spl_init(void)
+{
+	int ret;
+	bool setup_malloc = !(IS_ENABLED(CONFIG_SPL_STACK_R) &&
+			IS_ENABLED(CONFIG_SPL_SYS_MALLOC_SIMPLE));
+
+	if (!(gd->flags & GD_FLG_SPL_EARLY_INIT)) {
+		ret = spl_common_init(setup_malloc);
+		if (ret)
+			return ret;
 	}
 	gd->flags |= GD_FLG_SPL_INIT;
 
@@ -266,87 +248,6 @@ __weak void board_boot_order(u32 *spl_boot_list)
 {
 	spl_boot_list[0] = spl_boot_device();
 }
-
-#ifdef CONFIG_SPL_BOARD_LOAD_IMAGE
-__weak void spl_board_announce_boot_device(void) { }
-#endif
-
-#ifdef CONFIG_SPL_LIBCOMMON_SUPPORT
-struct boot_device_name {
-	u32 boot_dev;
-	const char *name;
-};
-
-struct boot_device_name boot_name_table[] = {
-#ifdef CONFIG_SPL_RAM_DEVICE
-	{ BOOT_DEVICE_RAM, "RAM" },
-#endif
-#ifdef CONFIG_SPL_MMC_SUPPORT
-	{ BOOT_DEVICE_MMC1, "MMC1" },
-	{ BOOT_DEVICE_MMC2, "MMC2" },
-	{ BOOT_DEVICE_MMC2_2, "MMC2_2" },
-#endif
-#ifdef CONFIG_SPL_NAND_SUPPORT
-	{ BOOT_DEVICE_NAND, "NAND" },
-#endif
-#ifdef CONFIG_SPL_ONENAND_SUPPORT
-	{ BOOT_DEVICE_ONENAND, "OneNAND" },
-#endif
-#ifdef CONFIG_SPL_NOR_SUPPORT
-	{ BOOT_DEVICE_NOR, "NOR" },
-#endif
-#ifdef CONFIG_SPL_YMODEM_SUPPORT
-	{ BOOT_DEVICE_UART, "UART" },
-#endif
-#if defined(CONFIG_SPL_SPI_SUPPORT) || defined(CONFIG_SPL_SPI_FLASH_SUPPORT)
-	{ BOOT_DEVICE_SPI, "SPI" },
-#endif
-#ifdef CONFIG_SPL_ETH_SUPPORT
-#ifdef CONFIG_SPL_ETH_DEVICE
-	{ BOOT_DEVICE_CPGMAC, "eth device" },
-#else
-	{ BOOT_DEVICE_CPGMAC, "net" },
-#endif
-#endif
-#ifdef CONFIG_SPL_USBETH_SUPPORT
-	{ BOOT_DEVICE_USBETH, "USB eth" },
-#endif
-#ifdef CONFIG_SPL_USB_SUPPORT
-	{ BOOT_DEVICE_USB, "USB" },
-#endif
-#ifdef CONFIG_SPL_DFU_SUPPORT
-	{ BOOT_DEVICE_DFU, "USB DFU" },
-#endif
-#ifdef CONFIG_SPL_SATA_SUPPORT
-	{ BOOT_DEVICE_SATA, "SATA" },
-#endif
-	/* Keep this entry last */
-	{ BOOT_DEVICE_NONE, "unknown boot device" },
-};
-
-static void announce_boot_device(u32 boot_device)
-{
-	int i;
-
-	puts("Trying to boot from ");
-
-#ifdef CONFIG_SPL_BOARD_LOAD_IMAGE
-	if (boot_device == BOOT_DEVICE_BOARD) {
-		spl_board_announce_boot_device();
-		puts("\n");
-		return;
-	}
-#endif
-	for (i = 0; i < ARRAY_SIZE(boot_name_table) - 1; i++) {
-		if (boot_name_table[i].boot_dev == boot_device)
-			break;
-	}
-
-	printf("%s\n", boot_name_table[i].name);
-}
-#else
-static inline void announce_boot_device(u32 boot_device) { }
-#endif
 
 static struct spl_image_loader *spl_ll_find_loader(uint boot_device)
 {
@@ -365,19 +266,44 @@ static struct spl_image_loader *spl_ll_find_loader(uint boot_device)
 	return NULL;
 }
 
-static int spl_load_image(struct spl_image_info *spl_image, u32 boot_device)
+static int spl_load_image(struct spl_image_info *spl_image,
+			  struct spl_image_loader *loader)
 {
 	struct spl_boot_device bootdev;
-	struct spl_image_loader *loader = spl_ll_find_loader(boot_device);
 
-	bootdev.boot_device = boot_device;
+	bootdev.boot_device = loader->boot_device;
 	bootdev.boot_device_name = NULL;
-	if (loader)
-		return loader->load_image(spl_image, &bootdev);
 
+	return loader->load_image(spl_image, &bootdev);
+}
+
+/**
+ * boot_from_devices() - Try loading an booting U-Boot from a list of devices
+ *
+ * @spl_image: Place to put the image details if successful
+ * @spl_boot_list: List of boot devices to try
+ * @count: Number of elements in spl_boot_list
+ * @return 0 if OK, -ve on error
+ */
+static int boot_from_devices(struct spl_image_info *spl_image,
+			     u32 spl_boot_list[], int count)
+{
+	int i;
+
+	for (i = 0; i < count && spl_boot_list[i] != BOOT_DEVICE_NONE; i++) {
+		struct spl_image_loader *loader;
+
+		loader = spl_ll_find_loader(spl_boot_list[i]);
 #if defined(CONFIG_SPL_SERIAL_SUPPORT) && defined(CONFIG_SPL_LIBCOMMON_SUPPORT)
-	puts("SPL: Unsupported Boot Device!\n");
+		if (loader)
+			printf("Trying to boot from %s\n", loader->name);
+		else
+			puts("SPL: Unsupported Boot Device!\n");
 #endif
+		if (loader && !spl_load_image(spl_image, loader))
+			return 0;
+	}
+
 	return -ENODEV;
 }
 
@@ -391,7 +317,6 @@ void board_init_r(gd_t *dummy1, ulong dummy2)
 		BOOT_DEVICE_NONE,
 	};
 	struct spl_image_info spl_image;
-	int i;
 
 	debug(">>spl:board_init_r()\n");
 
@@ -418,15 +343,9 @@ void board_init_r(gd_t *dummy1, ulong dummy2)
 
 	memset(&spl_image, '\0', sizeof(spl_image));
 	board_boot_order(spl_boot_list);
-	for (i = 0; i < ARRAY_SIZE(spl_boot_list) &&
-			spl_boot_list[i] != BOOT_DEVICE_NONE; i++) {
-		announce_boot_device(spl_boot_list[i]);
-		if (!spl_load_image(&spl_image, spl_boot_list[i]))
-			break;
-	}
 
-	if (i == ARRAY_SIZE(spl_boot_list) ||
-	    spl_boot_list[i] == BOOT_DEVICE_NONE) {
+	if (boot_from_devices(&spl_image, spl_boot_list,
+			      ARRAY_SIZE(spl_boot_list))) {
 		puts("SPL: failed to boot from all boot devices\n");
 		hang();
 	}
@@ -450,7 +369,7 @@ void board_init_r(gd_t *dummy1, ulong dummy2)
 	      gd->malloc_ptr / 1024);
 #endif
 
-	debug("loaded - jumping to U-Boot...");
+	debug("loaded - jumping to U-Boot...\n");
 	spl_board_prepare_for_boot();
 	jump_to_image_no_args(&spl_image);
 }
@@ -511,6 +430,9 @@ ulong spl_relocate_stack_gd(void)
 	ptr = CONFIG_SPL_STACK_R_ADDR - roundup(sizeof(gd_t),16);
 	new_gd = (gd_t *)ptr;
 	memcpy(new_gd, (void *)gd, sizeof(gd_t));
+#if CONFIG_IS_ENABLED(DM)
+	dm_fixup_for_gd_move(new_gd);
+#endif
 #if !defined(CONFIG_ARM)
 	gd = new_gd;
 #endif
