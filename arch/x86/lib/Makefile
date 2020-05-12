@@ -1,7 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0+
 #
 # (C) Copyright 2002-2006
 # Wolfgang Denk, DENX Software Engineering, wd@denx.de.
+#
+# SPDX-License-Identifier:	GPL-2.0+
+#
 
 ifndef CONFIG_X86_64
 obj-y += bios.o
@@ -68,18 +70,8 @@ extra-$(CONFIG_EFI_STUB_64BIT) += crt0_x86_64_efi.o reloc_x86_64_efi.o
 
 endif
 
-ifdef CONFIG_EFI_STUB
-
+ifneq ($(CONFIG_EFI_STUB)$(CONFIG_CMD_BOOTEFI_HELLO_COMPILE),)
 ifeq ($(CONFIG_$(SPL_)X86_64),)
 extra-y += $(EFI_CRT0) $(EFI_RELOC)
 endif
-
-else
-
-ifndef CONFIG_SPL_BUILD
-ifneq ($(CONFIG_CMD_BOOTEFI_SELFTEST)$(CONFIG_CMD_BOOTEFI_HELLO_COMPILE),)
-extra-y += $(EFI_CRT0) $(EFI_RELOC)
-endif
-endif
-
 endif

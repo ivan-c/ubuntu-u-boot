@@ -1,8 +1,9 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * efi_selftest_manageprotocols
  *
  * Copyright (c) 2017 Heinrich Schuchardt <xypron.glpk@gmx.de>
+ *
+ * SPDX-License-Identifier:     GPL-2.0+
  *
  * This unit test checks the following protocol services:
  * InstallProtocolInterface, UninstallProtocolInterface,
@@ -335,7 +336,7 @@ static int execute(void)
 		return EFI_ST_FAILURE;
 	}
 	ret = boottime->uninstall_protocol_interface(handle1, &guid3,
-						     &interface3);
+						     &interface1);
 	if (ret != EFI_SUCCESS) {
 		efi_st_error("UninstallProtocolInterface failed\n");
 		return EFI_ST_FAILURE;

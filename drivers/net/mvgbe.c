@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * (C) Copyright 2009
  * Marvell Semiconductor <www.marvell.com>
@@ -9,6 +8,8 @@
  *
  * based on - Driver for MV64360X ethernet ports
  * Copyright (C) 2002 rabeeh@galileo.co.il
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>
@@ -26,6 +27,8 @@
 #include <asm/arch/soc.h>
 #elif defined(CONFIG_ORION5X)
 #include <asm/arch/orion5x.h>
+#elif defined(CONFIG_DOVE)
+#include <asm/arch/dove.h>
 #endif
 
 #include "mvgbe.h"

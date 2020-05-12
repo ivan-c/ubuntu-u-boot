@@ -1,4 +1,3 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * [origin: Linux kernel include/asm-arm/arch-at91/at91sam9261.h]
  *
@@ -12,6 +11,8 @@
  * Note that those SoCs are mostly software and pin compatible,
  * therefore this file applies to all of them. Differences between
  * those SoCs are concentrated at the end of this file.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef AT91SAM9261_H

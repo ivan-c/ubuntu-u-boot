@@ -1,8 +1,9 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * efi_selftest_util
  *
  * Copyright (c) 2017 Heinrich Schuchardt <xypron.glpk@gmx.de>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  *
  * Utility functions
  */

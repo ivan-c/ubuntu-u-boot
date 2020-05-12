@@ -1,4 +1,3 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Copyright (C) 2010 Albert ARIBAUD <albert.u.boot@aribaud.net>
  *
@@ -6,6 +5,8 @@
  * (C) Copyright 2009
  * Marvell Semiconductor <www.marvell.com>
  * Written-by: Prafulla Wadaskar <prafulla@marvell.com>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef _CONFIG_EDMINIV2_H
@@ -83,6 +84,7 @@
  * for your console driver.
  */
 
+#define CONFIG_CONS_INDEX	1	/*Console on UART0 */
 #define CONFIG_SYS_BAUDRATE_TABLE \
 	{ 9600, 19200, 38400, 57600, 115200, 230400, 460800, 921600 }
 
@@ -117,6 +119,7 @@
  */
 
 #ifdef CONFIG_CMD_NET
+#define CONFIG_MVGBE				/* Enable Marvell GbE Driver */
 #define CONFIG_MVGBE_PORTS	{1}		/* enable port 0 only */
 #define CONFIG_SKIP_LOCAL_MAC_RANDOMIZATION	/* don't randomize MAC */
 #define CONFIG_PHY_BASE_ADR	0x8

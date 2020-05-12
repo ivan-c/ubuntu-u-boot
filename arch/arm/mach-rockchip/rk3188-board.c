@@ -1,6 +1,7 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * (C) Copyright 2015 Google, Inc
+ *
+ * SPDX-License-Identifier:     GPL-2.0+
  */
 
 #include <common.h>
@@ -16,6 +17,8 @@
 #include <asm/arch/boot_mode.h>
 #include <asm/gpio.h>
 #include <dm/pinctrl.h>
+
+DECLARE_GLOBAL_DATA_PTR;
 
 int board_late_init(void)
 {

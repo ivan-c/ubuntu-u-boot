@@ -1,6 +1,7 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Copyright (c) 2017 Intel Corp.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __CONFIG_H
@@ -9,6 +10,7 @@
 #include <asm/ibmpc.h>
 
 /* ACPI */
+#define CONFIG_LAST_STAGE_INIT
 
 /* Boot */
 #define CONFIG_BOOTCOMMAND "run bootcmd"

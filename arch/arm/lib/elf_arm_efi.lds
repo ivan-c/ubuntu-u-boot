@@ -1,6 +1,7 @@
-/* SPDX-License-Identifier: BSD-2-Clause */
 /*
  * U-Boot ARM EFI linker script
+ *
+ * SPDX-License-Identifier:	BSD-2-Clause
  *
  * Modified from elf_arm_efi.lds in gnu-efi
  */

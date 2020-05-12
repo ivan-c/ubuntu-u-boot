@@ -1,7 +1,8 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * Copyright (c) 2015 Google, Inc
  * Written by Simon Glass <sjg@chromium.org>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>
@@ -10,6 +11,8 @@
 #include <fdtdec.h>
 #include <mmc.h>
 #include <asm/test.h>
+
+DECLARE_GLOBAL_DATA_PTR;
 
 struct sandbox_mmc_plat {
 	struct mmc_config cfg;

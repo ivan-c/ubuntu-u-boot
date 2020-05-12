@@ -1,9 +1,10 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Configuation settings for the Freescale MCF5208EVBe.
  *
  * Copyright (C) 2004-2008 Freescale Semiconductor, Inc.
  * TsiChung Liew (Tsi-Chung.Liew@freescale.com)
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef _M5208EVBE_H
@@ -63,7 +64,7 @@
 #	define CONFIG_GATEWAYIP	192.162.1.1
 #endif				/* CONFIG_MCFFEC */
 
-#define CONFIG_HOSTNAME		"M5208EVBe"
+#define CONFIG_HOSTNAME		M5208EVBe
 #define CONFIG_EXTRA_ENV_SETTINGS		\
 	"netdev=eth0\0"				\
 	"loadaddr=40010000\0"			\

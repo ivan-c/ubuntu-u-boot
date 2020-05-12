@@ -1,6 +1,7 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Copyright (C) Freescale Semiconductor, Inc. 2006, 2010.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 /*
  * mpc8313epb board configuration file
@@ -71,6 +72,8 @@
 #endif
 
 #define CONFIG_SYS_CLK_FREQ	CONFIG_83XX_CLKIN
+
+#define CONFIG_BOARD_EARLY_INIT_R		/* call board_early_init_r */
 
 #define CONFIG_SYS_IMMR		0xE0000000
 
@@ -344,6 +347,7 @@
 /*
  * Serial Port
  */
+#define CONFIG_CONS_INDEX	1
 #define CONFIG_SYS_NS16550_SERIAL
 #define CONFIG_SYS_NS16550_REG_SIZE	1
 
@@ -383,6 +387,7 @@
 /*
  * TSEC
  */
+#define CONFIG_TSEC_ENET		/* TSEC ethernet support */
 
 #define CONFIG_GMII			/* MII PHY management */
 
@@ -603,7 +608,7 @@
 
 #define CONFIG_NETDEV		"eth1"
 
-#define CONFIG_HOSTNAME		"mpc8313erdb"
+#define CONFIG_HOSTNAME		mpc8313erdb
 #define CONFIG_ROOTPATH		"/nfs/root/path"
 #define CONFIG_BOOTFILE		"uImage"
 				/* U-Boot image on TFTP server */

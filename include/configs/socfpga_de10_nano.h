@@ -1,6 +1,7 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Copyright (C) 2017, Intel Corporation
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 #ifndef __CONFIG_TERASIC_DE10_H__
 #define __CONFIG_TERASIC_DE10_H__

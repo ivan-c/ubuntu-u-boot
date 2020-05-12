@@ -26,11 +26,8 @@
 #undef __HAVE_ARCH_MEMSET
 
 #ifdef CONFIG_MARCO_MEMSET
-#define memset(_p, _v, _n)	\
-	(typeof(_p) (p) = (_p); \
-	 typeof(_v) (v) = (_v); \
-	 typeof(_n) (n) = (_n); \
-	 {								\
+#define memset(p, v, n)							\
+	({								\
 		if ((n) != 0) {						\
 			if (__builtin_constant_p((v)) && (v) == 0)	\
 				__memzero((p), (n));			\
@@ -40,10 +37,7 @@
 		(p);							\
 	})
 
-#define memzero(_p, _n) \
-	(typeof(_p) (p) = (_p); \
-	 typeof(_n) (n) = (_n); \
-	 { if ((n) != 0) __memzero((p), (n)); (p); })
+#define memzero(p, n) ({ if ((n) != 0) __memzero((p), (n)); (p); })
 #endif
 
 #endif /* __ASM_RISCV_STRING_H */

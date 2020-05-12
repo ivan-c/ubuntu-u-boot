@@ -1,8 +1,9 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Qualcomm APQ8096 sysmap
  *
  * (C) Copyright 2017 Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 #ifndef _MACH_SYSMAP_APQ8096_H
 #define _MACH_SYSMAP_APQ8096_H

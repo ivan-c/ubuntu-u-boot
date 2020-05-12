@@ -1,7 +1,8 @@
-// SPDX-License-Identifier: GPL-2.0
 /*
  * (C) Copyright 2015 Google, Inc
  * (C) 2017 Theobroma Systems Design und Consulting GmbH
+ *
+ * SPDX-License-Identifier:	GPL-2.0
  */
 
 #include <common.h>
@@ -18,6 +19,8 @@
 #include <asm/arch/hardware.h>
 #include <dm/lists.h>
 #include <dt-bindings/clock/rk3399-cru.h>
+
+DECLARE_GLOBAL_DATA_PTR;
 
 #if CONFIG_IS_ENABLED(OF_PLATDATA)
 struct rk3399_clk_plat {

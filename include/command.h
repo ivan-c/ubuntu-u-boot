@@ -1,7 +1,8 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * (C) Copyright 2000-2009
  * Wolfgang Denk, DENX Software Engineering, wd@denx.de.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 /*
@@ -110,8 +111,6 @@ extern int common_diskboot(cmd_tbl_t *cmdtp, const char *intf, int argc,
 extern int do_reset(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[]);
 extern int do_poweroff(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[]);
 
-extern unsigned long do_go_exec(ulong (*entry)(int, char * const []), int argc,
-				char * const argv[]);
 /*
  * Error codes that commands return to cmd_process(). We use the standard 0
  * and 1 for success and failure, but add one more case - failure with a

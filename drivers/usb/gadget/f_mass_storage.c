@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0+ OR BSD-3-Clause
 /*
  * f_mass_storage.c -- Mass Storage USB Composite Function
  *
@@ -6,6 +5,8 @@
  * Copyright (C) 2009 Samsung Electronics
  *                    Author: Michal Nazarewicz <m.nazarewicz@samsung.com>
  * All rights reserved.
+ *
+ * SPDX-License-Identifier: GPL-2.0+	BSD-3-Clause
  */
 
 /*
@@ -251,7 +252,6 @@
 #include <usb_mass_storage.h>
 
 #include <asm/unaligned.h>
-#include <linux/bitops.h>
 #include <linux/usb/gadget.h>
 #include <linux/usb/gadget.h>
 #include <linux/usb/composite.h>
@@ -282,6 +282,26 @@ static const char fsg_string_interface[] = "Mass Storage";
 
 struct kref {int x; };
 struct completion {int x; };
+
+inline void set_bit(int nr, volatile void *addr)
+{
+	int	mask;
+	unsigned int *a = (unsigned int *) addr;
+
+	a += nr >> 5;
+	mask = 1 << (nr & 0x1f);
+	*a |= mask;
+}
+
+inline void clear_bit(int nr, volatile void *addr)
+{
+	int	mask;
+	unsigned int *a = (unsigned int *) addr;
+
+	a += nr >> 5;
+	mask = 1 << (nr & 0x1f);
+	*a &= ~mask;
+}
 
 struct fsg_dev;
 struct fsg_common;
@@ -1724,7 +1744,7 @@ static int check_command(struct fsg_common *common, int cmnd_size,
 		    common->lun, lun);
 
 	/* Check the LUN */
-	if (common->lun < common->nluns) {
+	if (common->lun >= 0 && common->lun < common->nluns) {
 		curlun = &common->luns[common->lun];
 		if (common->cmnd[0] != SC_REQUEST_SENSE) {
 			curlun->sense_data = SS_NO_SENSE;
@@ -2066,7 +2086,7 @@ static int received_cbw(struct fsg_dev *fsg, struct fsg_buffhd *bh)
 		 * we can simply accept and discard any data received
 		 * until the next reset. */
 		wedge_bulk_in_endpoint(fsg);
-		generic_set_bit(IGNORE_BULK_OUT, &fsg->atomic_bitflags);
+		set_bit(IGNORE_BULK_OUT, &fsg->atomic_bitflags);
 		return -EINVAL;
 	}
 
@@ -2230,7 +2250,7 @@ reset:
 	fsg->bulk_out_enabled = 1;
 	common->bulk_out_maxpacket =
 				le16_to_cpu(get_unaligned(&d->wMaxPacketSize));
-	generic_clear_bit(IGNORE_BULK_OUT, &fsg->atomic_bitflags);
+	clear_bit(IGNORE_BULK_OUT, &fsg->atomic_bitflags);
 
 	/* Allocate the requests */
 	for (i = 0; i < FSG_NUM_BUFFERS; ++i) {

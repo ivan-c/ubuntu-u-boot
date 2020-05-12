@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0
 /**
  * udc-core.c - Core UDC Framework
  *
@@ -11,6 +10,8 @@
  *
  * commit 02e8c96627 : usb: gadget: udc: core: prepend udc_attach_driver with
  *		       usb_
+ *
+ * SPDX-License-Identifier:     GPL-2.0
  */
 
 #include <linux/compat.h>

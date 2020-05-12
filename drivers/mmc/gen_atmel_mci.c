@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * Copyright (C) 2010
  * Rob Emanuele <rob@emanuele.us>
@@ -6,6 +5,8 @@
  *
  * Original Driver:
  * Copyright (C) 2004-2006 Atmel Corporation
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>
@@ -20,6 +21,8 @@
 #include <asm/arch/clk.h>
 #include <asm/arch/hardware.h>
 #include "atmel_mci.h"
+
+DECLARE_GLOBAL_DATA_PTR;
 
 #ifndef CONFIG_SYS_MMC_CLK_OD
 # define CONFIG_SYS_MMC_CLK_OD	150000

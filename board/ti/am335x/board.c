@@ -1,10 +1,11 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * board.c
  *
  * Board functions for TI AM335X based boards
  *
  * Copyright (C) 2011, Texas Instruments, Incorporated - http://www.ti.com/
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>
@@ -242,11 +243,9 @@ static struct emif_regs ddr3_icev2_emif_reg_data = {
 #ifdef CONFIG_SPL_OS_BOOT
 int spl_start_uboot(void)
 {
-#ifdef CONFIG_SPL_SERIAL_SUPPORT
 	/* break into full u-boot on 'c' */
 	if (serial_tstc() && serial_getc() == 'c')
 		return 1;
-#endif
 
 #ifdef CONFIG_SPL_ENV_SUPPORT
 	env_init();
@@ -265,7 +264,7 @@ const struct dpll_params *get_dpll_ddr_params(void)
 
 	if (board_is_evm_sk())
 		return &dpll_ddr3_303MHz[ind];
-	else if (board_is_pb() || board_is_bone_lt() || board_is_icev2())
+	else if (board_is_bone_lt() || board_is_icev2())
 		return &dpll_ddr3_400MHz[ind];
 	else if (board_is_evm_15_or_later())
 		return &dpll_ddr3_303MHz[ind];
@@ -296,7 +295,7 @@ const struct dpll_params *get_dpll_mpu_params(void)
 	if (bone_not_connected_to_ac_power())
 		freq = MPUPLL_M_600;
 
-	if (board_is_pb() || board_is_bone_lt())
+	if (board_is_bone_lt())
 		freq = MPUPLL_M_1000;
 
 	switch (freq) {
@@ -342,7 +341,7 @@ static void scale_vcores_bone(int freq)
 	 * Override what we have detected since we know if we have
 	 * a Beaglebone Black it supports 1GHz.
 	 */
-	if (board_is_pb() || board_is_bone_lt())
+	if (board_is_bone_lt())
 		freq = MPUPLL_M_1000;
 
 	switch (freq) {
@@ -543,7 +542,7 @@ void sdram_init(void)
 	if (board_is_evm_sk())
 		config_ddr(303, &ioregs_evmsk, &ddr3_data,
 			   &ddr3_cmd_ctrl_data, &ddr3_emif_reg_data, 0);
-	else if (board_is_pb() || board_is_bone_lt())
+	else if (board_is_bone_lt())
 		config_ddr(400, &ioregs_bonelt,
 			   &ddr3_beagleblack_data,
 			   &ddr3_beagleblack_cmd_ctrl_data,
@@ -564,8 +563,8 @@ void sdram_init(void)
 }
 #endif
 
-#if defined(CONFIG_CLOCK_SYNTHESIZER) && (!defined(CONFIG_SPL_BUILD) || \
-	(defined(CONFIG_SPL_ETH_SUPPORT) && defined(CONFIG_SPL_BUILD)))
+#if !defined(CONFIG_SPL_BUILD) || \
+	(defined(CONFIG_SPL_ETH_SUPPORT) && defined(CONFIG_SPL_BUILD))
 static void request_and_set_gpio(int gpio, char *name, int val)
 {
 	int ret;
@@ -622,8 +621,8 @@ int board_init(void)
 	gpmc_init();
 #endif
 
-#if defined(CONFIG_CLOCK_SYNTHESIZER) && (!defined(CONFIG_SPL_BUILD) || \
-	(defined(CONFIG_SPL_ETH_SUPPORT) && defined(CONFIG_SPL_BUILD)))
+#if !defined(CONFIG_SPL_BUILD) || \
+	(defined(CONFIG_SPL_ETH_SUPPORT) && defined(CONFIG_SPL_BUILD))
 	if (board_is_icev2()) {
 		int rv;
 		u32 reg;
@@ -767,16 +766,6 @@ int board_late_init(void)
 			eth_env_set_enetaddr("eth1addr", mac_addr);
 	}
 #endif
-
-	if (!env_get("serial#")) {
-		char *board_serial = env_get("board_serial");
-		char *ethaddr = env_get("ethaddr");
-
-		if (!board_serial || !strncmp(board_serial, "unknown", 7))
-			env_set("serial#", ethaddr);
-		else
-			env_set("serial#", board_serial);
-	}
 
 	return 0;
 }
@@ -941,8 +930,6 @@ int board_fit_config_name_match(const char *name)
 	else if (board_is_bone() && !strcmp(name, "am335x-bone"))
 		return 0;
 	else if (board_is_bone_lt() && !strcmp(name, "am335x-boneblack"))
-		return 0;
-	else if (board_is_pb() && !strcmp(name, "am335x-pocketbeagle"))
 		return 0;
 	else if (board_is_evm_sk() && !strcmp(name, "am335x-evmsk"))
 		return 0;

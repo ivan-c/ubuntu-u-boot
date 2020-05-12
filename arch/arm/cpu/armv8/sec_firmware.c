@@ -1,6 +1,7 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * Copyright 2016 NXP Semiconductor, Inc.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>
@@ -115,48 +116,25 @@ static int sec_firmware_check_copy_loadable(const void *sec_firmware_img,
 					    u32 *loadable_l, u32 *loadable_h)
 {
 	phys_addr_t sec_firmware_loadable_addr = 0;
-	int conf_node_off, ld_node_off, images;
+	int conf_node_off, ld_node_off;
 	char *conf_node_name = NULL;
 	const void *data;
 	size_t size;
 	ulong load;
-	const char *name, *str, *type;
-	int len;
 
 	conf_node_name = SEC_FIRMEWARE_FIT_CNF_NAME;
 
 	conf_node_off = fit_conf_get_node(sec_firmware_img, conf_node_name);
 	if (conf_node_off < 0) {
 		printf("SEC Firmware: %s: no such config\n", conf_node_name);
-		return -ENOENT;
+	return -ENOENT;
 	}
 
-	/* find the node holding the images information */
-	images = fdt_path_offset(sec_firmware_img, FIT_IMAGES_PATH);
-	if (images < 0) {
-		printf("%s: Cannot find /images node: %d\n", __func__, images);
-		return -1;
-	}
-
-	type = FIT_LOADABLE_PROP;
-
-	name = fdt_getprop(sec_firmware_img, conf_node_off, type, &len);
-	if (!name) {
-		/* Loadables not present */
-		return 0;
-	}
-
-	printf("SEC Firmware: '%s' present in config\n", type);
-
-	for (str = name; str && ((str - name) < len);
-	     str = strchr(str, '\0') + 1) {
-		printf("%s: '%s'\n", type, str);
-		ld_node_off = fdt_subnode_offset(sec_firmware_img, images, str);
-		if (ld_node_off < 0) {
-			printf("cannot find image node '%s': %d\n", str,
-			       ld_node_off);
-			return -EINVAL;
-		}
+	ld_node_off = fit_conf_get_prop_node(sec_firmware_img, conf_node_off,
+					     FIT_LOADABLE_PROP);
+	if (ld_node_off >= 0) {
+		printf("SEC Firmware: '%s' present in config\n",
+		       FIT_LOADABLE_PROP);
 
 		/* Verify secure firmware image */
 		if (!(fit_image_verify(sec_firmware_img, ld_node_off))) {
@@ -186,19 +164,11 @@ static int sec_firmware_check_copy_loadable(const void *sec_firmware_img,
 		memcpy((void *)sec_firmware_loadable_addr, data, size);
 		flush_dcache_range(sec_firmware_loadable_addr,
 				   sec_firmware_loadable_addr + size);
-
-		/* Populate loadable address only for Trusted OS */
-		if (!strcmp(str, "trustedOS@1")) {
-			/*
-			 * Populate address ptrs for loadable image with
-			 * loadbale addr
-			 */
-			out_le32(loadable_l, (sec_firmware_loadable_addr &
-					      WORD_MASK));
-			out_le32(loadable_h, (sec_firmware_loadable_addr >>
-					      WORD_SHIFT));
-		}
 	}
+
+	/* Populate address ptrs for loadable image with loadbale addr */
+	out_le32(loadable_l, (sec_firmware_loadable_addr & WORD_MASK));
+	out_le32(loadable_h, (sec_firmware_loadable_addr >> WORD_SHIFT));
 
 	return 0;
 }
@@ -348,7 +318,9 @@ unsigned int sec_firmware_support_psci_version(void)
  */
 bool sec_firmware_support_hwrng(void)
 {
+	uint8_t rand[8];
 	if (sec_firmware_addr & SEC_FIRMWARE_RUNNING) {
+		if (!sec_firmware_get_random(rand, 8))
 			return true;
 	}
 
@@ -457,10 +429,8 @@ int fdt_fixup_kaslr(void *fdt)
 
 #if defined(CONFIG_ARMV8_SEC_FIRMWARE_SUPPORT)
 	/* Check if random seed generation is  supported */
-	if (sec_firmware_support_hwrng() == false) {
-		printf("WARNING: SEC firmware not running, no kaslr-seed\n");
+	if (sec_firmware_support_hwrng() == false)
 		return 0;
-	}
 
 	ret = sec_firmware_get_random(rand, 8);
 	if (ret < 0) {

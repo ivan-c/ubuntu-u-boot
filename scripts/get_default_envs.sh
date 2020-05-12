@@ -1,7 +1,8 @@
 #! /bin/bash
-# SPDX-License-Identifier: GPL-2.0+
 #
 # Copyright (C) 2016, Lukasz Majewski <l.majewski@majess.pl>
+#
+# SPDX-License-Identifier:      GPL-2.0+
 #
 
 # This file extracts default envs from built u-boot

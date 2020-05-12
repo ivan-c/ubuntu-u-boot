@@ -1,8 +1,9 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  *  EFI utils
  *
  *  Copyright (c) 2017 Rob Clark
+ *
+ *  SPDX-License-Identifier:     GPL-2.0+
  */
 
 #include <common.h>
@@ -70,17 +71,17 @@ static void parse_load_option(struct load_option *lo, void *ptr)
 
 /* free() the result */
 static void *get_var(u16 *name, const efi_guid_t *vendor,
-		     efi_uintn_t *size)
+		     unsigned long *size)
 {
 	efi_guid_t *v = (efi_guid_t *)vendor;
 	efi_status_t ret;
 	void *buf = NULL;
 
 	*size = 0;
-	EFI_CALL(ret = rs->get_variable(name, v, NULL, size, buf));
+	EFI_CALL(ret = rs->get_variable((s16 *)name, v, NULL, size, buf));
 	if (ret == EFI_BUFFER_TOO_SMALL) {
 		buf = malloc(*size);
-		EFI_CALL(ret = rs->get_variable(name, v, NULL, size, buf));
+		EFI_CALL(ret = rs->get_variable((s16 *)name, v, NULL, size, buf));
 	}
 
 	if (ret != EFI_SUCCESS) {
@@ -104,7 +105,7 @@ static void *try_load_entry(uint16_t n, struct efi_device_path **device_path,
 	u16 varname[] = L"Boot0000";
 	u16 hexmap[] = L"0123456789ABCDEF";
 	void *load_option, *image = NULL;
-	efi_uintn_t size;
+	unsigned long size;
 
 	varname[4] = hexmap[(n & 0xf000) >> 12];
 	varname[5] = hexmap[(n & 0x0f00) >> 8];
@@ -147,7 +148,7 @@ void *efi_bootmgr_load(struct efi_device_path **device_path,
 		       struct efi_device_path **file_path)
 {
 	uint16_t *bootorder;
-	efi_uintn_t size;
+	unsigned long size;
 	void *image = NULL;
 	int i, num;
 

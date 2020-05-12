@@ -1,5 +1,6 @@
-# SPDX-License-Identifier:	GPL-2.0+
 # Copyright (c) 2013, Google Inc.
+#
+# SPDX-License-Identifier:	GPL-2.0+
 #
 # Sanity check of the FIT handling in U-Boot
 

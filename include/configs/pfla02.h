@@ -1,6 +1,7 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Copyright (C) Stefano Babic <sbabic@denx.de>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 
@@ -8,6 +9,7 @@
 #define __PCM058_CONFIG_H
 
 #ifdef CONFIG_SPL
+#define CONFIG_SPL_SPI_LOAD
 #define CONFIG_SYS_SPI_U_BOOT_OFFS	(64 * 1024)
 #include "imx6_spl.h"
 #endif
@@ -23,6 +25,7 @@
 #define CONSOLE_DEV		"ttymxc3"
 
 /* Early setup */
+#define CONFIG_DISPLAY_BOARDINFO_LATE
 
 
 /* Size of malloc() pool */

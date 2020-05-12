@@ -1,4 +1,3 @@
-/* SPDX-License-Identifier: GPL-2.0 */
 /*
  *  linux/include/asm-nds/io.h
  *
@@ -7,6 +6,8 @@
  * Copyright (C) 2011 Andes Technology Corporation
  * Shawn Lin, Andes Technology Corporation <nobuhiro@andestech.com>
  * Macpaul Lin, Andes Technology Corporation <macpaul@andestech.com>
+ *
+ * SPDX-License-Identifier:	GPL-2.0
  *
  * Modifications:
  *  16-Sep-1996	RMK	Inlined the inx/outx functions & optimised for both

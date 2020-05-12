@@ -1,12 +1,12 @@
-# SPDX-License-Identifier: GPL-2.0+
 # Copyright (c) 2014 Google, Inc
+#
+# SPDX-License-Identifier:      GPL-2.0+
 #
 
 import errno
 import glob
 import os
 import shutil
-import sys
 import threading
 
 import command
@@ -27,9 +27,6 @@ def Mkdir(dirname, parents = False):
             os.mkdir(dirname)
     except OSError as err:
         if err.errno == errno.EEXIST:
-            if os.path.realpath('.') == os.path.realpath(dirname):
-                print "Cannot create the current working directory '%s'!" % dirname
-                sys.exit(1)
             pass
         else:
             raise

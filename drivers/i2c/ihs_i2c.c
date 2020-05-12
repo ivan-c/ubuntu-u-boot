@@ -1,7 +1,8 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * (C) Copyright 2013
  * Dirk Eibach,  Guntermann & Drunck GmbH, dirk.eibach@gdsys.cc
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>
@@ -98,8 +99,7 @@ static int wait_for_int(bool read)
 #endif
 
 #ifdef CONFIG_DM_I2C
-	fpgamap_read(fpga, priv->addr + REG_INTERRUPT_STATUS, &val,
-		     FPGAMAP_SIZE_16);
+	fpgamap_read16(fpga, priv->addr + REG_INTERRUPT_STATUS, &val);
 #else
 	I2C_GET_REG(interrupt_status, &val);
 #endif
@@ -110,8 +110,7 @@ static int wait_for_int(bool read)
 		if (ctr++ > 5000)
 			return 1;
 #ifdef CONFIG_DM_I2C
-		fpgamap_read(fpga, priv->addr + REG_INTERRUPT_STATUS, &val,
-			     FPGAMAP_SIZE_16);
+		fpgamap_read16(fpga, priv->addr + REG_INTERRUPT_STATUS, &val);
 #else
 		I2C_GET_REG(interrupt_status, &val);
 #endif
@@ -129,7 +128,6 @@ static int ihs_i2c_transfer(uchar chip, uchar *buffer, int len, bool read,
 #endif
 {
 	u16 val;
-	u16 data;
 #ifdef CONFIG_DM_I2C
 	struct ihs_i2c_priv *priv = dev_get_priv(dev);
 	struct udevice *fpga;
@@ -138,14 +136,13 @@ static int ihs_i2c_transfer(uchar chip, uchar *buffer, int len, bool read,
 #endif
 
 	/* Clear interrupt status */
-	data = I2CINT_ERROR_EV | I2CINT_RECEIVE_EV | I2CINT_TRANSMIT_EV;
 #ifdef CONFIG_DM_I2C
-	fpgamap_write(fpga, priv->addr + REG_INTERRUPT_STATUS, &data,
-		      FPGAMAP_SIZE_16);
-	fpgamap_read(fpga, priv->addr + REG_INTERRUPT_STATUS, &val,
-		     FPGAMAP_SIZE_16);
+	fpgamap_write16(fpga, priv->addr + REG_INTERRUPT_STATUS,
+			I2CINT_ERROR_EV | I2CINT_RECEIVE_EV | I2CINT_TRANSMIT_EV);
+	fpgamap_read16(fpga, priv->addr + REG_INTERRUPT_STATUS, &val);
 #else
-	I2C_SET_REG(interrupt_status, data);
+	I2C_SET_REG(interrupt_status, I2CINT_ERROR_EV
+		     | I2CINT_RECEIVE_EV | I2CINT_TRANSMIT_EV);
 	I2C_GET_REG(interrupt_status, &val);
 #endif
 
@@ -156,24 +153,26 @@ static int ihs_i2c_transfer(uchar chip, uchar *buffer, int len, bool read,
 		if (len > 1)
 			val |= buffer[1] << 8;
 #ifdef CONFIG_DM_I2C
-		fpgamap_write(fpga, priv->addr + REG_WRITE_MAILBOX_EXT, &val,
-			      FPGAMAP_SIZE_16);
+		fpgamap_write16(fpga, priv->addr + REG_WRITE_MAILBOX_EXT, val);
 #else
 		I2C_SET_REG(write_mailbox_ext, val);
 #endif
 	}
 
-	data = I2CMB_NATIVE
-	       | (read ? 0 : I2CMB_WRITE)
-	       | (chip << 1)
-	       | ((len > 1) ? I2CMB_2BYTE : 0)
-	       | (is_last ? 0 : I2CMB_HOLD_BUS);
-
 #ifdef CONFIG_DM_I2C
-	fpgamap_write(fpga, priv->addr + REG_WRITE_MAILBOX, &data,
-		      FPGAMAP_SIZE_16);
+	fpgamap_write16(fpga, priv->addr + REG_WRITE_MAILBOX,
+			I2CMB_NATIVE
+			| (read ? I2CMB_READ : I2CMB_WRITE)
+			| (chip << 1)
+			| ((len > 1) ? I2CMB_2BYTE : I2CMB_1BYTE)
+			| (!is_last ? I2CMB_HOLD_BUS : I2CMB_DONT_HOLD_BUS));
 #else
-	I2C_SET_REG(write_mailbox, data);
+	I2C_SET_REG(write_mailbox,
+		    I2CMB_NATIVE
+		    | (read ? 0 : I2CMB_WRITE)
+		    | (chip << 1)
+		    | ((len > 1) ? I2CMB_2BYTE : 0)
+		    | (is_last ? 0 : I2CMB_HOLD_BUS));
 #endif
 
 #ifdef CONFIG_DM_I2C
@@ -186,8 +185,7 @@ static int ihs_i2c_transfer(uchar chip, uchar *buffer, int len, bool read,
 	/* If we want to read, get the bytes from the mailbox */
 	if (read) {
 #ifdef CONFIG_DM_I2C
-		fpgamap_read(fpga, priv->addr + REG_READ_MAILBOX_EXT, &val,
-			     FPGAMAP_SIZE_16);
+		fpgamap_read16(fpga, priv->addr + REG_READ_MAILBOX_EXT, &val);
 #else
 		I2C_GET_REG(read_mailbox_ext, &val);
 #endif

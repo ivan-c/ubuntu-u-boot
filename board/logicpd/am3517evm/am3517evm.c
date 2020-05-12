@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * am3517evm.c - board file for TI's AM3517 family of devices.
  *
@@ -8,6 +7,8 @@
  *
  * Copyright (C) 2010
  * Texas Instruments Incorporated - http://www.ti.com/
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>

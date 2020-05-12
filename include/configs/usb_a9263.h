@@ -1,4 +1,3 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * (C) Copyright 2007-2013
  * Stelian Pop <stelian.pop@leadtechdesign.com>
@@ -10,6 +9,8 @@
  *
  * U-Boot image has to be less than 200704 bytes, otherwise at91bootstrap
  * installed on board will not be able to load it properly.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __CONFIG_H

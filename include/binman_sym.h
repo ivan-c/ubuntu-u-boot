@@ -1,4 +1,3 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Symbol access for symbols set up by binman as part of the build.
  *
@@ -6,6 +5,8 @@
  * assembled by binman.
  *
  * Copyright (c) 2017 Google, Inc
+ *
+ * SPDX-License-Identifier:     GPL-2.0+
  */
 
 #ifndef __BINMAN_SYM_H

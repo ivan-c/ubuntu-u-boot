@@ -1,7 +1,8 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * Copyright (C) 2016 Atmel Corporation
  *               Wenyou.Yang <wenyou.yang@atmel.com>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>
@@ -12,6 +13,8 @@
 #include <mach/at91_pmc.h>
 #include <mach/sama5_sfr.h>
 #include "pmc.h"
+
+DECLARE_GLOBAL_DATA_PTR;
 
 /*
  * The purpose of this clock is to generate a 480 MHz signal. A different

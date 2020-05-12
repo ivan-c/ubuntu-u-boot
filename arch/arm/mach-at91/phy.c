@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * (C) Copyright 2007-2008
  * Stelian Pop <stelian@popies.net>
@@ -9,6 +8,8 @@
  * IMKO GmbH <www.imko.de>
  *
  * Copyright (C) 2013 DENX Software Engineering, hs@denx.de
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>

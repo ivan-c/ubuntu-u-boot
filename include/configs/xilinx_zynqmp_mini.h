@@ -1,16 +1,15 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Configuration for Xilinx ZynqMP Flash utility
  *
  * (C) Copyright 2018 Xilinx, Inc.
  * Michal Simek <michal.simek@xilinx.com>
  * Siva Durga Prasad Paladugu <sivadur@xilinx.com>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __CONFIG_ZYNQMP_MINI_H
 #define __CONFIG_ZYNQMP_MINI_H
-
-#define CONFIG_SYS_MEMTEST_SCRATCH     0xfffc0000
 
 #include <configs/xilinx_zynqmp.h>
 
@@ -32,6 +31,7 @@
 /* BOOTP options */
 #undef CONFIG_BOOTP_BOOTFILESIZE
 #undef CONFIG_BOOTP_MAY_FAIL
+#undef CONFIG_CMD_UNZIP
 
 #undef CONFIG_NR_DRAM_BANKS
 

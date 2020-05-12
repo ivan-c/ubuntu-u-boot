@@ -1,6 +1,7 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * Copyright (c) Xilinx, Inc.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <asm/arch/ps7_init_gpl.h>

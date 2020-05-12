@@ -1,8 +1,9 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Copyright 2007,2009 Wind River Systems <www.windriver.com>
  * Copyright 2007 Embedded Specialties, Inc.
  * Copyright 2004, 2007 Freescale Semiconductor.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 /*
@@ -52,6 +53,7 @@
 #define CONFIG_FSL_PCIE_RESET   1	/* need PCIe reset errata */
 #endif
 
+#define CONFIG_TSEC_ENET		/* tsec ethernet support */
 #define CONFIG_ENV_OVERWRITE
 
 #define CONFIG_INTERRUPTS		/* enable pci, srio, ddr interrupts */
@@ -384,6 +386,7 @@
 #define CONFIG_SYS_MALLOC_LEN		(1024 * 1024) /* Reserved for malloc */
 
 /* Serial Port */
+#define CONFIG_CONS_INDEX	1
 #define CONFIG_SYS_NS16550_SERIAL
 #define CONFIG_SYS_NS16550_REG_SIZE	1
 #define CONFIG_SYS_NS16550_CLK		(400000000 / CONFIG_SYS_CLK_DIV)
@@ -519,7 +522,7 @@
 
 #define CONFIG_IPADDR	 192.168.0.55
 
-#define CONFIG_HOSTNAME	 "sbc8548"
+#define CONFIG_HOSTNAME	 sbc8548
 #define CONFIG_ROOTPATH	 "/opt/eldk/ppc_85xx"
 #define CONFIG_BOOTFILE	 "/uImage"
 #define CONFIG_UBOOTPATH /u-boot.bin	/* TFTP server */

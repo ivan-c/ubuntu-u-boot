@@ -1,6 +1,7 @@
-/* SPDX-License-Identifier: GPL-2.0 */
 /*
  * Copyright 2013-2016, NVIDIA CORPORATION.
+ *
+ * SPDX-License-Identifier: GPL-2.0
  */
 
 #ifndef _TEGRA186_COMMON_H_

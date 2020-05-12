@@ -1,9 +1,10 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * (C) Copyright 2009-2014
  * Gerald Kerma <dreagle@doukki.net>
  * Marvell Semiconductor <www.marvell.com>
  * Written-by: Prafulla Wadaskar <prafulla@marvell.com>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef _CONFIG_SHEEVAPLUG_H
@@ -21,9 +22,7 @@
 /*
  * Standard filesystems
  */
-#define CONFIG_BZIP2
-#define CONFIG_MTD_DEVICE		/* needed for mtdparts commands */
-#define CONFIG_MTD_PARTITIONS
+#define CONFIG_SYS_MVFS
 
 /*
  * mv-plug-common.h should be defined after CMD configs since it used them

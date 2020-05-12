@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * board.c
  *
@@ -9,6 +8,8 @@
  * Board functions for TI AM335X based boards
  *
  * Copyright (C) 2011, Texas Instruments, Incorporated - http://www.ti.com/
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>

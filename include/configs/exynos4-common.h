@@ -1,8 +1,9 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Copyright (C) 2014 Samsung Electronics
  *
  * Configuration settings for the SAMSUNG EXYNOS5 board.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __CONFIG_EXYNOS4_COMMON_H

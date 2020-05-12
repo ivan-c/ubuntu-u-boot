@@ -1,6 +1,7 @@
-// SPDX-License-Identifier: GPL-2.0
 /*
  * (C) Copyright 2017 Rockchip Electronics Co., Ltd
+ *
+ * SPDX-License-Identifier:     GPL-2.0
  */
 #include <common.h>
 #include <clk.h>
@@ -743,7 +744,7 @@ static int rk322x_dmc_ofdata_to_platdata(struct udevice *dev)
 		printf("%s: Cannot read rockchip,sdram-params\n", __func__);
 		return -EINVAL;
 	}
-	ret = regmap_init_mem(dev_ofnode(dev), &params->map);
+	ret = regmap_init_mem(dev, &params->map);
 	if (ret)
 		return ret;
 #endif

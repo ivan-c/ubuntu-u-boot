@@ -1,8 +1,9 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * BTRFS filesystem implementation for U-Boot
  *
  * 2017 Marek Behun, CZ.NIC, marek.behun@nic.cz
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include "btrfs.h"
@@ -43,6 +44,16 @@ static int generic_bin_search(void *addr, int item_size, struct btrfs_key *key,
 {
 	int low = 0, high = max, mid, ret;
 	struct btrfs_key *tmp;
+
+	if (0) {
+		int i;
+		printf("\tsearching %llu %i\n", key->objectid, key->type);
+		for (i = 0; i < max; ++i) {
+			tmp = (struct btrfs_key *) ((u8 *) addr + i*item_size);
+			printf("\t\t%llu %i\n", tmp->objectid, tmp->type);
+		}
+		printf("\n");
+	}
 
 	while (low < high) {
 		mid = (low + high) / 2;

@@ -1,6 +1,7 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * Copyright (c) 2013 Google, Inc
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>
@@ -16,6 +17,8 @@
 #include <asm/arch/clock.h>
 #include <asm/arch/periph.h>
 #include <linux/err.h>
+
+DECLARE_GLOBAL_DATA_PTR;
 
 struct rockchip_mmc_plat {
 #if CONFIG_IS_ENABLED(OF_PLATDATA)

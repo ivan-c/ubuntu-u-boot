@@ -1,9 +1,10 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * (C) Copyright 2008-2010
  * Gražvydas Ignotas <notasas@gmail.com>
  *
  * Configuration settings for the OMAP3 Pandora.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __CONFIG_H

@@ -1,6 +1,7 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * Copyright 2014 Freescale Semiconductor, Inc.
+ *
+ * SPDX-License-Identifier:     GPL-2.0+
  */
 
 #include <common.h>
@@ -15,6 +16,8 @@
 #include <asm/immap_85xx.h>
 #endif
 #include "vid.h"
+
+DECLARE_GLOBAL_DATA_PTR;
 
 int __weak i2c_multiplexer_select_vid_channel(u8 channel)
 {

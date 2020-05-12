@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * Originally from Linux v4.9
  * Paul Mackerras	August 1996.
@@ -17,6 +16,8 @@
  *
  * This file follows drivers/of/base.c with functions in the same order as the
  * Linux version.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>

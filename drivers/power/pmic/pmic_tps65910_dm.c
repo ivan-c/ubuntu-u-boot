@@ -1,6 +1,7 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * Copyright (C) EETS GmbH, 2017, Felix Brack <f.brack@eets.ch>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>
@@ -9,6 +10,8 @@
 #include <power/pmic.h>
 #include <power/regulator.h>
 #include <power/tps65910_pmic.h>
+
+DECLARE_GLOBAL_DATA_PTR;
 
 static const struct pmic_child_info pmic_children_info[] = {
 	{ .prefix = "ldo_", .driver = TPS65910_LDO_DRIVER },

@@ -1,5 +1,6 @@
-# SPDX-License-Identifier: GPL-2.0+
 # Copyright (c) 2016, Google Inc.
+#
+# SPDX-License-Identifier:      GPL-2.0+
 #
 # U-Boot Verified Boot Test
 
@@ -12,7 +13,7 @@ import pytest
 
 LOGL_FIRST, LOGL_WARNING, LOGL_INFO = (0, 4, 6)
 
-@pytest.mark.buildconfigspec('cmd_log')
+@pytest.mark.buildconfigspec('log')
 def test_log(u_boot_console):
     """Test that U-Boot logging works correctly."""
     def check_log_entries(lines, mask, max_level=LOGL_INFO):
@@ -98,7 +99,7 @@ def test_log(u_boot_console):
     test8()
     test9()
 
-@pytest.mark.buildconfigspec('cmd_log')
+@pytest.mark.buildconfigspec('log')
 def test_log_format(u_boot_console):
     """Test the 'log format' and 'log rec' commands"""
     def run_with_format(fmt, expected_output):

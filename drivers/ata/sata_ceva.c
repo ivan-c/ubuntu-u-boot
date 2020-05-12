@@ -1,7 +1,8 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * (C) Copyright 2015 - 2016 Xilinx, Inc.
  * Michal Simek <michal.simek@xilinx.com>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 #include <common.h>
 #include <dm.h>
@@ -72,10 +73,6 @@
 #define DRV_NAME	"ahci-ceva"
 #define CEVA_FLAG_BROKEN_GEN2	1
 
-struct ceva_sata_priv {
-	ulong base;
-};
-
 static int ceva_init_sata(ulong mmio)
 {
 	ulong tmp;
@@ -114,20 +111,18 @@ static int ceva_init_sata(ulong mmio)
 	return 0;
 }
 
-static int sata_ceva_bind(struct udevice *dev)
-{
-	struct udevice *scsi_dev;
-
-	return ahci_bind_scsi(dev, &scsi_dev);
-}
-
 static int sata_ceva_probe(struct udevice *dev)
 {
-	struct ceva_sata_priv *priv = dev_get_priv(dev);
+	int ret;
+	struct scsi_platdata *plat = dev_get_uclass_platdata(dev);
 
-	ceva_init_sata(priv->base);
+	ceva_init_sata(plat->base);
 
-	return ahci_probe_scsi(dev, priv->base);
+	ret = ahci_init_one_dm(dev);
+	if (ret)
+		return ret;
+
+	return ahci_start_ports_dm(dev);
 }
 
 static const struct udevice_id sata_ceva_ids[] = {
@@ -137,22 +132,24 @@ static const struct udevice_id sata_ceva_ids[] = {
 
 static int sata_ceva_ofdata_to_platdata(struct udevice *dev)
 {
-	struct ceva_sata_priv *priv = dev_get_priv(dev);
+	struct scsi_platdata *plat = dev_get_uclass_platdata(dev);
 
-	priv->base = devfdt_get_addr(dev);
-	if (priv->base == FDT_ADDR_T_NONE)
+	plat->base = devfdt_get_addr(dev);
+	if (plat->base == FDT_ADDR_T_NONE)
 		return -EINVAL;
+
+	/* Hardcode number for ceva sata controller */
+	plat->max_lun = 1; /* Actually two but untested */
+	plat->max_id = 2;
 
 	return 0;
 }
 
 U_BOOT_DRIVER(ceva_host_blk) = {
 	.name = "ceva_sata",
-	.id = UCLASS_AHCI,
+	.id = UCLASS_SCSI,
 	.of_match = sata_ceva_ids,
-	.bind = sata_ceva_bind,
 	.ops = &scsi_ops,
-	.priv_auto_alloc_size = sizeof(struct ceva_sata_priv),
 	.probe = sata_ceva_probe,
 	.ofdata_to_platdata = sata_ceva_ofdata_to_platdata,
 };

@@ -1,8 +1,9 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * Copyright 2017 NXP
  *
  * Peng Fan <peng.fan@nxp.com>
+ *
+ * SPDX-License-Identifier:     GPL-2.0+
  */
 
 #include <common.h>
@@ -10,6 +11,8 @@
 #include <asm/arch/imx-regs.h>
 #include <asm/io.h>
 #include <errno.h>
+
+DECLARE_GLOBAL_DATA_PTR;
 
 static struct ccm_reg *ccm_reg = (struct ccm_reg *)CCM_BASE_ADDR;
 

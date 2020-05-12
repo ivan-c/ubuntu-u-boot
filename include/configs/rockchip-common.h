@@ -1,13 +1,12 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * (C) Copyright 2016 Rockchip Electronics Co., Ltd
+ *
+ * SPDX-License-Identifier:     GPL-2.0+
  */
 
 #ifndef _ROCKCHIP_COMMON_H_
 #define _ROCKCHIP_COMMON_H_
 #include <linux/sizes.h>
-
-#define CONFIG_SYS_NS16550_MEM32
 
 #ifndef CONFIG_SPL_BUILD
 
@@ -58,5 +57,7 @@
 	"name=rootfs,size=-,uuid="ROOT_UUID
 
 #endif
+
+#define CONFIG_DISPLAY_BOARDINFO_LATE
 
 #endif /* _ROCKCHIP_COMMON_H_ */

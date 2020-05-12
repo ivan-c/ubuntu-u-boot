@@ -1,7 +1,8 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * (C) Copyright 2003
  * Wolfgang Denk, DENX Software Engineering, wd@denx.de.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 /*
@@ -43,6 +44,7 @@
 #define CONFIG_SYS_NS16550_REG_SIZE	1
 #define CONFIG_SYS_NS16550_CLK		115200
 #define CONFIG_SYS_NS16550_COM1		0xb40003f8
+#define CONFIG_CONS_INDEX		1
 
 #ifdef CONFIG_SYS_BIG_ENDIAN
 #define CONFIG_IDE_SWAP_IO

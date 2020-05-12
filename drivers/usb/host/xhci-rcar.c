@@ -1,8 +1,9 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * Copyright (C) 2017 Marek Vasut <marek.vasut@gmail.com>
  *
  * Renesas RCar USB HOST xHCI Controller
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>
@@ -117,15 +118,12 @@ err_clk:
 
 static int xhci_rcar_deregister(struct udevice *dev)
 {
-	int ret;
 	struct rcar_xhci_platdata *plat = dev_get_platdata(dev);
-
-	ret = xhci_deregister(dev);
 
 	clk_disable(&plat->clk);
 	clk_free(&plat->clk);
 
-	return ret;
+	return xhci_deregister(dev);
 }
 
 static int xhci_rcar_ofdata_to_platdata(struct udevice *dev)

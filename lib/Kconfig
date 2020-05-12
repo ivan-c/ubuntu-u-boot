@@ -27,51 +27,6 @@ config HAVE_PRIVATE_LIBGCC
 config LIB_UUID
 	bool
 
-config PRINTF
-	bool
-	default y
-
-config SPL_PRINTF
-	bool
-	select SPL_SPRINTF
-	select SPL_STRTO if !USE_TINY_PRINTF
-
-config TPL_PRINTF
-	bool
-	select TPL_SPRINTF
-	select TPL_STRTO if !USE_TINY_PRINTF
-
-config SPRINTF
-	bool
-	default y
-
-config SPL_SPRINTF
-	bool
-
-config TPL_SPRINTF
-	bool
-
-config STRTO
-	bool
-	default y
-
-config SPL_STRTO
-	bool
-
-config TPL_STRTO
-	bool
-
-config IMAGE_SPARSE
-	bool
-
-config IMAGE_SPARSE_FILLBUF_SIZE
-	hex "Android sparse image CHUNK_TYPE_FILL buffer size"
-	default 0x80000
-	depends on IMAGE_SPARSE
-	help
-	  Set the size of the fill buffer used when processing CHUNK_TYPE_FILL
-	  chunks.
-
 config USE_PRIVATE_LIBGCC
 	bool "Use private libgcc"
 	depends on HAVE_PRIVATE_LIBGCC
@@ -111,6 +66,7 @@ config PANIC_HANG
 
 config REGEX
 	bool "Enable regular expression support"
+	default n if ARCH_SUNXI
 	default y if NET
 	help
 	  If this variable is defined, U-Boot is linked against the
@@ -297,8 +253,6 @@ config OF_LIBFDT
 
 config OF_LIBFDT_OVERLAY
 	bool "Enable the FDT library overlay support"
-	depends on OF_LIBFDT
-	default y if ARCH_OMAP2PLUS || ARCH_KEYSTONE
 	help
 	  This enables the FDT library (libfdt) overlay support.
 
@@ -356,6 +310,5 @@ endmenu
 
 source lib/efi/Kconfig
 source lib/efi_loader/Kconfig
-source lib/optee/Kconfig
 
 endmenu

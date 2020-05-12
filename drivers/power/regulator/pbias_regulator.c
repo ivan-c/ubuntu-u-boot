@@ -1,7 +1,8 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * (C) Copyright 2016 Texas Instruments Incorporated, <www.ti.com>
  * Jean-Jacques Hiblot <jjhiblot@ti.com>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>
@@ -14,6 +15,8 @@
 #include <linux/bitops.h>
 #include <linux/ioport.h>
 #include <dm/read.h>
+
+DECLARE_GLOBAL_DATA_PTR;
 
 struct pbias_reg_info {
 	u32 enable;
@@ -222,6 +225,9 @@ static int pbias_regulator_set_value(struct udevice *dev, int uV)
 	int rc;
 	u32 reg;
 
+	debug("Setting %s voltage to %s\n", p->name,
+	      (reg & p->vmode) ? "3.0v" : "1.8v");
+
 	rc = pmic_read(dev->parent, 0, (uint8_t *)&reg, sizeof(reg));
 	if (rc)
 		return rc;
@@ -232,9 +238,6 @@ static int pbias_regulator_set_value(struct udevice *dev, int uV)
 		reg &= ~p->vmode;
 	else
 		return -EINVAL;
-
-	debug("Setting %s voltage to %s\n", p->name,
-	      (reg & p->vmode) ? "3.0v" : "1.8v");
 
 	return pmic_write(dev->parent, 0, (uint8_t *)&reg, sizeof(reg));
 }

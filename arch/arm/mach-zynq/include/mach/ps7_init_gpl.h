@@ -1,7 +1,8 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * (c) Copyright 2010-2014 Xilinx, Inc. All rights reserved.
  * (c) Copyright 2016 Topic Embedded Products.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef _ASM_ARCH_PS7_INIT_GPL_H

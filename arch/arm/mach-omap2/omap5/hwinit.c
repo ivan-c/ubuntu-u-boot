@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  *
  * Functions for omap5 based boards.
@@ -10,6 +9,8 @@
  *	Aneesh V	<aneesh@ti.com>
  *	Steve Sakoman	<steve@sakoman.com>
  *	Sricharan	<r.sricharan@ti.com>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 #include <common.h>
 #include <palmas.h>
@@ -22,6 +23,8 @@
 #include <asm/arch/gpio.h>
 #include <asm/emif.h>
 #include <asm/omap_common.h>
+
+DECLARE_GLOBAL_DATA_PTR;
 
 u32 *const omap_si_rev = (u32 *)OMAP_SRAM_SCRATCH_OMAP_REV;
 

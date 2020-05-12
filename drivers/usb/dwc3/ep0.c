@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0
 /**
  * ep0.c - DesignWare USB3 DRD Controller Endpoint 0 Handling
  *
@@ -11,6 +10,8 @@
  * to uboot.
  *
  * commit c00552ebaf : Merge 3.18-rc7 into usb-next
+ *
+ * SPDX-License-Identifier:     GPL-2.0
  */
 
 #include <linux/kernel.h>

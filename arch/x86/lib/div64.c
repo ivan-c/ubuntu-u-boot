@@ -1,9 +1,10 @@
-// SPDX-License-Identifier: BSD-3-Clause
 /*
  * This file is copied from the coreboot repository as part of
  * the libpayload project:
  *
  * Copyright 2014 Google Inc.
+ *
+ * SPDX-License-Identifier:     BSD-3-Clause
  */
 
 #include <common.h>

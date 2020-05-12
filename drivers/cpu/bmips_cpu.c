@@ -1,10 +1,11 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * Copyright (C) 2017 Álvaro Fernández Rojas <noltari@gmail.com>
  *
  * Derived from linux/arch/mips/bcm63xx/cpu.c:
  *	Copyright (C) 2008 Maxime Bizon <mbizon@freebox.fr>
  *	Copyright (C) 2009 Florian Fainelli <florian@openwrt.org>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>
@@ -12,6 +13,8 @@
 #include <dm.h>
 #include <errno.h>
 #include <asm/io.h>
+
+DECLARE_GLOBAL_DATA_PTR;
 
 #define REV_CHIPID_SHIFT		16
 #define REV_CHIPID_MASK			(0xffff << REV_CHIPID_SHIFT)
@@ -46,10 +49,6 @@
 #define DMIPSPLLCFG_6358_N1_MASK	(0x3f << DMIPSPLLCFG_6358_N1_SHIFT)
 #define DMIPSPLLCFG_6358_N2_SHIFT	29
 #define DMIPSPLLCFG_6358_N2_MASK	(0x7 << DMIPSPLLCFG_6358_N2_SHIFT)
-
-#define REG_BCM6362_MISC_STRAPBUS	0x1814
-#define STRAPBUS_6362_FCVO_SHIFT	1
-#define STRAPBUS_6362_FCVO_MASK		(0x1f << STRAPBUS_6362_FCVO_SHIFT)
 
 #define REG_BCM6368_DDR_DMIPSPLLCFG	0x12a0
 #define DMIPSPLLCFG_6368_P1_SHIFT	0
@@ -195,44 +194,6 @@ static ulong bcm6358_get_cpu_freq(struct bmips_cpu_priv *priv)
 	return (16 * 1000000 * n1 * n2) / m1;
 }
 
-static ulong bcm6362_get_cpu_freq(struct bmips_cpu_priv *priv)
-{
-	unsigned int mips_pll_fcvo;
-
-	mips_pll_fcvo = readl_be(priv->regs + REG_BCM6362_MISC_STRAPBUS);
-	mips_pll_fcvo = (mips_pll_fcvo & STRAPBUS_6362_FCVO_MASK)
-			>> STRAPBUS_6362_FCVO_SHIFT;
-
-	switch (mips_pll_fcvo) {
-	case 0x03:
-	case 0x0b:
-	case 0x13:
-	case 0x1b:
-		return 240000000;
-	case 0x04:
-	case 0x0c:
-	case 0x14:
-	case 0x1c:
-		return 160000000;
-	case 0x05:
-	case 0x0e:
-	case 0x16:
-	case 0x1e:
-	case 0x1f:
-		return 400000000;
-	case 0x06:
-		return 440000000;
-	case 0x07:
-	case 0x17:
-		return 384000000;
-	case 0x15:
-	case 0x1d:
-		return 200000000;
-	default:
-		return 320000000;
-	}
-}
-
 static ulong bcm6368_get_cpu_freq(struct bmips_cpu_priv *priv)
 {
 	unsigned int tmp, p1, p2, ndiv, m1;
@@ -328,12 +289,6 @@ static const struct bmips_cpu_hw bmips_cpu_bcm6358 = {
 	.get_cpu_count = bcm6358_get_cpu_count,
 };
 
-static const struct bmips_cpu_hw bmips_cpu_bcm6362 = {
-	.get_cpu_desc = bmips_short_cpu_desc,
-	.get_cpu_freq = bcm6362_get_cpu_freq,
-	.get_cpu_count = bcm6358_get_cpu_count,
-};
-
 static const struct bmips_cpu_hw bmips_cpu_bcm6368 = {
 	.get_cpu_desc = bmips_short_cpu_desc,
 	.get_cpu_freq = bcm6368_get_cpu_freq,
@@ -395,7 +350,8 @@ int bmips_cpu_bind(struct udevice *dev)
 {
 	struct cpu_platdata *plat = dev_get_parent_platdata(dev);
 
-	plat->cpu_id = dev_read_u32_default(dev, "reg", -1);
+	plat->cpu_id = fdtdec_get_int(gd->fdt_blob, dev_of_offset(dev),
+		"reg", -1);
 	plat->device_id = read_c0_prid();
 
 	return 0;
@@ -406,11 +362,14 @@ int bmips_cpu_probe(struct udevice *dev)
 	struct bmips_cpu_priv *priv = dev_get_priv(dev);
 	const struct bmips_cpu_hw *hw =
 		(const struct bmips_cpu_hw *)dev_get_driver_data(dev);
+	fdt_addr_t addr;
+	fdt_size_t size;
 
-	priv->regs = dev_remap_addr(dev);
-	if (!priv->regs)
+	addr = devfdt_get_addr_size_index(dev_get_parent(dev), 0, &size);
+	if (addr == FDT_ADDR_T_NONE)
 		return -EINVAL;
 
+	priv->regs = ioremap(addr, size);
 	priv->hw = hw;
 
 	return 0;
@@ -435,9 +394,6 @@ static const struct udevice_id bmips_cpu_ids[] = {
 	}, {
 		.compatible = "brcm,bcm6358-cpu",
 		.data = (ulong)&bmips_cpu_bcm6358,
-	}, {
-		.compatible = "brcm,bcm6362-cpu",
-		.data = (ulong)&bmips_cpu_bcm6362,
 	}, {
 		.compatible = "brcm,bcm6368-cpu",
 		.data = (ulong)&bmips_cpu_bcm6368,

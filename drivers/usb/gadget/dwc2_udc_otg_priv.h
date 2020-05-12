@@ -1,7 +1,8 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Designware DWC2 on-chip full/high speed USB device controllers
  * Copyright (C) 2005 for Samsung Electronics
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __DWC2_UDC_OTG_PRIV__

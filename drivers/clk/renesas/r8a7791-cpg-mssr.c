@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * Renesas R8A7791 CPG MSSR driver
  *
@@ -9,6 +8,8 @@
  * Copyright (C) 2015-2017 Glider bvba
  * Based on clk-rcar-gen2.c
  * Copyright (C) 2013 Ideas On Board SPRL
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>

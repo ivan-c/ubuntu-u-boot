@@ -1,6 +1,7 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * (C) Copyright 2015 Google, Inc
+ *
+ * SPDX-License-Identifier:     GPL-2.0+
  */
 
 #include <clk.h>
@@ -129,6 +130,8 @@ void board_init_f(ulong dummy)
 		debug("spl_early_init() failed: %d\n", ret);
 		hang();
 	}
+
+	rockchip_timer_init();
 
 	ret = rockchip_get_clk(&dev);
 	if (ret) {

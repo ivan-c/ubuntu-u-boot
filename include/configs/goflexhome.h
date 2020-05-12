@@ -1,4 +1,3 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Copyright (C) 2013 Suriyan Ramasami <suriyan.r@gmail.com>
  *
@@ -9,6 +8,8 @@
  * Prafulla Wadaskar <prafulla@marvell.com>
  * (C) Copyright 2009
  * Marvell Semiconductor <www.marvell.com>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef _CONFIG_GOFLEXHOME_H
@@ -41,8 +42,7 @@
  * Commands configuration
  */
 
-#define CONFIG_MTD_DEVICE		/* needed for mtdparts commands */
-#define CONFIG_MTD_PARTITIONS
+#define CONFIG_SYS_MVFS         /* Picks up Filesystem from mv-common.h */
 
 /*
  * mv-common.h should be defined after CMD configs since it used them

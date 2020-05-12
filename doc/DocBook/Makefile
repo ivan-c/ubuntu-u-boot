@@ -1,4 +1,3 @@
-# SPDX-License-Identifier: GPL-2.0
 ###
 # This makefile is used to generate the kernel documentation,
 # primarily based on in-line comments in various source files.
@@ -6,8 +5,11 @@
 # to document the SRC - and how to read it.
 # To add a new book the only step required is to add the book to the
 # list of DOCBOOKS.
+#
+# SPDX-License-Identifier:	GPL-2.0
+#
 
-DOCBOOKS := efi.xml linker_lists.xml stdio.xml
+DOCBOOKS := linker_lists.xml stdio.xml
 
 ###
 # The build process is as follows (targets):

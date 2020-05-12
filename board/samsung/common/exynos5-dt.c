@@ -1,6 +1,7 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * Copyright (C) 2012 Samsung Electronics
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>
@@ -92,9 +93,6 @@ int exynos_power_init(void)
 	struct udevice *dev;
 	int ret;
 
-#ifdef CONFIG_PMIC_S2MPS11
-	ret = pmic_get("s2mps11_pmic", &dev);
-#else
 	ret = pmic_get("max77686", &dev);
 	if (!ret) {
 		/* TODO(sjg@chromium.org): Move into the clock/pmic API */
@@ -114,7 +112,6 @@ int exynos_power_init(void)
 			s5m8767_enable_32khz_cp(dev);
 #endif
 	}
-#endif	/* CONFIG_PMIC_S2MPS11 */
 	if (ret == -ENODEV)
 		return 0;
 

@@ -13,7 +13,6 @@
 *.su
 *.mod.c
 *.i
-*.lex.c
 *.lst
 *.order
 *.elf
@@ -21,7 +20,6 @@
 *.bin
 *.patch
 *.cfgtmp
-*.tab.[ch]
 
 # host programs on Cygwin
 *.exe
@@ -48,6 +46,7 @@ fit-dtb.blob
 #
 # Generated files
 #
+/LOG
 /spl/
 /tpl/
 /defconfig
@@ -86,7 +85,3 @@ GTAGS
 *.orig
 *~
 \#*#
-
-# gcc code coverage files
-*.gcda
-*.gcno

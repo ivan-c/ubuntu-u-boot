@@ -1,6 +1,7 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * (C) Copyright 2011 Freescale Semiconductor, Inc.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __CONFIG_H
@@ -48,6 +49,7 @@
 /* Serial Info */
 #define CONFIG_MXC_UART
 #define CONFIG_MXC_UART_BASE	UART1_BASE
+#define CONFIG_CONS_INDEX	1	/* use UART0 for console */
 
 /* No NOR flash present */
 #define CONFIG_ENV_OFFSET      (6 * 64 * 1024)
@@ -66,6 +68,7 @@
 #define CONFIG_ENV_OVERWRITE
 
 /* ESDHC driver */
+#define CONFIG_FSL_ESDHC
 #define CONFIG_SYS_FSL_ESDHC_ADDR	IMX_MMC_SDHC1_BASE
 #define CONFIG_SYS_FSL_ESDHC_NUM	1
 

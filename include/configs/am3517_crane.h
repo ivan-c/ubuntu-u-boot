@@ -1,4 +1,3 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * am3517_crane.h - Default configuration for AM3517 CraneBoard.
  *
@@ -7,6 +6,8 @@
  * Based on include/configs/am3517evm.h
  *
  * Copyright (C) 2011 Mistral Solutions pvt Ltd
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __CONFIG_H
@@ -57,6 +58,7 @@
 /*
  * select serial console configuration
  */
+#define CONFIG_CONS_INDEX		3
 #define CONFIG_SYS_NS16550_COM3		OMAP34XX_UART3
 #define CONFIG_SERIAL3			3	/* UART3 on CRANEBOARD */
 

@@ -1,6 +1,7 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Copyright (C) 2017 NXP
+ *
+ * SPDX-License-Identifier:     GPL-2.0+
  */
 
 #ifndef __ASM_ARCH_MX8MQ_PINS_H__

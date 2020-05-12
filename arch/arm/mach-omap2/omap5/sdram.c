@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * Timing and Organization details of the ddr device parts used in OMAP5
  * EVM
@@ -8,6 +7,8 @@
  *
  * Aneesh V <aneesh@ti.com>
  * Sricharan R <r.sricharan@ti.com>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <asm/emif.h>

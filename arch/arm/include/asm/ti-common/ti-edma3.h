@@ -1,9 +1,10 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Enhanced Direct Memory Access (EDMA3) Controller
  *
  * (C) Copyright 2014
  *     Texas Instruments Incorporated, <www.ti.com>
+ *
+ * SPDX-License-Identifier:     GPL-2.0+
  */
 
 #ifndef _EDMA3_H_

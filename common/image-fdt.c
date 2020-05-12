@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * Copyright (c) 2013, Google Inc.
  *
@@ -6,6 +5,8 @@
  *
  * (C) Copyright 2000-2006
  * Wolfgang Denk, DENX Software Engineering, wd@denx.de.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>
@@ -19,9 +20,6 @@
 #ifndef CONFIG_SYS_FDT_PAD
 #define CONFIG_SYS_FDT_PAD 0x3000
 #endif
-
-/* adding a ramdisk needs 0x44 bytes in version 2008.10 */
-#define FDT_RAMDISK_OVERHEAD	0x80
 
 DECLARE_GLOBAL_DATA_PTR;
 

@@ -1,4 +1,3 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  *	Andesboot - Startup Code for Whitiger core
  *
@@ -6,6 +5,8 @@
  *	Copyright (C) 2006	Shawn Lin <nobuhiro@andestech.com>
  *	Copyright (C) 2011	Macpaul Lin <macpaul@andestech.com>
  *				Greentime Hu <greentime@andestech.com>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 .pic

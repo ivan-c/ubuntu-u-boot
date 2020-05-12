@@ -1,9 +1,10 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * (C) Copyright 2015 Google, Inc
  *
  * (C) Copyright 2008-2014 Rockchip Electronics
  * Peter, Software Engineering, <superpeter.cai@gmail.com>.
+ *
+ * SPDX-License-Identifier:     GPL-2.0+
  */
 
 #include <common.h>
@@ -17,6 +18,8 @@
 #include <asm/arch/periph.h>
 #include <dm/pinctrl.h>
 #include <linux/sizes.h>
+
+DECLARE_GLOBAL_DATA_PTR;
 
 /* i2c timerout */
 #define I2C_TIMEOUT_MS		100

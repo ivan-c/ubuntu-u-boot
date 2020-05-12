@@ -1,7 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0+
 #
 # Copyright (c) 2009 Wind River Systems, Inc.
 # Tom Rix <Tom.Rix at windriver.com>
+#
+# SPDX-License-Identifier:	GPL-2.0+
+#
 
 obj-$(CONFIG_AXP152_POWER)	+= axp152.o
 obj-$(CONFIG_AXP209_POWER)	+= axp209.o

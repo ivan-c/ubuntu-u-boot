@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * Copyright (C) 2011 OMICRON electronics GmbH
  *
@@ -6,6 +5,8 @@
  *
  * Copyright (C) 2011
  * Heiko Schocher, DENX Software Engineering, hs@denx.de.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>

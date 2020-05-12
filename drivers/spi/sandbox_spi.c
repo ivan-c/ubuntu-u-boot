@@ -20,6 +20,8 @@
 #include <asm/state.h>
 #include <dm/device-internal.h>
 
+DECLARE_GLOBAL_DATA_PTR;
+
 #ifndef CONFIG_SPI_IDLE_VAL
 # define CONFIG_SPI_IDLE_VAL 0xFF
 #endif

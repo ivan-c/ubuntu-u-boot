@@ -1,8 +1,9 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * DHCOM DH-iMX6 PDK board support
  *
  * Copyright (C) 2017 Marek Vasut <marex@denx.de>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>
@@ -18,7 +19,6 @@
 #include <asm/mach-imx/iomux-v3.h>
 #include <asm/mach-imx/mxc_i2c.h>
 #include <asm/mach-imx/sata.h>
-#include <environment.h>
 #include <errno.h>
 #include <fsl_esdhc.h>
 #include <fuse.h>

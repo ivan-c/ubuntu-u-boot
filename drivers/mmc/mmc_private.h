@@ -1,9 +1,10 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Copyright 2008,2010 Freescale Semiconductor, Inc
  * Andy Fleming
  *
  * Based (loosely) on the Linux code
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef _MMC_PRIVATE_H_

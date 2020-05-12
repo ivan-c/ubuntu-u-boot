@@ -1,6 +1,7 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * (C) Copyright 2008 Stefan Roese <sr@denx.de>, DENX Software Engineering
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 /*
@@ -51,6 +52,7 @@
 #define CONFIG_SYS_NS16550_SERIAL
 #define CONFIG_SYS_NS16550_REG_SIZE	-4
 #define CONFIG_SYS_NS16550_COM1		UART_1_BASE
+#define CONFIG_CONS_INDEX		1
 #define CONFIG_SYS_NS16550_CLK		921600
 
 /*

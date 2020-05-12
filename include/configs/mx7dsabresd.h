@@ -1,8 +1,9 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Copyright (C) 2015 Freescale Semiconductor, Inc.
  *
  * Configuration settings for the Freescale i.MX7D SABRESD board.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __MX7D_SABRESD_CONFIG_H

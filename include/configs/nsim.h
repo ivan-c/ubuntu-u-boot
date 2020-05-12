@@ -1,6 +1,7 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Copyright (C) 2013-2016 Synopsys, Inc. All rights reserved.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef _CONFIG_NSIM_H_
@@ -23,6 +24,16 @@
 #define CONFIG_SYS_MALLOC_LEN		SZ_2M
 #define CONFIG_SYS_BOOTM_LEN		SZ_32M
 #define CONFIG_SYS_LOAD_ADDR		0x82000000
+
+/*
+ * UART configuration
+ *
+ */
+#define CONFIG_ARC_SERIAL
+
+/*
+ * Command line configuration
+ */
 
 /*
  * Environment settings

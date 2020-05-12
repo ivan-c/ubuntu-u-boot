@@ -1,9 +1,10 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 
 /*
  * Copyright (C) 2012 Samsung Electronics
  *
  * Configuration settings for the SAMSUNG EXYNOS5250 board.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __CONFIG_5250_H

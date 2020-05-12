@@ -1,9 +1,10 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * Atmel DataFlash probing
  *
  * Copyright (C) 2004-2009, 2015 Freescale Semiconductor, Inc.
  * Haikun Wang (haikun.wang@freescale.com)
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>

@@ -1,6 +1,7 @@
-// SPDX-License-Identifier: GPL-2.0
 /*
  * (C) Copyright 2017 Rockchip Electronics Co., Ltd
+ *
+ * SPDX-License-Identifier:	GPL-2.0
  */
 
 #include <common.h>
@@ -15,6 +16,8 @@
 #include <dm/lists.h>
 #include <dt-bindings/clock/rk3228-cru.h>
 #include <linux/log2.h>
+
+DECLARE_GLOBAL_DATA_PTR;
 
 enum {
 	VCO_MAX_HZ	= 3200U * 1000000,
@@ -472,7 +475,7 @@ static int rk322x_clk_ofdata_to_platdata(struct udevice *dev)
 {
 	struct rk322x_clk_priv *priv = dev_get_priv(dev);
 
-	priv->cru = dev_read_addr_ptr(dev);
+	priv->cru = (struct rk322x_cru *)devfdt_get_addr(dev);
 
 	return 0;
 }

@@ -1,8 +1,10 @@
-# SPDX-License-Identifier: GPL-2.0+
 #
 # Xilinx ZYNQ U-Boot
 #
 # (C) Copyright 2013 Xilinx, Inc.
+#
+# SPDX-License-Identifier:	GPL-2.0+
+#
 
 1. About this
 

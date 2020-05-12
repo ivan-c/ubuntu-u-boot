@@ -1,4 +1,3 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * (C) Copyright 2008 Magnus Lilja <lilja.magnus@gmail.com>
  *
@@ -8,6 +7,8 @@
  * Kshitij Gupta <kshitij@ti.com>
  *
  * Configuration settings for the Freescale i.MX31 PDK board.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __CONFIG_H
@@ -16,6 +17,8 @@
 #include <asm/arch/imx-regs.h>
 
 /* High Level Configuration Options */
+#define CONFIG_MX31			/* This is a mx31 */
+
 #define CONFIG_CMDLINE_TAG			/* enable passing of ATAGs */
 #define CONFIG_SETUP_MEMORY_TAGS
 #define CONFIG_INITRD_TAG
@@ -60,6 +63,7 @@
 
 /* allow to overwrite serial and ethaddr */
 #define CONFIG_ENV_OVERWRITE
+#define CONFIG_CONS_INDEX		1
 
 #define	CONFIG_EXTRA_ENV_SETTINGS					\
 	"bootargs_base=setenv bootargs console=ttymxc0,115200\0"	\

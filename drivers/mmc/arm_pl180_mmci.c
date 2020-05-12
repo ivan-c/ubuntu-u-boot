@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * ARM PrimeCell MultiMedia Card Interface - PL180
  *
@@ -7,6 +6,8 @@
  * Author: Ulf Hansson <ulf.hansson@stericsson.com>
  * Author: Martin Lundholm <martin.xa.lundholm@stericsson.com>
  * Ported to drivers/mmc/ by: Matt Waddel <matt.waddel@linaro.org>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 /* #define DEBUG */
@@ -24,6 +25,8 @@
 
 #ifdef CONFIG_DM_MMC
 #include <dm.h>
+DECLARE_GLOBAL_DATA_PTR;
+
 #define MMC_CLOCK_MAX	48000000
 #define MMC_CLOCK_MIN	400000
 

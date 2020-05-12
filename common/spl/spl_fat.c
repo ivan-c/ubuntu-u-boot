@@ -1,9 +1,10 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * (C) Copyright 2014
  * Texas Instruments, <www.ti.com>
  *
  * Dan Murphy <dmurphy@ti.com>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  *
  * FAT Image Functions copied from spl_mmc.c
  */

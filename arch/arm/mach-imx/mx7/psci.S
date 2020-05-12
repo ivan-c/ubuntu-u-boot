@@ -1,7 +1,8 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Copyright (C) 2015-2016 Freescale Semiconductor, Inc.
  * Copyright 2017 NXP
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <config.h>
@@ -23,8 +24,7 @@ psci_cpu_on:
 	mov	r5, r1
 	mov	r0, r1
 	mov	r1, r2
-	mov	r2, r3
-	bl	psci_save
+	bl	psci_save_target_pc
 
 	mov	r0, r4
 	mov	r1, r5

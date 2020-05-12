@@ -28,8 +28,6 @@ source "drivers/dfu/Kconfig"
 
 source "drivers/dma/Kconfig"
 
-source "drivers/fastboot/Kconfig"
-
 source "drivers/firmware/Kconfig"
 
 source "drivers/fpga/Kconfig"
@@ -61,8 +59,6 @@ source "drivers/pci/Kconfig"
 source "drivers/pcmcia/Kconfig"
 
 source "drivers/phy/Kconfig"
-
-source "drivers/phy/allwinner/Kconfig"
 
 source "drivers/phy/marvell/Kconfig"
 

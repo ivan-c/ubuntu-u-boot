@@ -1,9 +1,10 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * g_dnl.c -- USB Downloader Gadget
  *
  * Copyright (C) 2012 Samsung Electronics
  * Lukasz Majewski  <l.majewski@samsung.com>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>

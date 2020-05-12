@@ -1,8 +1,9 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Copyright 2014 Freescale Semiconductor, Inc.
  *
  * Configuration settings for the Freescale i.MX6SX Sabresd board.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __CONFIG_H
@@ -42,6 +43,7 @@
 #define UPDATE_M4_ENV ""
 #endif
 
+#define CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	UPDATE_M4_ENV \
 	"script=boot.scr\0" \

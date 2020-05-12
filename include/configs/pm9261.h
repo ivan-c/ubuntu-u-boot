@@ -1,4 +1,3 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * (C) Copyright 2007-2008
  * Stelian Pop <stelian@popies.net>
@@ -6,6 +5,8 @@
  * Ilko Iliev <www.ronetix.at>
  *
  * Configuation settings for the RONETIX PM9261 board.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __CONFIG_H

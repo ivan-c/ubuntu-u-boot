@@ -1,8 +1,9 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * efi_selftest_events
  *
  * Copyright (c) 2017 Heinrich Schuchardt <xypron.glpk@gmx.de>
+ *
+ * SPDX-License-Identifier:     GPL-2.0+
  *
  * This unit test uses timer events to check the handling of
  * task priority levels.

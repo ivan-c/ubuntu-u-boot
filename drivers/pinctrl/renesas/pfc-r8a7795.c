@@ -1,8 +1,9 @@
-// SPDX-License-Identifier: GPL-2.0
 /*
  * R8A7795 ES2.0+ processor support - PFC hardware block.
  *
  * Copyright (C) 2015-2016 Renesas Electronics Corporation
+ *
+ * SPDX-License-Identifier:	GPL-2.0
  */
 
 #include <common.h>

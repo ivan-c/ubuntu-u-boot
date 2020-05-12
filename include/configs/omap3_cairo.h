@@ -1,4 +1,3 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Configuration settings for the QUIPOS Cairo board.
  *
@@ -14,6 +13,8 @@
  *	Syed Mohammed Khasim <khasim@ti.com>
  *
  * Also derived from include/configs/omap3_beagle.h
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __OMAP3_CAIRO_CONFIG_H
@@ -202,6 +203,8 @@
  * are needed and peripheral clocks for UART2 must be enabled in
  * function per_clocks_enable().
  */
+#undef CONFIG_CONS_INDEX
+#define CONFIG_CONS_INDEX		2
 #ifdef CONFIG_SPL_BUILD
 #undef CONFIG_SYS_NS16550_COM3
 #define CONFIG_SYS_NS16550_COM2		OMAP34XX_UART2

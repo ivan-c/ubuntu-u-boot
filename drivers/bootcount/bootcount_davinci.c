@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * (C) Copyright 2011
  * Heiko Schocher, DENX Software Engineering, hs@denx.de.
@@ -6,6 +5,8 @@
  * A bootcount driver for the RTC IP block found on many TI platforms.
  * This requires the RTC clocks, etc, to be enabled prior to use and
  * not all boards with this IP block on it will have the RTC in use.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <bootcount.h>

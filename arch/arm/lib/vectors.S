@@ -1,4 +1,3 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  *  vectors - Generic ARM exception table code
  *
@@ -10,6 +9,8 @@
  *  Copyright (c) 2002	Alex Züpke <azu@sysgo.de>
  *  Copyright (c) 2002	Gary Jennejohn <garyj@denx.de>
  *  Copyright (c) 2002	Kyle Harris <kharris@nexus-tech.net>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <config.h>

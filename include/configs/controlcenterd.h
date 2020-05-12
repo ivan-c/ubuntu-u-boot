@@ -155,6 +155,7 @@
 /*
  * Serial Port
  */
+#define CONFIG_CONS_INDEX		2
 #define CONFIG_SYS_NS16550_SERIAL
 #define CONFIG_SYS_NS16550_REG_SIZE	1
 #define CONFIG_SYS_NS16550_CLK		get_bus_freq(0)
@@ -198,6 +199,7 @@
 /*
  * MMC
  */
+#define CONFIG_FSL_ESDHC
 #define CONFIG_SYS_FSL_ESDHC_ADDR	CONFIG_SYS_MPC85xx_ESDHC_ADDR
 
 #ifndef CONFIG_TRAILBLAZER
@@ -254,6 +256,7 @@
 /*
  * Ethernet
  */
+#define CONFIG_TSEC_ENET
 
 #define CONFIG_TSECV2
 
@@ -315,7 +318,15 @@
 /*
  * Board initialisation callbacks
  */
+#define CONFIG_BOARD_EARLY_INIT_R
 #define CONFIG_MISC_INIT_R
+#define CONFIG_LAST_STAGE_INIT
+
+#else /* CONFIG_TRAILBLAZER */
+
+#define CONFIG_BOARD_EARLY_INIT_R
+#define CONFIG_LAST_STAGE_INIT
+
 #endif /* CONFIG_TRAILBLAZER */
 
 /*
@@ -343,7 +354,7 @@
 
 #else
 
-#define CONFIG_HOSTNAME		"controlcenterd"
+#define CONFIG_HOSTNAME		controlcenterd
 #define CONFIG_ROOTPATH		"/opt/nfsroot"
 #define CONFIG_BOOTFILE		"uImage"
 #define CONFIG_UBOOTPATH	u-boot.bin	/* U-Boot image on TFTP */

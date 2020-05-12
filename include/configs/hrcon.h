@@ -1,8 +1,9 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * (C) Copyright 2014
  * Dirk Eibach,  Guntermann & Drunck GmbH, dirk.eibach@gdsys.cc
  *
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __CONFIG_H
@@ -17,6 +18,10 @@
 #define CONFIG_MPC8308		1 /* MPC8308 CPU specific */
 #define CONFIG_HRCON		1 /* HRCON board specific */
 
+#define CONFIG_BOARD_EARLY_INIT_R
+#define CONFIG_LAST_STAGE_INIT
+
+#define CONFIG_FSL_ESDHC
 #define CONFIG_SYS_FSL_ESDHC_ADDR	CONFIG_SYS_MPC83xx_ESDHC_ADDR
 
 /*
@@ -272,6 +277,7 @@
 /*
  * Serial Port
  */
+#define CONFIG_CONS_INDEX	2
 #define CONFIG_SYS_NS16550_SERIAL
 #define CONFIG_SYS_NS16550_REG_SIZE	1
 #define CONFIG_SYS_NS16550_CLK		get_bus_freq(0)
@@ -464,6 +470,7 @@ void fpga_control_clear(unsigned int bus, int pin);
 /*
  * TSEC
  */
+#define CONFIG_TSEC_ENET	/* TSEC ethernet support */
 #define CONFIG_SYS_TSEC1_OFFSET	0x24000
 #define CONFIG_SYS_TSEC1	(CONFIG_SYS_IMMR+CONFIG_SYS_TSEC1_OFFSET)
 
@@ -577,7 +584,7 @@ void fpga_control_clear(unsigned int bus, int pin);
 #define CONFIG_LOADADDR	800000	/* default location for tftp and bootm */
 
 
-#define CONFIG_HOSTNAME		"hrcon"
+#define CONFIG_HOSTNAME		hrcon
 #define CONFIG_ROOTPATH		"/opt/nfsroot"
 #define CONFIG_BOOTFILE		"uImage"
 

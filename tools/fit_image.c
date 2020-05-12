@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * (C) Copyright 2008 Semihalf
  *
@@ -11,6 +10,8 @@
  *		some functions added to address abstraction
  *
  * All rights reserved.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include "imagetool.h"

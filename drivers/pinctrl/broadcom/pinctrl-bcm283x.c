@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0
 /*
  * Copyright (C) 2018 Alexander Graf <agraf@suse.de>
  *
@@ -7,6 +6,8 @@
  *
  * This driver gets instantiated by the GPIO driver, because both devices
  * share the same device node.
+ *
+ * SPDX-License-Identifier:	GPL-2.0
  * https://spdx.org/licenses
  */
 

@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * Copyright 2017 General Electric Company
  *
@@ -6,6 +5,8 @@
  *
  * Copyright (C) 2011 Freescale Semiconductor, Inc.
  * Jason Liu <r64343@freescale.com>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>
@@ -19,7 +20,6 @@
 #include <linux/errno.h>
 #include <asm/mach-imx/mxc_i2c.h>
 #include <asm/mach-imx/mx5_video.h>
-#include <environment.h>
 #include <netdev.h>
 #include <i2c.h>
 #include <mmc.h>

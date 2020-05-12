@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0
 /*
  * (C) Copyright 2014
  * Heiko Schocher, DENX Software Engineering, hs@denx.de.
@@ -8,6 +7,8 @@
  * Based on linux:drivers/pwm/pwm-imx.c
  * from
  * Sascha Hauer <s.hauer@pengutronix.de>
+ *
+ * SPDX-License-Identifier:	GPL-2.0
  */
 
 #include <common.h>

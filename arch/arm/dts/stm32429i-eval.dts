@@ -1,7 +1,8 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * Copyright (C) 2015, STMicroelectronics - All Rights Reserved
  * Author: Maxime Coquelin <mcoquelin.stm32@gmail.com> for STMicroelectronics.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 /dts-v1/;
@@ -229,7 +230,6 @@
 	pinctrl-0 = <&sdio_pins>;
 	pinctrl-1 = <&sdio_pins_od>;
 	bus-width = <4>;
-	max-frequency = <14000000>;
 };
 
 &timers1 {

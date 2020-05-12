@@ -1,8 +1,9 @@
-// SPDX-License-Identifier: GPL-2.0
 /*
  * Copyright (c) 2012, NVIDIA CORPORATION.  All rights reserved.
  *
  * Inspired by cmd_ext_common.c, cmd_fat.c.
+ *
+ * SPDX-License-Identifier:	GPL-2.0
  */
 
 #include <common.h>

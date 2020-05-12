@@ -1,6 +1,7 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Copyright (C) 2013-2014 Synopsys, Inc. All rights reserved.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __ASM_ARC_IO_H
@@ -9,7 +10,7 @@
 #include <linux/types.h>
 #include <asm/byteorder.h>
 
-#ifdef __ARCHS__
+#ifdef CONFIG_ISA_ARCV2
 
 /*
  * ARCv2 based HS38 cores are in-order issue, but still weakly ordered
@@ -41,12 +42,12 @@
 #define mb()	asm volatile("sync\n" : : : "memory")
 #endif
 
-#ifdef __ARCHS__
+#ifdef CONFIG_ISA_ARCV2
 #define __iormb()		rmb()
 #define __iowmb()		wmb()
 #else
-#define __iormb()		asm volatile("" : : : "memory")
-#define __iowmb()		asm volatile("" : : : "memory")
+#define __iormb()		do { } while (0)
+#define __iowmb()		do { } while (0)
 #endif
 
 static inline void sync(void)

@@ -1,8 +1,9 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Copyright 2013-2015 Toradex, Inc.
  *
  * Configuration settings for the Toradex Colibri iMX6
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __CONFIG_H
@@ -11,6 +12,7 @@
 #include "mx6_common.h"
 
 #undef CONFIG_DISPLAY_BOARDINFO
+#define CONFIG_DISPLAY_BOARDINFO_LATE	/* Calls show_board_info() */
 
 #define CONFIG_SYS_GENERIC_BOARD
 
@@ -35,6 +37,10 @@
 #define CONFIG_MXC_UART
 #define CONFIG_MXC_UART_BASE		UART1_BASE
 
+/* Make the HW version stuff available in U-Boot env */
+#define CONFIG_VERSION_VARIABLE		/* ver environment variable */
+#define CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
+
 /* I2C Configs */
 #define CONFIG_SYS_I2C
 #define CONFIG_SYS_I2C_MXC
@@ -49,11 +55,13 @@
 #endif
 
 /* MMC Configs */
+#define CONFIG_FSL_ESDHC
 #define CONFIG_FSL_USDHC
 #define CONFIG_SYS_FSL_ESDHC_ADDR	0
 #define CONFIG_SYS_FSL_USDHC_NUM	2
 
 #define CONFIG_SUPPORT_EMMC_BOOT	/* eMMC specific */
+#define CONFIG_BOUNCE_BUFFER
 
 /* Network */
 #define CONFIG_FEC_MXC
@@ -97,6 +105,7 @@
 
 /* allow to overwrite serial and ethaddr */
 #define CONFIG_ENV_OVERWRITE
+#define CONFIG_CONS_INDEX		1
 
 /* Command definition */
 #undef CONFIG_CMD_LOADB
@@ -220,6 +229,7 @@
 #undef CONFIG_SYS_MAXARGS
 #define CONFIG_SYS_MAXARGS		48
 
+#define CONFIG_SYS_ALT_MEMTEST
 #define CONFIG_SYS_MEMTEST_START	0x10000000
 #define CONFIG_SYS_MEMTEST_END		0x10010000
 #define CONFIG_SYS_MEMTEST_SCRATCH	0x10800000

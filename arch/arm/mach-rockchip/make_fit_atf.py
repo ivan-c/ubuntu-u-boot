@@ -13,6 +13,8 @@ import getopt
 
 # pip install pyelftools
 from elftools.elf.elffile import ELFFile
+from elftools.elf.sections import SymbolTableSection
+from elftools.elf.segments import Segment, InterpSegment, NoteSegment
 
 ELF_SEG_P_TYPE='p_type'
 ELF_SEG_P_PADDR='p_paddr'
@@ -21,11 +23,12 @@ ELF_SEG_P_OFFSET='p_offset'
 ELF_SEG_P_FILESZ='p_filesz'
 ELF_SEG_P_MEMSZ='p_memsz'
 
-DT_HEADER="""// SPDX-License-Identifier: GPL-2.0+ OR X11
-/*
+DT_HEADER="""/*
  * Copyright (C) 2017 Fuzhou Rockchip Electronics Co., Ltd
  *
  * Minimal dts for a SPL FIT image payload.
+ *
+ * SPDX-License-Identifier: GPL-2.0+  X11
  */
 /dts-v1/;
 

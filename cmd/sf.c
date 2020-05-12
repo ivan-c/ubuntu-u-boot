@@ -1,8 +1,9 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * Command for accessing SPI flash.
  *
  * Copyright (C) 2008 Atmel Corporation
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>
@@ -286,7 +287,7 @@ static int do_spi_flash_read_write(int argc, char * const argv[])
 	}
 
 	buf = map_physmem(addr, len, MAP_WRBACK);
-	if (!buf && addr) {
+	if (!buf) {
 		puts("Failed to map physical memory\n");
 		return 1;
 	}

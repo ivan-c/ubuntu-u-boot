@@ -1,7 +1,8 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * Copyright (C) 2015 Samsung Electronics
  * Przemyslaw Marczak <p.marczak@samsung.com>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>
@@ -12,6 +13,8 @@
 #include <dm/uclass-internal.h>
 #include <adc.h>
 #include <power/regulator.h>
+
+DECLARE_GLOBAL_DATA_PTR;
 
 #define ADC_UCLASS_PLATDATA_SIZE	sizeof(struct adc_uclass_platdata)
 #define CHECK_NUMBER			true

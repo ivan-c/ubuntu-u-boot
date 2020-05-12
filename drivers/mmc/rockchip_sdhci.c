@@ -1,8 +1,9 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * (C) Copyright 2016 Fuzhou Rockchip Electronics Co., Ltd
  *
  * Rockchip SD Host Controller Interface
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>
@@ -14,6 +15,7 @@
 #include <sdhci.h>
 #include <clk.h>
 
+DECLARE_GLOBAL_DATA_PTR;
 /* 400KHz is max freq for card ID etc. Use that as min */
 #define EMMC_MIN_FREQ	400000
 
@@ -60,13 +62,6 @@ static int arasan_sdhci_probe(struct udevice *dev)
 
 	host->quirks = SDHCI_QUIRK_WAIT_SEND_CMD;
 	host->max_clk = max_frequency;
-	/*
-	 * The sdhci-driver only supports 4bit and 8bit, as sdhci_setup_cfg
-	 * doesn't allow us to clear MMC_MODE_4BIT.  Consequently, we don't
-	 * check for other bus-width values.
-	 */
-	if (host->bus_width == 8)
-		host->host_caps |= MMC_MODE_8BIT;
 
 	ret = sdhci_setup_cfg(&plat->cfg, host, 0, EMMC_MIN_FREQ);
 
@@ -87,7 +82,6 @@ static int arasan_sdhci_ofdata_to_platdata(struct udevice *dev)
 
 	host->name = dev->name;
 	host->ioaddr = dev_read_addr_ptr(dev);
-	host->bus_width = dev_read_u32_default(dev, "bus-width", 4);
 #endif
 
 	return 0;

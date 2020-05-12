@@ -1,7 +1,8 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * (C) Copyright 2009
  * Stefano Babic, DENX Software Engineering, sbabic@denx.de.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef _SYS_PROTO_H_
@@ -106,7 +107,6 @@ void set_chipselect_size(int const);
 
 void init_aips(void);
 void init_src(void);
-void init_snvs(void);
 void imx_wdog_disable_powerdown(void);
 
 int board_mmc_get_env_dev(int devno);

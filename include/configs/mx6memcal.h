@@ -1,8 +1,9 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Copyright (C) 2010-2018 Freescale Semiconductor, Inc.
  *
  * Configuration settings for the virtual mx6memcal board.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __CONFIG_H
@@ -13,6 +14,7 @@
 #include "mx6_common.h"
 #include "imx6_spl.h"
 
+#undef CONFIG_FSL_ESDHC
 #undef CONFIG_MMC
 #undef CONFIG_SPL_MMC_SUPPORT
 #undef CONFIG_GENERIC_MMC

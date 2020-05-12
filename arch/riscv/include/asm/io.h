@@ -1,7 +1,8 @@
-/* SPDX-License-Identifier: GPL-2.0 */
 /*
  * Copyright (C) 2017 Andes Technology Corporation
  * Rick Chen, Andes Technology Corporation <rick@andestech.com>
+ *
+ * SPDX-License-Identifier:	GPL-2.0
  *
  */
 #ifndef __ASM_RISCV_IO_H
@@ -415,17 +416,19 @@ static inline void writesl(unsigned int *addr, const void *data, int longlen)
 #define eth_io_copy_and_sum(s, c, l, b) \
 	eth_copy_and_sum((s), __mem_pci(c), (l), (b))
 
-static inline int check_signature(ulong io_addr, const uchar *s, int len)
+static inline int
+check_signature(unsigned long io_addr, const unsigned char *signature,
+		  int length)
 {
 	int retval = 0;
 
 	do {
-		if (readb(io_addr) != *s)
+		if (readb(io_addr) != *signature)
 			goto out;
 		io_addr++;
-		s++;
-		len--;
-	} while (len);
+		signature++;
+		length--;
+	} while (length);
 	retval = 1;
 out:
 	return retval;
@@ -452,17 +455,18 @@ out:
 	eth_copy_and_sum((a), __mem_isa(b), (c), (d))
 
 static inline int
-isa_check_signature(ulong io_addr, const uchar *s, int len)
+isa_check_signature(unsigned long io_addr, const unsigned char *signature,
+		       int length)
 {
 	int retval = 0;
 
 	do {
-		if (isa_readb(io_addr) != *s)
+		if (isa_readb(io_addr) != *signature)
 			goto out;
 		io_addr++;
-		s++;
-		len--;
-	} while (len);
+		signature++;
+		length--;
+	} while (length);
 	retval = 1;
 out:
 	return retval;

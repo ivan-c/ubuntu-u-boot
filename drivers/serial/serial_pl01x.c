@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * (C) Copyright 2000
  * Rob Taylor, Flying Pig Systems. robt@flyingpig.com.
@@ -6,6 +5,8 @@
  * (C) Copyright 2004
  * ARM Ltd.
  * Philippe Robin, <philippe.robin@arm.com>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 /* Simple U-Boot driver for the PrimeCell PL010/PL011 UARTs */

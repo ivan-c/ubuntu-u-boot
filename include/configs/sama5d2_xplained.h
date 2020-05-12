@@ -1,9 +1,10 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Configuration file for the SAMA5D2 Xplained Board.
  *
  * Copyright (C) 2015 Atmel Corporation
  *		      Wenyou Yang <wenyou.yang@atmel.com>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __CONFIG_H
@@ -43,15 +44,6 @@
 				"fatload mmc 1:1 0x22000000 zImage; " \
 				"bootz 0x22000000 - 0x21000000"
 
-#elif CONFIG_SPI_BOOT
-
-/* bootstrap + u-boot + env in sd card, but kernel + dtb in eMMC */
-#undef CONFIG_BOOTCOMMAND
-
-#define CONFIG_BOOTCOMMAND	"ext4load mmc 0:1 0x21000000 /boot/at91-sama5d2_xplained.dtb; " \
-				"ext4load mmc 0:1 0x22000000 /boot/zImage; " \
-				"bootz 0x22000000 - 0x21000000"
-
 #endif
 
 /* SPL */
@@ -69,6 +61,7 @@
 #define CONFIG_SPL_FS_LOAD_PAYLOAD_NAME		"u-boot.img"
 
 #elif CONFIG_SPI_BOOT
+#define CONFIG_SPL_SPI_LOAD
 #define CONFIG_SYS_SPI_U_BOOT_OFFS	0x10000
 
 #endif

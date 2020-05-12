@@ -50,17 +50,17 @@
 	model = "OrangePi PC 2";
 	compatible = "xunlong,orangepi-pc-2", "allwinner,sun50i-h5";
 
-	aliases {
-		serial0 = &uart0;
-		ethernet0 = &emac;
-	};
-
 	chosen {
 		stdout-path = "serial0:115200n8";
 	};
 
 	memory {
 		reg = <0x40000000 0x40000000>;
+	};
+
+	aliases {
+		serial0 = &uart0;
+		ethernet0 = &emac;
 	};
 
 	soc {
@@ -70,29 +70,6 @@
 			regulator-min-microvolt = <3300000>;
 			regulator-max-microvolt = <3300000>;
 		};
-	};
-};
-
-&ehci0 {
-	status = "okay";
-};
-
-&ehci1 {
-	status = "okay";
-};
-
-&emac {
-	pinctrl-names = "default";
-	pinctrl-0 = <&emac_rgmii_pins>;
-	phy-mode = "rgmii";
-	phy-handle = <&ext_rgmii_phy>;
-	status = "okay";
-};
-
-&external_mdio {
-	ext_rgmii_phy: ethernet-phy@1 {
-		compatible = "ethernet-phy-ieee802.3-c22";
-		reg = <1>;
 	};
 };
 
@@ -109,7 +86,13 @@
 	status = "okay";
 };
 
-&ohci0 {
+&uart0 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart0_pins_a>;
+	status = "okay";
+};
+
+&usbphy {
 	status = "okay";
 };
 
@@ -117,17 +100,18 @@
 	status = "okay";
 };
 
-&uart0 {
+&ehci1 {
+	status = "okay";
+};
+
+&emac {
 	pinctrl-names = "default";
-	pinctrl-0 = <&uart0_pins_a>;
+	pinctrl-0 = <&emac_rgmii_pins>;
+	phy-mode = "rgmii";
+	phy = <&phy1>;
 	status = "okay";
-};
 
-&usb_otg {
-	dr_mode = "otg";
-	status = "okay";
-};
-
-&usbphy {
-	status = "okay";
+	phy1: ethernet-phy@1 {
+		reg = <1>;
+	};
 };

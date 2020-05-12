@@ -1,8 +1,9 @@
-/* SPDX-License-Identifier: GPL-2.0 */
 /*-
  * Copyright (c) 2007-2008, Juniper Networks, Inc.
  * Copyright (c) 2008, Michael Trimarchi <trimarchimichael@yahoo.it>
  * All rights reserved.
+ *
+ * SPDX-License-Identifier:	GPL-2.0
  */
 
 #ifndef USB_EHCI_H

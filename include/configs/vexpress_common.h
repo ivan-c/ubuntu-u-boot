@@ -1,4 +1,3 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * (C) Copyright 2011 ARM Limited
  * (C) Copyright 2010 Linaro
@@ -6,6 +5,8 @@
  *
  * Configuration for Versatile Express. Parts were derived from other ARM
  *   configurations.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __VEXPRESS_COMMON_H
@@ -133,6 +134,7 @@
 #define CONFIG_PL011_CLOCK		24000000
 #define CONFIG_PL01x_PORTS		{(void *)CONFIG_SYS_SERIAL0, \
 					 (void *)CONFIG_SYS_SERIAL1}
+#define CONFIG_CONS_INDEX		0
 
 #define CONFIG_SYS_BAUDRATE_TABLE	{ 9600, 19200, 38400, 57600, 115200 }
 #define CONFIG_SYS_SERIAL0		V2M_UART0

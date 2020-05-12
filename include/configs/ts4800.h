@@ -1,4 +1,3 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Copyright (C) 2015, Savoir-faire Linux Inc.
  *
@@ -7,6 +6,8 @@
  *   Freescale Semiconductor, Inc.
  *
  * Configuration settings for the TS4800 Board
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __CONFIG_H
@@ -50,6 +51,7 @@
 /*
  * MMC Configs
  * */
+#define CONFIG_FSL_ESDHC
 #define CONFIG_SYS_FSL_ESDHC_ADDR	MMC_SDHC1_BASE_ADDR
 
 /*
@@ -65,6 +67,7 @@
 
 /* allow to overwrite serial and ethaddr */
 #define CONFIG_ENV_OVERWRITE		/* disable vendor parameters protection (serial#, ethaddr) */
+#define CONFIG_CONS_INDEX		1 /* use UART0 : used by serial driver */
 
 /***********************************************************
  * Command definition

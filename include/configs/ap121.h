@@ -1,6 +1,7 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Copyright (C) 2015-2016 Wills Wang <wills.wang@live.com>
+ *
+ * SPDX-License-Identifier: GPL-2.0+
  */
 
 #ifndef __CONFIG_H
@@ -42,5 +43,6 @@
  */
 #define CONFIG_SYS_MEMTEST_START        0x80100000
 #define CONFIG_SYS_MEMTEST_END          0x83f00000
+#define CONFIG_CMD_MEMTEST
 
 #endif  /* __CONFIG_H */

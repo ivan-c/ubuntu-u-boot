@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * (C) Copyright 2000-2010
  * Wolfgang Denk, DENX Software Engineering, wd@denx.de.
@@ -7,6 +6,8 @@
  * Andreas Heppel <aheppel@sysgo.de>
  *
  * (C) Copyright 2008 Atmel Corporation
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 #include <common.h>
 #include <dm.h>

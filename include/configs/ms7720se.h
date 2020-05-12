@@ -1,8 +1,9 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Configuation settings for the Hitachi Solution Engine 7720
  *
  * Copyright (C) 2007 Yoshihiro Shimoda <shimoda.yoshihiro@renesas.com>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __MS7720SE_H

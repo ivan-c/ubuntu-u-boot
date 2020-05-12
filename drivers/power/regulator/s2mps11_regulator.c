@@ -1,7 +1,8 @@
-// SPDX-License-Identifier: GPL-2.0
 /*
  *  Copyright (C) 2018 Samsung Electronics
  *  Jaehoon Chung <jh80.chung@samsung.com>
+ *
+ * SPDX-License-Identifier:	GPL-2.0
  */
 
 #include <common.h>
@@ -12,6 +13,8 @@
 #include <power/pmic.h>
 #include <power/regulator.h>
 #include <power/s2mps11.h>
+
+DECLARE_GLOBAL_DATA_PTR;
 
 #define MODE(_id, _val, _name) { \
 	.id = _id, \

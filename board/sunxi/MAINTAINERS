@@ -116,12 +116,6 @@ M:	Paul Kocialkowski <contact@paulk.fr>
 S:	Maintained
 F:	configs/Ainol_AW1_defconfig
 
-AMARULA A64-RELIC
-M:	Jagan Teki <jagan@amarulasolutions.com>
-S:	Maintained
-F:	configs/amarula_a64_relic_defconfig
-F:	arch/arm/dts/sun50i-a64-amarula-relic.dts
-
 AMPE A76 BOARD
 M:	Paul Kocialkowski <contact@paulk.fr>
 S:	Maintained
@@ -131,11 +125,6 @@ BANANAPI M1 PLUS
 M:	Jagan Teki <jagan@amarulasolutions.com>
 S:	Maintained
 F:	configs/bananapi_m1_plus_defconfig
-
-BANANAPI M2 BERRY
-M:	Jagan Teki <jagan@amarulasolutions.com>
-S:	Maintained
-F:	configs/bananapi_m2_berry_defconfig
 
 BANANAPI M2 ULTRA BOARD
 M:	Chen-Yu Tsai <wens@csie.org>
@@ -277,12 +266,10 @@ M:	Siarhei Siamashka <siarhei.siamashka@gmail.com>
 S:	Maintained
 F:	configs/MSI_Primo81_defconfig
 
-LIBRETECH ALL-H3-CC BOARDS
+LIBRETECH ALL-H3-CC H3 BOARD
 M:	Chen-Yu Tsai <wens@csie.org>
 S:	Maintained
-F:	configs/libretech_all_h3_cc_h2_plus_defconfig
 F:	configs/libretech_all_h3_cc_h3_defconfig
-F:	configs/libretech_all_h3_cc_h5_defconfig
 
 NANOPI-M1 BOARD
 M:	Mylène Josserand <mylene.josserand@free-electrons.com>
@@ -323,12 +310,6 @@ NINTENDO NES CLASSIC EDITION BOARD
 M:	FUKAUMI Naoki <naobsd@gmail.com>
 S:	Maintained
 F:	configs/Nintendo_NES_Classic_Edition_defconfig
-
-OLIMEX A20-SOM204 BOARD
-M:	Stefan Mavrodiev <stefan@olimex.com>
-S:	Maintained
-F:	configs/A20-Olimex-SOM204-EVB_defconfig
-F:	configs/A20-Olimex-SOM204-EVB-eMMC_defconfig
 
 ORANGEPI WIN/WIN PLUS BOARD
 M:	Jagan Teki <jagan@amarulasolutions.com>

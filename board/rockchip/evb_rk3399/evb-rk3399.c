@@ -1,6 +1,7 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * (C) Copyright 2016 Rockchip Electronics Co., Ltd
+ *
+ * SPDX-License-Identifier:     GPL-2.0+
  */
 
 #include <common.h>
@@ -10,6 +11,8 @@
 #include <asm/arch/periph.h>
 #include <power/regulator.h>
 #include <spl.h>
+
+DECLARE_GLOBAL_DATA_PTR;
 
 int board_init(void)
 {

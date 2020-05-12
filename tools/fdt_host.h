@@ -1,6 +1,7 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * (C) Copyright 2008 Semihalf
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __FDT_HOST_H__

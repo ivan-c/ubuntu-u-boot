@@ -1,7 +1,8 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Aries MA5D4 configuration
  * Copyright (C) 2015 Marek Vasut <marex@denx.de>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __MA5D4EVK_CONFIG_H__
@@ -85,6 +86,7 @@
  * SPI NOR (boot memory)
  */
 #ifdef CONFIG_CMD_SF
+#define CONFIG_ATMEL_SPI
 #define CONFIG_ATMEL_SPI0
 #define CONFIG_SPI_FLASH_ATMEL
 #define CONFIG_SF_DEFAULT_BUS		0
@@ -117,7 +119,7 @@
  * Extra Environments
  */
 #define CONFIG_PREBOOT		"run try_bootscript"
-#define CONFIG_HOSTNAME		"ma5d4evk"
+#define CONFIG_HOSTNAME		ma5d4evk
 
 #define CONFIG_EXTRA_ENV_SETTINGS					\
 	"consdev=ttyS3\0"						\
@@ -204,6 +206,7 @@
 
 #define CONFIG_SYS_MONITOR_LEN		(512 << 10)
 
+#define CONFIG_SPL_SPI_LOAD
 #define CONFIG_SYS_SPI_U_BOOT_OFFS	0x10000
 
 #define CONFIG_SYS_USE_MMC

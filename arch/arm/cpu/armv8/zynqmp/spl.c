@@ -1,8 +1,9 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * Copyright 2015 - 2016 Xilinx, Inc.
  *
  * Michal Simek <michal.simek@xilinx.com>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>

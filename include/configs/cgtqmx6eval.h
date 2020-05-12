@@ -1,4 +1,3 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  *
  * Congatec Conga-QEVAl board configuration file.
@@ -7,6 +6,8 @@
  * Based on Freescale i.MX6Q Sabre Lite board configuration file.
  * Copyright (C) 2013, Adeneo Embedded <www.adeneo-embedded.com>
  * Leo Sartre, <lsartre@adeneo-embedded.com>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __CONFIG_CGTQMX6EVAL_H
@@ -18,6 +19,7 @@
 
 #ifdef CONFIG_SPL
 #define CONFIG_SYS_SPI_U_BOOT_OFFS	(64 * 1024)
+#define CONFIG_SPL_SPI_LOAD
 #include "imx6_spl.h"
 #endif
 
@@ -97,6 +99,7 @@
 #define CONFIG_MMCROOT		"/dev/mmcblk0p2"
 #define CONFIG_SYS_MMC_ENV_DEV		0
 
+#define CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	"script=boot.scr\0" \
 	"image=zImage\0" \

@@ -1,4 +1,3 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * (C) Copyright 2006-2008
  * Texas Instruments.
@@ -10,6 +9,8 @@
  * Thomas Weber <weber@corscience.de>
  *
  * Configuration settings for the Tricorder board.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __CONFIG_H
@@ -48,6 +49,7 @@
 #define CONFIG_SYS_NS16550_CLK		48000000 /* 48MHz (APLL96/2) */
 
 /* select serial console configuration */
+#define CONFIG_CONS_INDEX		3
 #define CONFIG_SYS_NS16550_COM3		OMAP34XX_UART3
 #define CONFIG_SERIAL3			3
 #define CONFIG_SYS_BAUDRATE_TABLE	{4800, 9600, 19200, 38400, 57600,\
@@ -263,5 +265,6 @@
 #define CONFIG_SYS_SPL_MALLOC_START	0x80208000
 #define CONFIG_SYS_SPL_MALLOC_SIZE	0x100000	/* 1 MB */
 
+#define CONFIG_SYS_ALT_MEMTEST
 #define CONFIG_SYS_MEMTEST_SCRATCH	0x81000000
 #endif /* __CONFIG_H */

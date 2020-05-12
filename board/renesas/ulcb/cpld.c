@@ -1,9 +1,10 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * ULCB board CPLD access support
  *
  * Copyright (C) 2017 Renesas Electronics Corporation
  * Copyright (C) 2017 Cogent Embedded, Inc.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>

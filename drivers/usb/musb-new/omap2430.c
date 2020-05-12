@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0
 /*
  * Copyright (C) 2005-2007 by Texas Instruments
  * Some code has been taken from tusb6010.c
@@ -7,6 +6,8 @@
  * Tony Lindgren <tony@atomide.com>
  *
  * This file is part of the Inventra Controller Driver for Linux.
+ *
+ * SPDX-License-Identifier:	GPL-2.0
  */
 #ifndef __UBOOT__
 #include <linux/module.h>

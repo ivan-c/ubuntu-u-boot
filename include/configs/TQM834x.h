@@ -1,7 +1,8 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * (C) Copyright 2005
  * Wolfgang Denk, DENX Software Engineering, wd@denx.de.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 /*
@@ -39,6 +40,7 @@
 /* board pre init: do not call, nothing to do */
 
 /* detect the number of flash banks */
+#define CONFIG_BOARD_EARLY_INIT_R
 
 /*
  * DDR Setup
@@ -149,6 +151,7 @@
 /*
  * Serial Port
  */
+#define CONFIG_CONS_INDEX	1
 #define CONFIG_SYS_NS16550_SERIAL
 #define CONFIG_SYS_NS16550_REG_SIZE	1
 #define CONFIG_SYS_NS16550_CLK		get_bus_freq(0)
@@ -181,6 +184,7 @@
 /*
  * TSEC
  */
+#define CONFIG_TSEC_ENET		/* tsec ethernet support */
 #define CONFIG_MII
 
 #define CONFIG_SYS_TSEC1_OFFSET	0x24000

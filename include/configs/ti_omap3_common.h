@@ -1,8 +1,9 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * ti_omap3_common.h
  *
  * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  *
  * For more details, please see the technical documents listed at
  *   http://www.ti.com/product/omap3530
@@ -37,6 +38,7 @@
 					115200}
 
 /* Select serial console configuration */
+#define CONFIG_CONS_INDEX		3
 #ifdef CONFIG_SPL_BUILD
 #define CONFIG_SYS_NS16550_COM3		OMAP34XX_UART3
 #define CONFIG_SERIAL3			3

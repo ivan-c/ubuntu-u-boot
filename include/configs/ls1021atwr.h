@@ -1,6 +1,7 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Copyright 2014 Freescale Semiconductor, Inc.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __CONFIG_H
@@ -208,6 +209,7 @@
 #ifdef CONFIG_LPUART
 #define CONFIG_LPUART_32B_REG
 #else
+#define CONFIG_CONS_INDEX		1
 #define CONFIG_SYS_NS16550_SERIAL
 #ifndef CONFIG_DM_SERIAL
 #define CONFIG_SYS_NS16550_REG_SIZE	1
@@ -236,6 +238,7 @@
 /*
  * MMC
  */
+#define CONFIG_FSL_ESDHC
 
 /* SPI */
 #if defined(CONFIG_QSPI_BOOT) || defined(CONFIG_SD_BOOT_QSPI)
@@ -267,6 +270,7 @@
 /*
  * eTSEC
  */
+#define CONFIG_TSEC_ENET
 
 #ifdef CONFIG_TSEC_ENET
 #define CONFIG_MII

@@ -1,10 +1,11 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Copyright (C) 2007, Guennadi Liakhovetski <lg@denx.de>
  *
  * (C) Copyright 2009 Freescale Semiconductor, Inc.
  *
  * Configuration settings for the MX51EVK Board
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __CONFIG_H
@@ -49,6 +50,7 @@
 /*
  * MMC Configs
  * */
+#define CONFIG_FSL_ESDHC
 #define CONFIG_SYS_FSL_ESDHC_ADDR	MMC_SDHC1_BASE_ADDR
 #define CONFIG_SYS_FSL_ESDHC_NUM	2
 
@@ -77,6 +79,7 @@
 
 /* allow to overwrite serial and ethaddr */
 #define CONFIG_ENV_OVERWRITE
+#define CONFIG_CONS_INDEX		1
 
 #define CONFIG_ETHPRIME		"FEC0"
 

@@ -1,4 +1,3 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * esd vme8349 U-Boot configuration file
  * Copyright (c) 2008, 2009 esd gmbh Hannover Germany
@@ -8,6 +7,8 @@
  *
  * reinhard.arlt@esd-electronics.de
  * Based on the MPC8349EMDS config.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 /*
@@ -193,6 +194,7 @@
 /*
  * Serial Port
  */
+#define CONFIG_CONS_INDEX	1
 #define CONFIG_SYS_NS16550_SERIAL
 #define CONFIG_SYS_NS16550_REG_SIZE	1
 #define CONFIG_SYS_NS16550_CLK		get_bus_freq(0)
@@ -277,6 +279,10 @@
 /*
  * TSEC configuration
  */
+#ifdef VME_CADDY2
+#else
+#define CONFIG_TSEC_ENET		/* TSEC ethernet support */
+#endif
 
 #if defined(CONFIG_TSEC_ENET)
 
@@ -494,7 +500,7 @@
 #define CONFIG_HAS_ETH1
 #endif
 
-#define CONFIG_HOSTNAME		"VME8349"
+#define CONFIG_HOSTNAME		VME8349
 #define CONFIG_ROOTPATH		"/tftpboot/rootfs"
 #define CONFIG_BOOTFILE		"uImage"
 

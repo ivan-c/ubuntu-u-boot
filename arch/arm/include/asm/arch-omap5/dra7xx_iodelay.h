@@ -1,9 +1,10 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * (C) Copyright 2015
  * Texas Instruments Incorporated
  *
  * Lokesh Vutla <lokeshvutla@ti.com>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef _DRA7_IODELAY_H_

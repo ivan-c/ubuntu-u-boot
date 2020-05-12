@@ -1,7 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0+
 #
 # (C) Copyright 2000-2002
 # Wolfgang Denk, DENX Software Engineering, wd@denx.de.
+#
+# SPDX-License-Identifier:	GPL-2.0+
+#
 
 ifndef CONFIG_STANDALONE_LOAD_ADDR
 ifneq ($(CONFIG_ARCH_OMAP2PLUS),)
@@ -21,8 +23,9 @@ PLATFORM_RELFLAGS += $(call cc-option, -msoft-float) \
       $(call cc-option,-mshort-load-bytes,$(call cc-option,-malignment-traps,))
 
 # LLVM support
-LLVM_RELFLAGS		:= $(call cc-option,-mllvm,) \
-			$(call cc-option,-mno-movt,)
+LLVMS_RELFLAGS		:= $(call cc-option,-mllvm,) \
+			$(call cc-option,-target arm-none-eabi,) \
+			$(call cc-option,-arm-use-movt=0,)
 PLATFORM_RELFLAGS	+= $(LLVM_RELFLAGS)
 
 PLATFORM_CPPFLAGS += -D__ARM__

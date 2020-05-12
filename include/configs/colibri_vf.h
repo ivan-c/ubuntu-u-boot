@@ -1,4 +1,3 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Copyright 2015-2016 Toradex, Inc.
  *
@@ -6,6 +5,8 @@
  *
  * Based on vf610twr.h:
  * Copyright 2013 Freescale Semiconductor, Inc.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __CONFIG_H
@@ -14,6 +15,8 @@
 #include <asm/arch/imx-regs.h>
 
 #define CONFIG_SYS_FSL_CLK
+
+#define CONFIG_DISPLAY_BOARDINFO_LATE	/* Calls show_board_info() */
 
 #define CONFIG_SKIP_LOWLEVEL_INIT
 
@@ -36,6 +39,7 @@
 
 /* Allow to overwrite serial and ethaddr */
 #define CONFIG_ENV_OVERWRITE
+#define CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
 
 /* NAND support */
 #define CONFIG_SYS_NAND_ONFI_DETECTION
@@ -46,6 +50,7 @@
 #define CONFIG_MTD_PARTITIONS
 #define CONFIG_MTD_DEVICE	/* needed for mtdparts commands */
 
+#define CONFIG_FSL_ESDHC
 #define CONFIG_SYS_FSL_ESDHC_ADDR	0
 #define CONFIG_SYS_FSL_ESDHC_NUM	1
 

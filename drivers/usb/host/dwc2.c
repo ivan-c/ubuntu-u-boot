@@ -1,7 +1,8 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * Copyright (C) 2012 Oleksandr Tymoshenko <gonzo@freebsd.org>
  * Copyright (C) 2014 Marek Vasut <marex@denx.de>
+ *
+ * SPDX-License-Identifier:     GPL-2.0+
  */
 
 #include <common.h>
@@ -18,11 +19,13 @@
 
 #include "dwc2.h"
 
+DECLARE_GLOBAL_DATA_PTR;
+
 /* Use only HC channel 0. */
 #define DWC2_HC_CHANNEL			0
 
 #define DWC2_STATUS_BUF_SIZE		64
-#define DWC2_DATA_BUF_SIZE		(CONFIG_USB_DWC2_BUFFER_SIZE * 1024)
+#define DWC2_DATA_BUF_SIZE		(64 * 1024)
 
 #define MAX_DEVICE			16
 #define MAX_ENDPOINT			16
@@ -31,9 +34,6 @@ struct dwc2_priv {
 #ifdef CONFIG_DM_USB
 	uint8_t aligned_buffer[DWC2_DATA_BUF_SIZE] __aligned(ARCH_DMA_MINALIGN);
 	uint8_t status_buffer[DWC2_STATUS_BUF_SIZE] __aligned(ARCH_DMA_MINALIGN);
-#ifdef CONFIG_DM_REGULATOR
-	struct udevice *vbus_supply;
-#endif
 #else
 	uint8_t *aligned_buffer;
 	uint8_t *status_buffer;
@@ -111,7 +111,7 @@ static void dwc_otg_flush_tx_fifo(struct dwc2_core_regs *regs, const int num)
 	ret = wait_for_bit_le32(&regs->grstctl, DWC2_GRSTCTL_TXFFLSH,
 				false, 1000, false);
 	if (ret)
-		dev_info(dev, "%s: Timeout!\n", __func__);
+		printf("%s: Timeout!\n", __func__);
 
 	/* Wait for 3 PHY Clocks */
 	udelay(1);
@@ -130,7 +130,7 @@ static void dwc_otg_flush_rx_fifo(struct dwc2_core_regs *regs)
 	ret = wait_for_bit_le32(&regs->grstctl, DWC2_GRSTCTL_RXFFLSH,
 				false, 1000, false);
 	if (ret)
-		dev_info(dev, "%s: Timeout!\n", __func__);
+		printf("%s: Timeout!\n", __func__);
 
 	/* Wait for 3 PHY Clocks */
 	udelay(1);
@@ -148,14 +148,14 @@ static void dwc_otg_core_reset(struct dwc2_core_regs *regs)
 	ret = wait_for_bit_le32(&regs->grstctl, DWC2_GRSTCTL_AHBIDLE,
 				true, 1000, false);
 	if (ret)
-		dev_info(dev, "%s: Timeout!\n", __func__);
+		printf("%s: Timeout!\n", __func__);
 
 	/* Core Soft Reset */
 	writel(DWC2_GRSTCTL_CSFTRST, &regs->grstctl);
 	ret = wait_for_bit_le32(&regs->grstctl, DWC2_GRSTCTL_CSFTRST,
 				false, 1000, false);
 	if (ret)
-		dev_info(dev, "%s: Timeout!\n", __func__);
+		printf("%s: Timeout!\n", __func__);
 
 	/*
 	 * Wait for core to come out of reset.
@@ -168,36 +168,19 @@ static void dwc_otg_core_reset(struct dwc2_core_regs *regs)
 #if defined(CONFIG_DM_USB) && defined(CONFIG_DM_REGULATOR)
 static int dwc_vbus_supply_init(struct udevice *dev)
 {
-	struct dwc2_priv *priv = dev_get_priv(dev);
+	struct udevice *vbus_supply;
 	int ret;
 
-	ret = device_get_supply_regulator(dev, "vbus-supply",
-					  &priv->vbus_supply);
+	ret = device_get_supply_regulator(dev, "vbus-supply", &vbus_supply);
 	if (ret) {
 		debug("%s: No vbus supply\n", dev->name);
 		return 0;
 	}
 
-	ret = regulator_set_enable(priv->vbus_supply, true);
+	ret = regulator_set_enable(vbus_supply, true);
 	if (ret) {
-		dev_err(dev, "Error enabling vbus supply\n");
+		pr_err("Error enabling vbus supply\n");
 		return ret;
-	}
-
-	return 0;
-}
-
-static int dwc_vbus_supply_exit(struct udevice *dev)
-{
-	struct dwc2_priv *priv = dev_get_priv(dev);
-	int ret;
-
-	if (priv->vbus_supply) {
-		ret = regulator_set_enable(priv->vbus_supply, false);
-		if (ret) {
-			dev_err(dev, "Error disabling vbus supply\n");
-			return ret;
-		}
 	}
 
 	return 0;
@@ -207,13 +190,6 @@ static int dwc_vbus_supply_init(struct udevice *dev)
 {
 	return 0;
 }
-
-#if defined(CONFIG_DM_USB)
-static int dwc_vbus_supply_exit(struct udevice *dev)
-{
-	return 0;
-}
-#endif
 #endif
 
 /*
@@ -294,7 +270,7 @@ static void dwc_otg_core_host_init(struct udevice *dev,
 		ret = wait_for_bit_le32(&regs->hc_regs[i].hcchar,
 					DWC2_HCCHAR_CHEN, false, 1000, false);
 		if (ret)
-			dev_info("%s: Timeout!\n", __func__);
+			printf("%s: Timeout!\n", __func__);
 	}
 
 	/* Turn on the vbus power. */
@@ -808,7 +784,7 @@ int wait_for_chhltd(struct dwc2_hc_regs *hc_regs, uint32_t *sub, u8 *toggle)
 	uint32_t hcint, hctsiz;
 
 	ret = wait_for_bit_le32(&hc_regs->hcint, DWC2_HCINT_CHHLTD, true,
-				2000, false);
+				1000, false);
 	if (ret)
 		return ret;
 
@@ -1115,7 +1091,7 @@ int _submit_int_msg(struct dwc2_priv *priv, struct usb_device *dev,
 	timeout = get_timer(0) + USB_TIMEOUT_MS(pipe);
 	for (;;) {
 		if (get_timer(0) > timeout) {
-			dev_err(dev, "Timeout poll on interrupt endpoint\n");
+			printf("Timeout poll on interrupt endpoint\n");
 			return -ETIMEDOUT;
 		}
 		ret = _submit_bulk_msg(priv, dev, pipe, buffer, len);
@@ -1131,13 +1107,11 @@ static int dwc2_init_common(struct udevice *dev, struct dwc2_priv *priv)
 	int i, j;
 
 	snpsid = readl(&regs->gsnpsid);
-	dev_info(dev, "Core Release: %x.%03x\n",
-		 snpsid >> 12 & 0xf, snpsid & 0xfff);
+	printf("Core Release: %x.%03x\n", snpsid >> 12 & 0xf, snpsid & 0xfff);
 
 	if ((snpsid & DWC2_SNPSID_DEVID_MASK) != DWC2_SNPSID_DEVID_VER_2xx &&
 	    (snpsid & DWC2_SNPSID_DEVID_MASK) != DWC2_SNPSID_DEVID_VER_3xx) {
-		dev_info(dev, "SNPSID invalid (not DWC2 OTG device): %08x\n",
-			 snpsid);
+		printf("SNPSID invalid (not DWC2 OTG device): %08x\n", snpsid);
 		return -ENODEV;
 	}
 
@@ -1295,11 +1269,6 @@ static int dwc2_usb_probe(struct udevice *dev)
 static int dwc2_usb_remove(struct udevice *dev)
 {
 	struct dwc2_priv *priv = dev_get_priv(dev);
-	int ret;
-
-	ret = dwc_vbus_supply_exit(dev);
-	if (ret)
-		return ret;
 
 	dwc2_uninit_common(priv->regs);
 

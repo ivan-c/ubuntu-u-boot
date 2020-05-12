@@ -1,10 +1,11 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * (C) Copyright 2008 Semihalf
  *
  * (C) Copyright 2000-2009
  * DENX Software Engineering
  * Wolfgang Denk, wd@denx.de
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include "mkimage.h"
@@ -300,8 +301,6 @@ static void process_args(int argc, char **argv)
 		else if (!params.datafile)
 			usage("Missing data file for auto-FIT (use -d)");
 	} else if (type != IH_TYPE_INVALID) {
-		if (type == IH_TYPE_SCRIPT && !params.datafile)
-			usage("Missing data file for script (use -d)");
 		params.type = type;
 	}
 
@@ -515,13 +514,6 @@ int main(int argc, char **argv)
 		} else if (params.type == IH_TYPE_PBLIMAGE) {
 			/* PBL has special Image format, implements its' own */
 			pbl_load_uboot(ifd, &params);
-		} else if (params.type == IH_TYPE_ZYNQMPBIF) {
-			/* Image file is meta, walk through actual targets */
-			int ret;
-
-			ret = zynqmpbif_copy_image(ifd, &params);
-			if (ret)
-				return ret;
 		} else {
 			copy_file(ifd, params.datafile, pad_len);
 		}
@@ -596,8 +588,9 @@ int main(int argc, char **argv)
 	if (tparams->print_header)
 		tparams->print_header (ptr);
 	else {
-		fprintf (stderr, "%s: Can't print header for %s\n",
-			params.cmdname, tparams->name);
+		fprintf (stderr, "%s: Can't print header for %s: %s\n",
+			params.cmdname, tparams->name, strerror(errno));
+		exit (EXIT_FAILURE);
 	}
 
 	(void) munmap((void *)ptr, sbuf.st_size);

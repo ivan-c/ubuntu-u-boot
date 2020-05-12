@@ -1,6 +1,7 @@
-// SPDX-License-Identifier: GPL-2.0
 /*
  * Copyright (c) 2016, NVIDIA CORPORATION.
+ *
+ * SPDX-License-Identifier: GPL-2.0
  */
 
 #include <common.h>
@@ -10,7 +11,6 @@
 
 struct sandbox_clk_test {
 	struct clk clks[SANDBOX_CLK_TEST_ID_COUNT];
-	struct clk_bulk bulk;
 };
 
 static const char * const sandbox_clk_test_names[] = {
@@ -32,13 +32,6 @@ int sandbox_clk_test_get(struct udevice *dev)
 	}
 
 	return 0;
-}
-
-int sandbox_clk_test_get_bulk(struct udevice *dev)
-{
-	struct sandbox_clk_test *sbct = dev_get_priv(dev);
-
-	return clk_get_bulk(dev, &sbct->bulk);
 }
 
 ulong sandbox_clk_test_get_rate(struct udevice *dev, int id)
@@ -71,13 +64,6 @@ int sandbox_clk_test_enable(struct udevice *dev, int id)
 	return clk_enable(&sbct->clks[id]);
 }
 
-int sandbox_clk_test_enable_bulk(struct udevice *dev)
-{
-	struct sandbox_clk_test *sbct = dev_get_priv(dev);
-
-	return clk_enable_bulk(&sbct->bulk);
-}
-
 int sandbox_clk_test_disable(struct udevice *dev, int id)
 {
 	struct sandbox_clk_test *sbct = dev_get_priv(dev);
@@ -86,13 +72,6 @@ int sandbox_clk_test_disable(struct udevice *dev, int id)
 		return -EINVAL;
 
 	return clk_disable(&sbct->clks[id]);
-}
-
-int sandbox_clk_test_disable_bulk(struct udevice *dev)
-{
-	struct sandbox_clk_test *sbct = dev_get_priv(dev);
-
-	return clk_disable_bulk(&sbct->bulk);
 }
 
 int sandbox_clk_test_free(struct udevice *dev)
@@ -107,13 +86,6 @@ int sandbox_clk_test_free(struct udevice *dev)
 	}
 
 	return 0;
-}
-
-int sandbox_clk_test_release_bulk(struct udevice *dev)
-{
-	struct sandbox_clk_test *sbct = dev_get_priv(dev);
-
-	return clk_release_bulk(&sbct->bulk);
 }
 
 static const struct udevice_id sandbox_clk_test_ids[] = {

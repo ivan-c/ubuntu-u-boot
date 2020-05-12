@@ -1,8 +1,9 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  *  EFI application loader
  *
  *  Copyright (c) 2017 Heinrich Schuchardt <xypron.glpk@gmx.de>
+ *
+ *  SPDX-License-Identifier:     GPL-2.0+
  */
 
 #ifndef _EFI_SELFTEST_H
@@ -113,7 +114,6 @@ u16 efi_st_get_key(void);
  * @setup:	set up the unit test
  * @teardown:	tear down the unit test
  * @execute:	execute the unit test
- * @setup_ok:	setup was successful (set at runtime)
  * @on_request:	test is only executed on request
  */
 struct efi_unit_test {
@@ -123,7 +123,6 @@ struct efi_unit_test {
 		     const struct efi_system_table *systable);
 	int (*execute)(void);
 	int (*teardown)(void);
-	int setup_ok;
 	bool on_request;
 };
 

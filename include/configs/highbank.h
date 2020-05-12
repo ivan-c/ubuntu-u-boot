@@ -1,6 +1,7 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Copyright 2010-2011 Calxeda, Inc.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __CONFIG_H
@@ -21,6 +22,7 @@
 
 #define CONFIG_PL011_CLOCK		150000000
 #define CONFIG_PL01x_PORTS		{ (void *)(0xFFF36000) }
+#define CONFIG_CONS_INDEX		0
 
 #define CONFIG_SYS_BOOTCOUNT_LE		/* Use little-endian accessors */
 

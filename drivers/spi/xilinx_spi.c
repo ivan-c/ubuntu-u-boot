@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * Xilinx SPI driver
  *
@@ -10,6 +9,8 @@
  * Copyright (c) 2010 Graeme Smecher <graeme.smecher@mail.mcgill.ca>
  * Copyright (c) 2010 Thomas Chou <thomas@wytron.com.tw>
  * Copyright (c) 2005-2008 Analog Devices Inc.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <config.h>

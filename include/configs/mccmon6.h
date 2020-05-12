@@ -1,7 +1,8 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Copyright (C) 2016-2017
  * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __CONFIG_H
@@ -93,6 +94,7 @@
 #define CONFIG_ETHPRIME			"FEC"
 #define CONFIG_FEC_MXC_PHYADDR		1
 
+#define CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	"console=ttymxc0,115200 quiet\0" \
 	"fdtfile=imx6q-mccmon6.dtb\0" \

@@ -1,8 +1,9 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Configuration settings for the Sentec Cobra Board.
  *
  * (C) Copyright 2003 Josef Baumgartner <josef.baumgartner@telex.de>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 /*

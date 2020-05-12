@@ -1,8 +1,9 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  *  Uclass for EFI drivers
  *
  *  Copyright (c) 2017 Heinrich Schuchardt
+ *
+ *  SPDX-License-Identifier:     GPL-2.0+
  *
  * For each EFI driver the uclass
  * - creates a handle

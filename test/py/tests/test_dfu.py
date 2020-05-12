@@ -1,5 +1,6 @@
-# SPDX-License-Identifier: GPL-2.0
 # Copyright (c) 2016, NVIDIA CORPORATION. All rights reserved.
+#
+# SPDX-License-Identifier: GPL-2.0
 
 # Test U-Boot's "dfu" command. The test starts DFU in U-Boot, waits for USB
 # device enumeration on the host, executes dfu-util multiple times to test

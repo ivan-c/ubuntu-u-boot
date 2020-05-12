@@ -1,8 +1,9 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * DHCOM DH-iMX6 PDK SPL support
  *
  * Copyright (C) 2017 Marek Vasut <marex@denx.de>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>
@@ -43,6 +44,8 @@
 #define USDHC_PAD_CTRL							\
 	(PAD_CTL_PUS_47K_UP | PAD_CTL_SPEED_LOW | PAD_CTL_DSE_80ohm |	\
 	 PAD_CTL_SRE_FAST | PAD_CTL_HYS)
+
+DECLARE_GLOBAL_DATA_PTR;
 
 static const struct mx6dq_iomux_ddr_regs dhcom6dq_ddr_ioregs = {
 	.dram_sdclk_0	= 0x00020030,

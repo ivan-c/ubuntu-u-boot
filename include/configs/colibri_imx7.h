@@ -1,4 +1,3 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Copyright 2016 Toradex AG
  *
@@ -6,6 +5,8 @@
  *
  * based on mx7dsabresd.h:
  * Copyright (C) 2015 Freescale Semiconductor, Inc.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __COLIBRI_IMX7_CONFIG_H
@@ -15,6 +16,10 @@
 
 /*#define CONFIG_DBG_MONITOR*/
 #define PHYS_SDRAM_SIZE			SZ_512M
+
+#define CONFIG_DISPLAY_BOARDINFO_LATE	/* Calls show_board_info() */
+
+#define CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
 
 /* Size of malloc() pool */
 #define CONFIG_SYS_MALLOC_LEN		(32 * SZ_1M)

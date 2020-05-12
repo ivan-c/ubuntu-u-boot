@@ -1,4 +1,3 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Copyright (C) 2010 Andreas Bießmann <biessmann.devel@googlemail.com>
  *
@@ -8,6 +7,8 @@
  * Rick Bronson <rick@efn.org>
  *
  * Configuration settings for the AT91RM9200EK board.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __AT91RM9200EK_CONFIG_H__

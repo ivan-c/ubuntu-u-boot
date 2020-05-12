@@ -1,10 +1,11 @@
-/* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * WindRiver SBC8349 U-Boot configuration file.
  * Copyright (c) 2006, 2007 Wind River Systems, Inc.
  *
  * Paul Gortmaker <paul.gortmaker@windriver.com>
  * Based on the MPC8349EMDS config.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 /*
@@ -258,6 +259,7 @@
 /*
  * Serial Port
  */
+#define CONFIG_CONS_INDEX     1
 #define CONFIG_SYS_NS16550_SERIAL
 #define CONFIG_SYS_NS16550_REG_SIZE    1
 #define CONFIG_SYS_NS16550_CLK		get_bus_freq(0)
@@ -337,6 +339,7 @@
 /*
  * TSEC configuration
  */
+#define CONFIG_TSEC_ENET		/* TSEC ethernet support */
 
 #if defined(CONFIG_TSEC_ENET)
 
@@ -596,7 +599,7 @@
 #define CONFIG_HAS_ETH1
 #endif
 
-#define CONFIG_HOSTNAME		"SBC8349"
+#define CONFIG_HOSTNAME		SBC8349
 #define CONFIG_ROOTPATH		"/tftpboot/rootfs"
 #define CONFIG_BOOTFILE		"uImage"
 

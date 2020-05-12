@@ -1,8 +1,9 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  * Allwinner LCD driver
  *
  * (C) Copyright 2017 Vasily Khoruzhick <anarsoul@gmail.com>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>

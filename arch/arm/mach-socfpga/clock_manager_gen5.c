@@ -1,6 +1,7 @@
-// SPDX-License-Identifier: GPL-2.0+
 /*
  *  Copyright (C) 2013-2017 Altera Corporation <www.altera.com>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>
@@ -8,6 +9,8 @@
 #include <dm.h>
 #include <asm/arch/clock_manager.h>
 #include <wait_bit.h>
+
+DECLARE_GLOBAL_DATA_PTR;
 
 static const struct socfpga_clock_manager *clock_manager_base =
 	(struct socfpga_clock_manager *)SOCFPGA_CLKMGR_ADDRESS;
