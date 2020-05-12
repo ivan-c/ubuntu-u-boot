@@ -1,8 +1,7 @@
+// SPDX-License-Identifier: GPL-2.0+
 /*
  * Copyright (C) 2017 DENX Software Engineering
  * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
- *
- * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>
@@ -20,6 +19,7 @@
 #include <environment.h>
 #include <fsl_esdhc.h>
 #include <netdev.h>
+#include <bootcount.h>
 #include "common.h"
 
 DECLARE_GLOBAL_DATA_PTR;
@@ -214,7 +214,7 @@ void board_boot_order(u32 *spl_boot_list)
 	env_load();
 
 	s = env_get("BOOT_FROM");
-	if (s && strcmp(s, "ACTIVE") == 0) {
+	if (s && !bootcount_error() && strcmp(s, "ACTIVE") == 0) {
 		spl_boot_list[0] = BOOT_DEVICE_MMC1;
 		spl_boot_list[1] = spl_boot_device();
 	}

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-2.0
 /*
  *	Copied from Linux Monitor (LiMon) - Networking.
  *
@@ -6,7 +7,6 @@
  *	Copyright 2000 Roland Borde
  *	Copyright 2000 Paolo Scaffardi
  *	Copyright 2000-2002 Wolfgang Denk, wd@denx.de
- *	SPDX-License-Identifier:	GPL-2.0
  */
 
 /*
@@ -87,6 +87,7 @@
 #include <environment.h>
 #include <errno.h>
 #include <net.h>
+#include <net/fastboot.h>
 #include <net/tftp.h>
 #if defined(CONFIG_LED_STATUS)
 #include <miiphy.h>
@@ -107,8 +108,6 @@
 #if defined(CONFIG_CMD_SNTP)
 #include "sntp.h"
 #endif
-
-DECLARE_GLOBAL_DATA_PTR;
 
 /** BOOTP EXTENTIONS **/
 
@@ -394,6 +393,7 @@ void net_init(void)
 int net_loop(enum proto_t protocol)
 {
 	int ret = -EINVAL;
+	enum net_loop_state prev_net_state = net_state;
 
 	net_restarted = 0;
 	net_dev_exists = 0;
@@ -431,6 +431,7 @@ restart:
 	case 1:
 		/* network not configured */
 		eth_halt();
+		net_set_state(prev_net_state);
 		return -ENODEV;
 
 	case 2:
@@ -451,6 +452,11 @@ restart:
 #ifdef CONFIG_CMD_TFTPSRV
 		case TFTPSRV:
 			tftp_start_server();
+			break;
+#endif
+#ifdef CONFIG_UDP_FUNCTION_FASTBOOT
+		case FASTBOOT:
+			fastboot_start_server();
 			break;
 #endif
 #if defined(CONFIG_CMD_DHCP)
@@ -651,6 +657,7 @@ done:
 	net_set_udp_handler(NULL);
 	net_set_icmp_handler(NULL);
 #endif
+	net_set_state(prev_net_state);
 	return ret;
 }
 
@@ -683,7 +690,7 @@ int net_start_again(void)
 		retry_forever = 0;
 	}
 
-	if ((!retry_forever) && (net_try_count >= retrycnt)) {
+	if ((!retry_forever) && (net_try_count > retrycnt)) {
 		eth_halt();
 		net_set_state(NETLOOP_FAIL);
 		/*
@@ -1324,6 +1331,7 @@ common:
 		/* Fall through */
 
 	case NETCONS:
+	case FASTBOOT:
 	case TFTPSRV:
 		if (net_ip.s_addr == 0) {
 			puts("*** ERROR: `ipaddr' not set\n");
