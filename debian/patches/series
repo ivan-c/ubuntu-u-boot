@@ -30,3 +30,9 @@ pinebook-pro/0004-arm-dts-rockchip-Add-initial-DT-for-Pinebook-Pro.patch
 pinebook-pro/0005-Add-initial-support-for-the-Pinebook-Pro-laptop-from.patch
 # https://patchwork.ozlabs.org/project/uboot/patch/20200420181825.935797-1-pbrobinson@gmail.com/
 pinebook-pro/0006-drivers-video-rockchip-fix-building-eDP-and-LVDS-dri.patch
+
+rpi-config-tweaks.patch
+lzo-to-lzno.patch
+ubuntu-hardening-limit-keynames-to-keydir.patch
+ubuntu-nitrogen6q2g-config-tweaks.patch
+rpi-board-dt.patch

@@ -43,6 +43,9 @@ armhf	imx		mx6qsabrelite	u-boot-dtb.imx
 # Hector Oron <zumbi@debian.org>
 armhf	imx		nitrogen6q	u-boot-dtb.imx
 
+# Shrirang Bagul <shrirang.bagul@canonical.com>
+armhf	imx		nitrogen6q2g	u-boot-dtb.imx
+
 # Vagrant Cascadian <vagrant@debian.org>
 armhf	imx		novena		u-boot.img SPL
 armhf	imx		novena-rawsd SPL
@@ -256,3 +259,7 @@ all:arm64	qemu	qemu_arm64	u-boot.bin
 all:i386	qemu	qemu-x86	u-boot.bin
 all:riscv64	qemu	qemu-riscv64	u-boot.bin
 all:riscv64	qemu	qemu-riscv64_smode	u-boot.bin
+
+# Dave Jones <dave.jones@canonical.com>
+armhf	rpi		rpi_4_32b	u-boot.bin
+arm64	rpi		rpi_4		u-boot.bin

@@ -1,0 +1,40 @@
+Author: Dave Jones <dave.jones@canonical.com>
+Description: Use the board's device-tree rather than embedded
+ Our u-boot binaries should accept the device-tree passed by the firmware
+ rather than use an embedded one. Firstly, the OF_EMBED option is actively
+ discouraged by u-boot itself, and secondly it allows the same binary to
+ operate correctly on platforms with differing serial configurations, e.g. the
+ Pi 3 and Compute Module 3.
+--- a/configs/rpi_2_defconfig
++++ b/configs/rpi_2_defconfig
+@@ -17,7 +17,7 @@
+ CONFIG_CMD_MMC=y
+ CONFIG_CMD_USB=y
+ CONFIG_CMD_FS_UUID=y
+-CONFIG_OF_EMBED=y
++CONFIG_OF_BOARD=y
+ CONFIG_DEFAULT_DEVICE_TREE="bcm2836-rpi-2-b"
+ CONFIG_ENV_FAT_INTERFACE="mmc"
+ CONFIG_ENV_FAT_DEVICE_AND_PART="0:1"
+--- a/configs/rpi_3_32b_defconfig
++++ b/configs/rpi_3_32b_defconfig
+@@ -18,7 +18,7 @@
+ CONFIG_CMD_MMC=y
+ CONFIG_CMD_USB=y
+ CONFIG_CMD_FS_UUID=y
+-CONFIG_OF_EMBED=y
++CONFIG_OF_BOARD=y
+ CONFIG_DEFAULT_DEVICE_TREE="bcm2837-rpi-3-b"
+ CONFIG_ENV_FAT_INTERFACE="mmc"
+ CONFIG_ENV_FAT_DEVICE_AND_PART="0:1"
+--- a/configs/rpi_3_defconfig
++++ b/configs/rpi_3_defconfig
+@@ -18,7 +18,7 @@
+ CONFIG_CMD_MMC=y
+ CONFIG_CMD_USB=y
+ CONFIG_CMD_FS_UUID=y
+-CONFIG_OF_EMBED=y
++CONFIG_OF_BOARD=y
+ CONFIG_DEFAULT_DEVICE_TREE="bcm2837-rpi-3-b"
+ CONFIG_ENV_FAT_INTERFACE="mmc"
+ CONFIG_ENV_FAT_DEVICE_AND_PART="0:1"
