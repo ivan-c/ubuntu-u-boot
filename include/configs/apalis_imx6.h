@@ -146,8 +146,6 @@
 #define MEM_LAYOUT_ENV_SETTINGS \
 	"bootm_size=0x20000000\0" \
 	"fdt_addr_r=0x12100000\0" \
-	"fdt_high=0xffffffff\0" \
-	"initrd_high=0xffffffff\0" \
 	"kernel_addr_r=0x11000000\0" \
 	"pxefile_addr_r=0x17100000\0" \
 	"ramdisk_addr_r=0x12200000\0" \
@@ -211,10 +209,6 @@
 #define CONFIG_SYS_CBSIZE		1024
 #undef CONFIG_SYS_MAXARGS
 #define CONFIG_SYS_MAXARGS		48
-
-#define CONFIG_SYS_MEMTEST_START	0x10000000
-#define CONFIG_SYS_MEMTEST_END		0x10010000
-#define CONFIG_SYS_MEMTEST_SCRATCH	0x10800000
 
 #define CONFIG_SYS_LOAD_ADDR		CONFIG_LOADADDR
 
