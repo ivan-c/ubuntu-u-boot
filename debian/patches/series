@@ -16,3 +16,9 @@ exynos/0001-arm-config-fix-default-console-only-to-specify-the-d.patch
 riscv64/qemu-riscv64_smode-sifive-fu540-fix-extlinux-define-.patch
 
 n900/bootz_and_raw_initrd.patch
+
+rpi-config-tweaks.patch
+lzo-to-lzno.patch
+ubuntu-hardening-limit-keynames-to-keydir.patch
+ubuntu-nitrogen6q2g-config-tweaks.patch
+rpi-board-dt.patch

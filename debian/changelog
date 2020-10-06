@@ -1,3 +1,34 @@
+u-boot (2020.10+dfsg-1ubuntu0~18.04.1) bionic; urgency=low
+
+  * SRU of 2020.10+dfsg-1 to support Raspberry Pi 4 (LP: #1903054), and
+    fix a failure to write issue (LP: #1900693)
+  * Re-added d/p/lzo-to-lzno.patch as lzop is in universe prior to Groovy
+  * Updated d/targets to remove arm-trusted-firmware references
+  * Updated d/control for compatibility with bionic debhelper
+  * Reinstate rpi-config-migration script for bionic
+
+  [ Dave Jones ]
+  * Merge from Debian unstable.  Remaining changes:
+    - Enable Ubuntu support for the Nitrogen6x board (LP: #1838064)
+      - Add d/p/ubuntu-nitrogen6q2g-config-tweaks.patch to tweak the
+        nitrogen6q2g configs to better fit our Ubuntu usage.
+      - Start building the nitrogen6x2g target for u-boot.
+    - Enable FIT signing support (LP: #1831942)
+      - Enable CONFIG_FIT_SIGNATURE so we can sign FIT images.
+      - Add libssl-dev to Build-Depends: to enable crypto functionality.
+      - Limit key names to keys within the keydir.
+    - d/p/rpi-config-tweaks.patch: Configuration adjustments to the RPi
+      configs
+    - d/p/rpi-board-dt.patch: use the board's device-tree instead of an
+      embedded one
+
+  * Removed obsolete patches/changes:
+    - d/p/lzo-to-lzno.patch: use gzip instead of lzo compression for FIT
+      images as lzop in Ubuntu is in universe. This should be temporary and in
+      the next releases ideally we should follow what Debian does.
+
+ -- Dave Jones <dave.jones@canonical.com>  Tue, 06 Oct 2020 03:18:18 +0000
+
 u-boot (2020.10+dfsg-1) unstable; urgency=medium
 
   * New upstream release.
@@ -82,6 +113,53 @@ u-boot (2020.07~rc2+dfsg-1) experimental; urgency=medium
   * debian/patches: Refresh.
 
  -- Vagrant Cascadian <vagrant@debian.org>  Mon, 18 May 2020 17:16:07 -0700
+
+u-boot (2020.04+dfsg-2ubuntu1) groovy; urgency=medium
+
+  * Merge with 2020.04+dfsg-2 from Debian unstable. Remaining changes:
+    - Enable Ubuntu support for the Nitrogen6x board (LP: #1838064)
+      - Add d/p/ubuntu-nitrogen6q2g-config-tweaks.patch to tweak the
+        nitrogen6q2g configs to better fit our Ubuntu usage.
+      - Start building the nitrogen6x2g target for u-boot.
+    - Enable FIT signing support (LP: #1831942)
+      - Enable CONFIG_FIT_SIGNATURE so we can sign FIT images.
+      - Add libssl-dev to Build-Depends: to enable crypto functionality.
+      - Limit key names to keys within the keydir.
+    - d/p/rpi-config-tweaks.patch: Configuration adjustments to the RPi
+      configs
+    - d/p/lzo-to-lzno.patch: use gzip instead of lzo compression for FIT
+      images as lzop in Ubuntu is in universe. This should be temporary and in
+      the next releases ideally we should follow what Debian does.
+    - d/p/rpi-board-dt.patch: use the board's device-tree instead of an
+      embedded one
+
+  * Removed obsolete patches/changes:
+    - Handle differing root partition labels during migration
+    - Add script to migrate old boot configurations to split, selective style
+    - Don't attempt config migration when /boot/firmware is a chroot
+    - Use vc4-fkms-v3d overlay on all models of Raspberry Pi
+    - Do not include the vc4-fkms-v3d overlay; this breaks book on the 3A+
+    - Ensure boot.scr is from recent flash-kernel
+    - d/p/rpi-import-mkknlimg.patch import tools/mkknlimg from Xenial/raspi2 -
+      scripts/mkknlimg @ 83a3ebb
+    - Remove redundant d/p/rpi-import-mkknlimg.patch
+    - d/p/ubuntu-nitrogen6q2g-temporary-config-fixup.patch:
+      Fix bad CRC issue. The env size and redundant environment config
+      variables have not yet been migrated to Kconfig, so setting them in
+      _defconfig has no effect. Set those manually.
+
+  * Removed patches obsoleted/merged by upstream:
+    - Use python2 for the build.
+    - Added d/p/python2.patch to fix-up remaining scripts still using bare
+      "python"
+    - d/p/am57xx/omap5_distro_bootcmd
+    - Correct odroid README paths
+    - Add d/p/rpi4.patch to support Raspberry Pi 4 boot
+    - Avoid device-tree memory fixup on Raspberry Pi 4; this allows access to
+      the all the RAM on models with more than 1Gb
+    - Add missing build dependency on arm/arm64
+
+ -- Dave Jones <dave.jones@canonical.com>  Sat, 16 May 2020 01:02:53 +0000
 
 u-boot (2020.04+dfsg-2) unstable; urgency=medium
 
@@ -227,6 +305,14 @@ u-boot (2019.10~rc4+dfsg-1) experimental; urgency=medium
     removed.
 
  -- Vagrant Cascadian <vagrant@debian.org>  Tue, 24 Sep 2019 01:03:23 -0700
+
+u-boot (2019.07+dfsg-1ubuntu4~18.04.1) bionic; urgency=medium
+
+  * Backport of 2019.07+dfsg1 to support Raspberry Pi 4 boot (LP: #1846329)
+  * Handle differing root partition labels during migration
+  * Ensure boot.scr is from recent flash-kernel
+
+ -- Dave Jones <dave.jones@canonical.com>  Thu, 19 Dec 2019 22:06:27 +0000
 
 u-boot (2019.07+dfsg-1) experimental; urgency=medium
 
@@ -534,6 +620,49 @@ u-boot (2018.07+dfsg-1) experimental; urgency=medium
 
  -- Vagrant Cascadian <vagrant@debian.org>  Mon, 09 Jul 2018 13:34:06 -0700
 
+u-boot (2018.07~rc3+dfsg1-0ubuntu3~18.04.2) bionic; urgency=medium
+
+  [ Shrirang Bagul ]
+  * Enable Ubuntu support for the Nitrogen6x board (LP: #1838064)
+    - Add d/p/ubuntu-nitrogen6q2g-config-tweaks.patch to tweak the
+      nitrogen6q2g configs to better fit our Ubuntu usage.
+    - Start building the nitrogen6x2g target for u-boot.
+
+ -- Łukasz 'sil2100' Zemczak <lukasz.zemczak@ubuntu.com>  Tue, 01 Oct 2019 09:44:59 +0200
+
+u-boot (2018.07~rc3+dfsg1-0ubuntu3~18.04.1) bionic; urgency=low
+
+  * Enable FIT signing support (LP: #1831942)
+    - Enable CONFIG_FIT_SIGNATURE so we can sign FIT images.
+    - Add libssl-dev to Build-Depends: to enable crypto functionality.
+    - Limit key names to keys within the keydir.
+
+ -- Andy Whitcroft <apw@ubuntu.com>  Mon, 10 Jun 2019 20:52:14 +0100
+
+u-boot (2018.07~rc3+dfsg1-0ubuntu2~18.04.1) bionic; urgency=medium
+
+  * d/control: Add missing dependency on binutils (for strings) (LP: #1814930)
+
+ -- Dave Jones <dave.jones@canonical.com>  Wed, 06 Feb 2019 16:40:22 +0000
+
+u-boot (2018.07~rc3+dfsg1-0ubuntu1~18.04.1) bionic; urgency=medium
+
+  * Backport to bionic (LP: #1805668).
+  * New interim upstream release .
+    - We pull in an rc version because that's the u-boot version we use in
+      our current core18 images and we want to provide 'feature parity'.
+  * debian/control:
+    - Added missing build-deps bison and flex.
+  * debian/patches:
+    - Refresh am57xx/omap5_distro_bootcmd.
+    - Refreshed patches.
+    - Removed odroid-xu3/bootdelay which was applied upstream.
+    - Add lzo-to-lzno.patch to use gzip instead of lzo compression for FIT
+      images as lzop in Ubuntu is in universe. This should be temporary and
+      in the next releases ideally we should follow what Debian does.
+
+ -- Dave Jones <dave.jones@canonical.com>  Fri, 11 Jan 2019 16:43:27 +0000
+
 u-boot (2018.07~rc2+dfsg-1) experimental; urgency=medium
 
   * New upstream release candidate:
@@ -594,6 +723,26 @@ u-boot (2018.05~rc2+dfsg-1) experimental; urgency=medium
   * Install build configs to /usr/share/doc/*/configs.
 
  -- Vagrant Cascadian <vagrant@debian.org>  Tue, 17 Apr 2018 16:05:55 -0700
+
+u-boot (2018.03+dfsg1-2ubuntu2) disco; urgency=medium
+
+  * debian/u-boot-rpi.postinst:
+    - Support the fact that we now ship multiple uboot binaries for multiple
+      Pi platforms in one package. Try to determine which device we're running
+      on and use the right binary during upgrade/installation.
+
+ -- Łukasz 'sil2100' Zemczak <lukasz.zemczak@ubuntu.com>  Thu, 29 Nov 2018 01:16:07 +0100
+
+u-boot (2018.03+dfsg1-2ubuntu1) cosmic; urgency=low
+
+  * Merge from Debian unstable.  Remaining changes:
+    - rpi-import-mkknlimg.patch import tools/mkknlimg from Xenial/raspi2 -
+      scripts/mkknlimg @ 83a3ebb
+  * debian/patches/rpi2-rpi3-config-tweaks.patch: basing on the earlier
+    rpi2-config-tweaks.patch, make configuration adjustments to the rpi2 and
+    rpi3 configs.
+
+ -- Łukasz 'sil2100' Zemczak <lukasz.zemczak@ubuntu.com>  Fri, 27 Apr 2018 12:38:24 +0100
 
 u-boot (2018.03+dfsg1-2) unstable; urgency=medium
 
@@ -1071,6 +1220,26 @@ u-boot (2016.05~rc3+dfsg1-1) experimental; urgency=medium
 
  -- Vagrant Cascadian <vagrant@debian.org>  Sat, 30 Apr 2016 18:53:04 -0700
 
+u-boot (2016.03+dfsg1-6ubuntu2) zesty; urgency=medium
+
+  * From upstream u-boot: (LP: #1636838)
+    - debian/patches/rpi-import-mkknlimg.patch: import tools/mkknlimg from
+      Xenial/raspi2 - scripts/mkknlimg @ 83a3ebb
+    - debian/u-boot-rpi.postinst: pass u-boot.bin through mkknlimg before
+      installing it as /boot/firmware/uboot.bin
+    - debian/patches/serial-pl01x-Add-support-for-devices-with-the-rate-p.patch:
+      Skip serial clock initialization when it's done by the firmware.
+
+ -- Paolo Pisati <paolo.pisati@canonical.com>  Wed, 09 Nov 2016 17:09:29 +0200
+
+u-boot (2016.03+dfsg1-6ubuntu1) yakkety; urgency=low
+
+  * Merge from Debian unstable.  Remaining changes:
+    - debian/patches/rpi2-config-tweaks.patch: configuration adjustments
+      to the RPi2 config.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Wed, 06 Jul 2016 17:30:44 -0700
+
 u-boot (2016.03+dfsg1-6) unstable; urgency=medium
 
   [ Vagrant Cascadian ]
@@ -1091,6 +1260,14 @@ u-boot (2016.03+dfsg1-6) unstable; urgency=medium
     tracking down the patch!
 
  -- Vagrant Cascadian <vagrant@debian.org>  Tue, 28 Jun 2016 09:38:27 +0200
+
+u-boot (2016.03+dfsg1-5ubuntu1) yakkety; urgency=low
+
+  * Merge from Debian unstable.  Remaining changes:
+    - debian/patches/rpi2-config-tweaks.patch: configuration adjustments
+      to the RPi2 config.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Fri, 10 Jun 2016 21:46:33 -0700
 
 u-boot (2016.03+dfsg1-5) unstable; urgency=medium
 
@@ -1116,6 +1293,14 @@ u-boot (2016.03+dfsg1-5) unstable; urgency=medium
   * u-boot-tegra: Update README.Debian for Jetson TX1.
 
  -- Vagrant Cascadian <vagrant@debian.org>  Sun, 29 May 2016 14:29:59 -0700
+
+u-boot (2016.03+dfsg1-4ubuntu1) yakkety; urgency=low
+
+  * Merge from Debian unstable.  Remaining changes:
+    - debian/patches/rpi2-config-tweaks.patch: configuration adjustments
+      to the RPi2 config.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Tue, 26 Apr 2016 21:06:04 -0700
 
 u-boot (2016.03+dfsg1-4) unstable; urgency=medium
 
@@ -1175,6 +1360,14 @@ u-boot (2016.03~rc2+dfsg1-1) experimental; urgency=medium
 
  -- Vagrant Cascadian <vagrant@debian.org>  Tue, 16 Feb 2016 15:01:48 -0800
 
+u-boot (2016.01+dfsg1-2ubuntu1) xenial; urgency=low
+
+  * Merge from Debian unstable.  Remaining changes:
+    - debian/patches/rpi2-config-tweaks.patch: configuration adjustments
+      to the RPi2 config.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Thu, 11 Feb 2016 21:55:38 -0800
+
 u-boot (2016.01+dfsg1-2) unstable; urgency=medium
 
   * u-boot-omap:
@@ -1187,6 +1380,13 @@ u-boot (2016.01+dfsg1-2) unstable; urgency=medium
     works" from upstream.
 
  -- Vagrant Cascadian <vagrant@debian.org>  Mon, 08 Feb 2016 20:14:04 -0800
+
+u-boot (2016.01+dfsg1-1ubuntu1) xenial; urgency=medium
+
+  * debian/patches/rpi2-config-tweaks.patch: configuration adjustments
+    to the RPi2 config.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Tue, 02 Feb 2016 11:43:50 -0800
 
 u-boot (2016.01+dfsg1-1) unstable; urgency=medium
 
@@ -2250,3 +2450,4 @@ u-boot (2010.03-1) unstable; urgency=low
   * Initial packaging.  closes: #583605.
 
  -- Clint Adams <schizo@debian.org>  Fri, 28 May 2010 16:20:39 -0400
+
