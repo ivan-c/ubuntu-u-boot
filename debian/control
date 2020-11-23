@@ -17,6 +17,7 @@ Build-Depends:
  libc6:armhf [armhf] <cross !pkg.uboot.notools>,
  libc6:armel [armel] <cross !pkg.uboot.notools>,
  libc6:riscv64 [riscv64] <cross !pkg.uboot.notools>,
+ opensbi,
  libpython3-dev:native [linux-any],
  libssl-dev,
  python3:any [linux-any],
@@ -225,6 +226,7 @@ Description: A boot loader for Raspberry PI systems
 Package: u-boot-sifive
 Architecture: riscv64
 Multi-Arch: same
+Built-Using: ${uboot:Built-Using}
 Depends: ${misc:Depends}
 Description: A boot loader for SiFive systems
  Das U-Boot is a cross-platform bootloader for embedded systems,
