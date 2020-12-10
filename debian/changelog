@@ -1,3 +1,12 @@
+u-boot (2020.10+dfsg-1ubuntu6) hirsute; urgency=medium
+
+  * Add d/p/rpi-8gb-pci.patch for Pi400 and Pi4-8Gb support (LP: #1906552)
+  * Add d/p/rpi-cm4-sdhci.patch for CM4 eMMC support
+  * Add d/p/rpi-maxargs.patch for new Core 18 boot-env (LP: #1910094)
+  * Remove redundant d/targets entries
+
+ -- Dave Jones <dave.jones@canonical.com>  Thu, 10 Dec 2020 23:44:09 +0000
+
 u-boot (2020.10+dfsg-1ubuntu5) hirsute; urgency=medium
 
   * Use flat binary rather than ELF OpenSBI; U-Boot SPL doesn't support ELF.
