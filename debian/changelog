@@ -1,3 +1,10 @@
+u-boot (2020.10+dfsg-1ubuntu5) hirsute; urgency=medium
+
+  * Use flat binary rather than ELF OpenSBI; U-Boot SPL doesn't support ELF.
+  * Switch back to generic OpenSBI, as modern versions detect the platform.
+
+ -- William Grant <wgrant@ubuntu.com>  Mon, 21 Dec 2020 10:32:59 +1100
+
 u-boot (2020.10+dfsg-1ubuntu4) hirsute; urgency=medium
 
   * Use the right opensbi fw_dynamic for fu540.

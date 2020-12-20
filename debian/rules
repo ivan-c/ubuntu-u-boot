@@ -35,7 +35,7 @@ else
 TARGETSUBARCH = $(patsubst pkg.uboot.subarch.%,%,$(filter pkg.uboot.subarch.%,$(DEB_BUILD_PROFILES)))
 endif
 
-export OPENSBI=/usr/lib/riscv64-linux-gnu/opensbi/sifive/fu540/fw_dynamic.elf
+export OPENSBI=/usr/lib/riscv64-linux-gnu/opensbi/generic/fw_dynamic.bin
 
 %:
 	dh $@
