@@ -22,3 +22,6 @@ lzo-to-lzno.patch
 ubuntu-hardening-limit-keynames-to-keydir.patch
 ubuntu-nitrogen6q2g-config-tweaks.patch
 rpi-board-dt.patch
+rpi-cm4-sdhci.patch
+rpi-8gb-pci.patch
+rpi-maxargs.patch

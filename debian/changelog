@@ -1,3 +1,19 @@
+u-boot (2020.10+dfsg-1ubuntu0~20.04.2) focal; urgency=medium
+
+  * SRU of changes through to 2020.10+dfsg-1ubuntu6 to fix Pi4-8GB & CM4 support,
+    and add support for risc-v unleashed board:
+
+  [ Dave Jones ]
+  * Add d/p/rpi-8gb-pci.patch for Pi400 and Pi4-8Gb support (LP: #1906552)
+  * Add d/p/rpi-cm4-sdhci.patch for CM4 eMMC support
+  * Add d/p/rpi-maxargs.patch for new Core 18 boot-env (LP: #1910094)
+  * Remove redundant d/targets entries
+
+  [ Dimitri John Ledkov ]
+  * Enable u-boot spl for unleashed. LP: #1905274
+
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Fri, 08 Jan 2021 13:03:11 +0000
+
 u-boot (2020.10+dfsg-1ubuntu0~20.04.1) focal; urgency=medium
 
   * SRU of 2020.10+dfsg-1 to support Raspberry Pi 4 (LP: #1903054)
