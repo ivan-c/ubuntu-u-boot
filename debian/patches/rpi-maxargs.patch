@@ -1,0 +1,17 @@
+Author: Dave Jones <dave.jones@canonical.com>
+Forwarded: no
+Description: Allow more than 16 args for a command for LP: #1910094
+ The default u-boot command line configuration only permits a maximum of
+ 16 arguments per command. Unfortunately, the fix for LP: #1900879 demands
+ considerably more than this.
+
+--- a/include/configs/rpi.h
++++ b/include/configs/rpi.h
+@@ -93,6 +93,7 @@
+ 
+ /* Console configuration */
+ #define CONFIG_SYS_CBSIZE		1024
++#define CONFIG_SYS_MAXARGS		64
+ 
+ /* Environment */
+ #define CONFIG_SYS_LOAD_ADDR		0x1000000
