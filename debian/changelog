@@ -1,3 +1,11 @@
+u-boot (2021.01+dfsg-2) unstable; urgency=medium
+
+  * debian/patches: Disable USE_PREBOOT on rockpro64 and pinebook-pro to
+    workaround boot failure triggered by USB initialization.
+    (Closes: #973323, #980434)
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Thu, 21 Jan 2021 20:36:56 -0800
+
 u-boot (2021.01+dfsg-1) unstable; urgency=medium
 
   [ Nicolas Boulenguez ]
