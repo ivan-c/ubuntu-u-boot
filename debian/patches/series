@@ -19,3 +19,11 @@ riscv64/qemu-riscv64_smode-sifive-fu540-fix-extlinux-define-.patch
 n900/bootz_and_raw_initrd.patch
 
 rk3399/disable-preboot
+
+rpi-config-tweaks.patch
+ubuntu-hardening-limit-keynames-to-keydir.patch
+ubuntu-nitrogen6q2g-config-tweaks.patch
+rpi-board-dt.patch
+rpi-cm4-sdhci.patch
+rpi-8gb-pci.patch
+rpi-maxargs.patch
