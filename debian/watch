@@ -4,5 +4,5 @@ opts=dversionmangle=auto,\
      pgpmode=auto,\
      repacksuffix=+dfsg,\
      uversionmangle=s/-rc/~rc/ \
-https://ftp.denx.de/pub/@PACKAGE@ \
+https://ftp.denx.de/pub/@PACKAGE@/ \
 @PACKAGE@@ANY_VERSION@@ARCHIVE_EXT@

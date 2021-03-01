@@ -1,3 +1,35 @@
+u-boot (2021.01+dfsg-3) unstable; urgency=medium
+
+  [ Domenico Andreoli ]
+  * u-boot-install-sunxi: Add support for some armhf
+
+  [ Vagrant Cascadian ]
+  * debian/watch: Fix missing "/".
+
+  [ Andreas B. Mundt ]
+  * Update u-boot-install-sunxi: Add Olimex A20-OLinuXino-LIME2-eMMC
+
+  [ harry88@gmx.ph ]
+  * u-boot-install-sunxi: Avoid overriding files in current directory
+    (Closes: #982278)
+
+  [ Nicolas Boulenguez ]
+  * Enable version 1.1 of the pinephone (Closes: #982981)
+
+  [ Vagrant Cascadian ]
+  * u-boot-install-sunxi: Make installing .itb files optional.
+  * u-boot-install-sunxi: Add support for armhf targets: Banana Pi
+    BPI-M2-Ultra Banana Pi BPI-M3 Banana Pi M2 Berry Cubietech Cubieboard
+    Cubietech Cubieboard2 Cubietech Cubieboard4 Cubietech Cubietruck
+    Cubietech Cubietruck Plus FriendlyARM NanoPi NEO Air Lamobo R1 LeMaker
+    Banana Pi LeMaker Banana Pro LinkSprite pcDuino LinkSprite pcDuino3
+    Olimex A10-OLinuXino-LIME Olimex A10s-Olinuxino Micro Olimex
+    A20-Olimex-SOM-EVB Olimex A20-OLinuXino-LIME Olimex A20-Olinuxino
+    Micro PineRiver Mini X-Plus Xunlong Orange Pi Plus / Plus 2 Xunlong
+    Orange Pi Zero
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Mon, 01 Mar 2021 00:00:18 -0800
+
 u-boot (2021.01+dfsg-2) unstable; urgency=medium
 
   * debian/patches: Disable USE_PREBOOT on rockpro64 and pinebook-pro to
