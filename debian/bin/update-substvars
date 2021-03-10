@@ -14,5 +14,9 @@ for file in debian/build/platforms.* ; do
 			printf "uboot:Built-Using=$(dpkg-query -f '${source:Package} (= ${source:Version}) [arm64]' -W arm-trusted-firmware)\n"\
 				   >> debian/${package}.substvars
 			;;
+		sifive)
+			printf "uboot:Built-Using=$(dpkg-query -f '${source:Package} (= ${source:Version}) [riscv64]' -W opensbi)\n"\
+				   >> debian/${package}.substvars
+			;;
 	esac
 done
