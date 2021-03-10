@@ -1,3 +1,11 @@
+u-boot (2021.01+dfsg-3ubuntu2) hirsute; urgency=medium
+
+  * Import meta-sifive u-boot patches.
+  * Enable sifive_hifive_unmatched_fu740 target.
+  * Build-depend on opensbi with fu740 errata fix.
+
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Wed, 10 Mar 2021 12:27:57 +0000
+
 u-boot (2021.01+dfsg-3ubuntu1) hirsute; urgency=medium
 
   * Merge from Debian unstable. Remaining changes:

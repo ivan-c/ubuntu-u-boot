@@ -15,6 +15,43 @@ test-imagetools-test-fixes
 exynos/0001-arm-config-fix-default-console-only-to-specify-the-d.patch
 
 riscv64/qemu-riscv64_smode-sifive-fu540-fix-extlinux-define-.patch
+riscv64/sifive-fu540-compressed-booti-support.patch
+riscv64/0001-clk-sifive-fu540-prci-Extract-prci-core-to-common-ba.patch
+riscv64/0002-clk-sifive-fu540-prci-Use-common-name-for-prci-confi.patch
+riscv64/0003-clk-sifive-fu740-Sync-up-DT-bindings-header-with-ups.patch
+riscv64/0004-clk-sifive-fu740-prci-Add-a-driver-for-the-SiFive-FU.patch
+riscv64/0005-clk-sifive-select-PLL-clock-as-input-source-after-en.patch
+riscv64/0006-clk-sifive-fu740-prci-set-HFPCLKPLL-rate-to-260-Mhz.patch
+riscv64/0007-riscv-dts-Add-SiFive-FU740-C000-SoC-dts-from-Linux.patch
+riscv64/0008-riscv-dts-Add-hifive-unmatched-a00-dts-from-Linux.patch
+riscv64/0009-riscv-cpu-fu740-Add-support-for-cpu-fu740.patch
+riscv64/0010-riscv-Add-SiFive-HiFive-Unmatched-FU740-board-suppor.patch
+riscv64/0011-riscv-sifive-dts-fu740-Add-board-u-boot.dtsi-files.patch
+riscv64/0012-dt-bindings-sifive-fu740-add-indexes-for-reset-signa.patch
+riscv64/0013-fu740-dtsi-add-reset-producer-and-consumer-entries.patch
+riscv64/0014-ram-sifive-Add-common-DDR-driver-for-sifive.patch
+riscv64/0015-ram-sifive-Added-compatible-string-for-FU740-c000-dd.patch
+riscv64/0016-sifive-dts-fu740-Add-DDR-controller-and-phy-register.patch
+riscv64/0017-riscv-sifive-dts-fu740-add-U-Boot-dmc-node.patch
+riscv64/0018-riscv-sifive-hifive_unmatched_fu740-add-SPL-configur.patch
+riscv64/0019-sifive-hifive_unmatched_fu740-Add-sample-SD-gpt-part.patch
+riscv64/0020-sifive-fu740-Add-U-Boot-proper-sector-start.patch
+riscv64/0021-configs-hifive_unmatched_fu740-Add-config-options-fo.patch
+riscv64/0022-riscv-sifive-fu540-enable-all-cache-ways-from-U-Boot.patch
+riscv64/0023-riscv-sifive-dts-fu740-set-ethernet-clock-rate.patch
+riscv64/0024-sifive-fu740-set-kernel_comp_addr_r-and-kernel_comp_.patch
+riscv64/0025-sifive-fu740-enable-full-L2-cache-ways-16-ways-total.patch
+riscv64/0026-sifive-fu740-fix-cache-controller-signals-order.patch
+riscv64/0027-sifive-fu740-change-eth0-assigned-clock-rates-to-125.patch
+riscv64/0028-sifive-hifive_unmatched_fu740-Enable-64bit-PCI-resou.patch
+riscv64/0029-clk-sifive-add-pciaux-clock.patch
+riscv64/0030-pci-sifive-add-pcie-driver-for-fu740.patch
+riscv64/0031-Update-SiFive-Unmatched-defconfig.patch
+riscv64/0032-riscv-sifive-unmatched-set-cacheline-size-to-64-byte.patch
+riscv64/0033-fu740-add-CONFIG_CMD_GPT-and-CONFIG_CMD_GPT_RENAME.patch
+riscv64/0034-Unmathced-FU740-add-NVME-USB-and-PXE-to-boot-targets.patch
+riscv64/0001-riscv-clear-feature-disable-CSR.patch
+riscv64/0001-riscv-sifive-unmatched-enable-SoC-FAN-on-rev2.patch
 
 n900/bootz_and_raw_initrd.patch
 

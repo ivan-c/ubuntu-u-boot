@@ -272,6 +272,7 @@ avr32	-		hammerhead	u-boot.img
 
 # Hector Oron <zumbi@debian.org>
 riscv64	sifive	sifive_fu540	u-boot.bin spl/u-boot-spl.bin u-boot.itb
+riscv64	sifive	sifive_hifive_unmatched_fu740	u-boot.bin spl/u-boot-spl.bin u-boot.itb
 
 sh4	-		r2dplus		u-boot.bin
 

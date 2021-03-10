@@ -16,7 +16,7 @@ Build-Depends:
  libc6:armhf [armhf] <cross !pkg.uboot.notools>,
  libc6:armel [armel] <cross !pkg.uboot.notools>,
  libc6:riscv64 [riscv64] <cross !pkg.uboot.notools>,
- opensbi,
+ opensbi (>= 0.9-1ubuntu2~),
  libpython3-dev:native [linux-any],
  libssl-dev,
  python3:any [linux-any],
