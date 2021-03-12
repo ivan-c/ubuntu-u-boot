@@ -32,6 +32,9 @@ else
 TARGETSUBARCH = $(patsubst pkg.uboot.subarch.%,%,$(filter pkg.uboot.subarch.%,$(DEB_BUILD_PROFILES)))
 endif
 
+# Enable debugging symbols and remove build paths
+export HOSTCFLAGS = -g -ffile-prefix-map=$(CURDIR)=.
+
 %:
 	dh $@
 
