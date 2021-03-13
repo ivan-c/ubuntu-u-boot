@@ -1,3 +1,26 @@
+u-boot (2021.04~rc3+dfsg-1) experimental; urgency=medium
+
+  * New upstream release candidate. Fixes CVE-2021-27097 and
+    CVE-2021-27138. (Closes: #983270, #983269)
+  * Disable tests for FIT images
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Fri, 12 Mar 2021 16:22:35 -0800
+
+u-boot (2021.01+dfsg-4) unstable; urgency=medium
+
+  [ Arnaud Ferraris ]
+  * Add support for the pinetab platform (Closes: #982982)
+  * u-boot-install-sunxi: fix device tree model for PinePhone 1.1
+    (Closes: #984704)
+
+  [ Vagrant Cascadian ]
+  * debian/patches: Update PineTab patch use default bootdelay.
+  * debian/patches: Add Forwarded link to PineTab patch.
+  * debian/rules: Ensure debugging symbols are enabled.
+  * debian/rules: Pass argument to remove build path from debug symbols.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Fri, 12 Mar 2021 15:00:43 -0800
+
 u-boot (2021.01+dfsg-3) unstable; urgency=medium
 
   [ Domenico Andreoli ]

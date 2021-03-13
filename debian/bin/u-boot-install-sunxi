@@ -38,7 +38,9 @@ if [ -z "$TARGET" ] && [ -f "${dtmodel}" ]; then
 		"OrangePi Zero Plus2") TARGET="/usr/lib/u-boot/orangepi_zero_plus2/" ;;
 		"OrangePi One Plus") TARGET="/usr/lib/u-boot/orangepi_one_plus/" ;;
 		"Pinebook") TARGET="/usr/lib/u-boot/pinebook" ;;
-		"Pine64 PinePhone (1."[12]")") TARGET='/usr/lib/u-boot/pinephone' ;;
+		"Pine64 PinePhone Braveheart (1.1)") TARGET='/usr/lib/u-boot/pinephone' ;;
+		"Pine64 PinePhone (1.2)") TARGET='/usr/lib/u-boot/pinephone' ;;
+		"PineTab") TARGET="/usr/lib/u-boot/pinetab" ;;
 		"Pine64+") TARGET="/usr/lib/u-boot/pine64_plus" ;;
 		"Pine64 LTS") TARGET="/usr/lib/u-boot/pine64-lts" ;;
 		"PineRiver Mini X-Plus") TARGET="/usr/lib/u-boot/Mini-X" ;;

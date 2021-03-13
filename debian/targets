@@ -259,6 +259,9 @@ arm64	sunxi		pinebook	/usr/lib/arm-trusted-firmware/sun50i_a64/bl31.bin u-boot.b
 # Arnaud Ferraris <arnaud.ferraris@collabora.com> (1.1, 1.2)
 arm64	sunxi		pinephone	/usr/lib/arm-trusted-firmware/sun50i_a64/bl31.bin u-boot.bin spl/sunxi-spl.bin u-boot-nodtb.bin arch/arm/dts/sun50i-a64-pinephone-1.1.dtb arch/arm/dts/sun50i-a64-pinephone-1.2.dtb u-boot-sunxi-with-spl.fit.itb
 
+# Arnaud Ferraris <arnaud.ferraris@collabora.com>
+arm64	sunxi		pinetab		/usr/lib/arm-trusted-firmware/sun50i_a64/bl31.bin u-boot.bin spl/sunxi-spl.bin u-boot-nodtb.bin arch/arm/dts/sun50i-a64-pinetab.dtb u-boot-sunxi-with-spl.fit.itb
+
 # Jonas Smedegaard <dr@jones.dk>
 arm64	sunxi		teres_i		/usr/lib/arm-trusted-firmware/sun50i_a64/bl31.bin u-boot.bin spl/sunxi-spl.bin u-boot-nodtb.bin arch/arm/dts/sun50i-a64-teres-i.dtb u-boot-sunxi-with-spl.fit.itb
 

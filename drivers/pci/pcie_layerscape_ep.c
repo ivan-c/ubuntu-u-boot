@@ -7,6 +7,7 @@
 #include <common.h>
 #include <asm/arch/fsl_serdes.h>
 #include <dm.h>
+#include <asm/global_data.h>
 #include <dm/devres.h>
 #include <errno.h>
 #include <pci_ep.h>
@@ -332,5 +333,5 @@ U_BOOT_DRIVER(pci_layerscape_ep) = {
 	.ops = &ls_pcie_ep_ops,
 	.probe = ls_pcie_ep_probe,
 	.remove = ls_pcie_ep_remove,
-	.priv_auto_alloc_size = sizeof(struct ls_pcie_ep),
+	.priv_auto	= sizeof(struct ls_pcie_ep),
 };
