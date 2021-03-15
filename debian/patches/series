@@ -50,8 +50,13 @@ riscv64/0031-Update-SiFive-Unmatched-defconfig.patch
 riscv64/0032-riscv-sifive-unmatched-set-cacheline-size-to-64-byte.patch
 riscv64/0033-fu740-add-CONFIG_CMD_GPT-and-CONFIG_CMD_GPT_RENAME.patch
 riscv64/0034-Unmathced-FU740-add-NVME-USB-and-PXE-to-boot-targets.patch
-riscv64/0001-riscv-clear-feature-disable-CSR.patch
-riscv64/0001-riscv-sifive-unmatched-enable-SoC-FAN-on-rev2.patch
+riscv64/0035-riscv-clear-feature-disable-CSR.patch
+riscv64/0036-riscv-sifive-unmatched-add-I2C-EEPROM.patch
+riscv64/0037-cmd-Add-a-pwm-command.patch
+riscv64/0038-cmd-pwm-Rework-argc-sanity-checking.patch
+riscv64/0039-riscv-sifive-unmatched-enable-PWM.patch
+riscv64/0040-riscv-sifive-unmatched-update-for-rev3-16GB-1866.patch
+riscv64/0041-Fix-CRC32-checksum-for-SiFive-HiFive-EEPROM.patch
 
 n900/bootz_and_raw_initrd.patch
 

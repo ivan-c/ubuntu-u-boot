@@ -1,3 +1,9 @@
+u-boot (2021.01+dfsg-3ubuntu3) hirsute; urgency=medium
+
+  * Update patches for unmatched.
+
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Mon, 15 Mar 2021 16:29:23 +0000
+
 u-boot (2021.01+dfsg-3ubuntu2) hirsute; urgency=medium
 
   * Import meta-sifive u-boot patches.
