@@ -1,3 +1,9 @@
+u-boot (2021.01+dfsg-3ubuntu5) hirsute; urgency=medium
+
+  * Set default FDT files for the sifive boards.
+
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Tue, 16 Mar 2021 18:03:09 +0000
+
 u-boot (2021.01+dfsg-3ubuntu4) hirsute; urgency=medium
 
   * Update patch for unmatched.
