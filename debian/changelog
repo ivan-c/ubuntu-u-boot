@@ -1,3 +1,39 @@
+u-boot (2021.04~rc4+dfsg-1) experimental; urgency=medium
+
+  [ Vagrant Cascadian ]
+  * New upstream release candidate.
+  * debian/patches: Refresh mx53loco patch.
+  * debian/targets: mx53loco: Update to install u-boot-dtb.imx.
+
+  [ Nicolas Boulenguez ]
+  * Set CROSS_COMPILE on the Make command line instead of exporting
+    (Closes: #980236)
+  * Encode the GNU type instead of the Debian arch alias for qemu
+    (Closes: #980360)
+  * Name the platform list temp file after subpackage instead of subarch
+    (Closes: #980362)
+  * Install configurations with dh_installdocs instead of dh_install
+    (Closes: #980359)
+  * Pass distinct substvars to gencontrol on the command line
+    (Closes: #980358)
+  * Store all dh_install commands into the same file (Closes: #980361)
+  * Set BL31 SCP on the command line instead of the environment
+    (Closes: #980363)
+  * Replace many shell constructs with Make constructs (Closes: #979296)
+
+  [ Vagrant Cascadian ]
+  * debian/targets.mk: Use a single debian/build/rockchip_make_fit_atf
+    rule for all architectures.
+  * debian/rules: Depend on rockchip_make_fit_atf for
+    override_dh_auto_build-arch target.
+  * debian/rules: When pkg.uboot.platform.* is in DEB_BUILD_PROFILES, only
+    build specified platform.
+  * debian/patches: Refresh disable-fit-image-tests.
+  * debian/targets.mk: Fix u-boot-sunxi variables for arm64 assigns and
+    dpkg-gencontrol. Thanks to Nicolas Boulenguez.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Sat, 20 Mar 2021 18:09:04 -0700
+
 u-boot (2021.04~rc3+dfsg-1) experimental; urgency=medium
 
   * New upstream release candidate. Fixes CVE-2021-27097 and

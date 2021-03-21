@@ -9,4 +9,4 @@ Enables support for ext4, the "load" command, and using bootz with raw initrds.
 +CONFIG_CMD_EXT4=y
  CONFIG_CMD_FAT=y
  CONFIG_CMD_FS_GENERIC=y
- CONFIG_ENV_OVERWRITE=y
+ CONFIG_OF_CONTROL=y

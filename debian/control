@@ -47,7 +47,9 @@ Description: A boot loader for embedded systems
  intended to be easy to port and to debug, and runs on many
  supported architectures, including PPC, ARM, MIPS, x86, m68k,
  NIOS, and Microblaze.
- ${uboot:platforms}
+ .
+ Included platforms:
+ ${u-boot:platforms}
 
 Package: u-boot-amlogic
 Architecture: arm64
@@ -62,7 +64,9 @@ Description: A boot loader for amlogic systems
  NIOS, and Microblaze.
  .
  This package includes boot loaders for various amlogic platforms.
- ${uboot:platforms}
+ .
+ Included platforms:
+ ${u-boot-amlogic:platforms}
 
 Package: u-boot-imx
 Architecture: armhf
@@ -78,7 +82,9 @@ Description: A boot loader for imx systems
  NIOS, and Microblaze.
  .
  This package includes boot loaders for various imx platforms.
- ${uboot:platforms}
+ .
+ Included platforms:
+ ${u-boot-imx:platforms}
 
 Package: u-boot-qemu
 Architecture: all
@@ -94,7 +100,9 @@ Description: A boot loader for qemu
  NIOS, and Microblaze.
  .
  This package includes boot loaders for qemu/kvm.
- ${uboot:platforms}
+ .
+ Included platforms:
+ ${u-boot-qemu:platforms}
 
 Package: u-boot-qcom
 Architecture: arm64
@@ -108,7 +116,9 @@ Description: A boot loader for qcom systems
  NIOS, and Microblaze.
  .
  This package includes boot loaders for various qcom platforms.
- ${uboot:platforms}
+ .
+ Included platforms:
+ ${u-boot-qcom:platforms}
 
 Package: u-boot-tegra
 Architecture: armhf arm64
@@ -124,7 +134,9 @@ Description: A boot loader for NVIDIA Tegra systems
  NIOS, and Microblaze.
  .
  This package includes boot loaders for various NVIDIA Tegra platforms.
- ${uboot:platforms}
+ .
+ Included platforms:
+ ${u-boot-tegra:platforms}
 
 Package: u-boot-omap
 Architecture: armhf
@@ -141,12 +153,14 @@ Description: A boot loader for omap systems
  .
  This package includes boot loaders for various omap and related
  platforms.
- ${uboot:platforms}
+ .
+ Included platforms:
+ ${u-boot-omap:platforms}
 
 Package: u-boot-sunxi
 Architecture: armhf arm64
 Multi-Arch: same
-Built-Using: ${uboot:Built-Using}
+Built-Using: ${u-boot-sunxi:Built-Using}
 Depends: ${misc:Depends}
 Recommends: arm-trusted-firmware [arm64], u-boot-tools [arm64]
 Breaks: u-boot (<< 2014.10~rc2+dfsg1-2~)
@@ -160,7 +174,9 @@ Description: A boot loader for sunxi systems
  .
  This package includes boot loaders for various Allwinner/sunxi
  platforms.
- ${uboot:platforms}
+ .
+ Included platforms:
+ ${u-boot-sunxi:platforms}
 
 Package: u-boot-exynos
 Architecture: armhf
@@ -174,7 +190,9 @@ Description: A boot loader for exynos systems
  NIOS, and Microblaze.
  .
  This package includes boot loaders for various Exynos platforms.
- ${uboot:platforms}
+ .
+ Included platforms:
+ ${u-boot-exynos:platforms}
 
 Package: u-boot-mvebu
 Architecture: arm64
@@ -188,12 +206,14 @@ Description: A boot loader for marvell systems
  NIOS, and Microblaze.
  .
  This package includes boot loaders for various Marvell platforms.
- ${uboot:platforms}
+ .
+ Included platforms:
+ ${u-boot-mvebu:platforms}
 
 Package: u-boot-rockchip
 Architecture: armhf arm64
 Multi-Arch: same
-Built-Using: ${uboot:Built-Using}
+Built-Using: ${u-boot-rockchip:Built-Using}
 Depends: ${misc:Depends}
 Recommends: python3, arm-trusted-firmware [arm64], u-boot-tools [arm64]
 Description: A boot loader for rockchip systems
@@ -204,7 +224,9 @@ Description: A boot loader for rockchip systems
  NIOS, and Microblaze.
  .
  This package includes boot loaders for various Rockchip platforms.
- ${uboot:platforms}
+ .
+ Included platforms:
+ ${u-boot-rockchip:platforms}
 
 Package: u-boot-rpi
 Architecture: armel armhf arm64
@@ -219,7 +241,9 @@ Description: A boot loader for Raspberry PI systems
  .
  This package includes boot loaders for various Raspberry PI
  platforms.
- ${uboot:platforms}
+ .
+ Included platforms:
+ ${u-boot-rpi:platforms}
 
 Package: u-boot-sifive
 Architecture: riscv64
@@ -234,7 +258,9 @@ Description: A boot loader for SiFive systems
  .
  This package includes boot loaders for various SiFive
  platforms.
- ${uboot:platforms}
+ .
+ Included platforms:
+ ${u-boot-sifive:platforms}
 
 Package: u-boot-tools
 Architecture: linux-any
