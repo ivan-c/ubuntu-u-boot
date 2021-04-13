@@ -1,3 +1,11 @@
+u-boot (2021.01+dfsg-3ubuntu6) hirsute; urgency=medium
+
+  * Set USE_PREBOOT on unmatched board too (just like unleashed & qemu),
+    otherwise u-boot's fdtfile from itb is not used (i.e. when
+    extlinux.conf does not specify fdtdir). LP: #1923162
+
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Tue, 13 Apr 2021 14:52:32 +0100
+
 u-boot (2021.01+dfsg-3ubuntu5) hirsute; urgency=medium
 
   * Set default FDT files for the sifive boards.
