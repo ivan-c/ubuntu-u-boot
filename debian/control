@@ -24,6 +24,7 @@ Build-Depends:
  python3-pkg-resources [linux-any],
  swig [linux-any],
  lzop [armhf],
+ quilt [riscv64],
 Build-Depends-Indep:
 # For u-boot-qemu targets
  gcc-i686-linux-gnu [!i386],

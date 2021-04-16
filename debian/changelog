@@ -1,3 +1,10 @@
+u-boot (2021.01+dfsg-3ubuntu7) hirsute; urgency=medium
+
+  * Unapply unmatched patches, whilst building unleashed platform. Fixes
+    failure to boot from sd-card on Unleashed. LP: #1924761
+
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Fri, 16 Apr 2021 14:07:49 +0100
+
 u-boot (2021.01+dfsg-3ubuntu6) hirsute; urgency=medium
 
   * Set USE_PREBOOT on unmatched board too (just like unleashed & qemu),
