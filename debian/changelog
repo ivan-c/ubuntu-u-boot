@@ -1,3 +1,10 @@
+u-boot (2021.01+dfsg-3ubuntu8) hirsute; urgency=medium
+
+  * Skip processing fdtdir on qemu-riscv64_smode target, as it crashes the
+    riscv qemu VM. LP: #1925267 LP: #1923162
+
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Wed, 21 Apr 2021 01:25:13 +0100
+
 u-boot (2021.01+dfsg-3ubuntu7) hirsute; urgency=medium
 
   * Unapply unmatched patches, whilst building unleashed platform. Fixes

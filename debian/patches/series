@@ -59,6 +59,7 @@ riscv64/0040-riscv-sifive-unmatched-update-for-rev3-16GB-1866.patch
 riscv64/0041-Fix-CRC32-checksum-for-SiFive-HiFive-EEPROM.patch
 riscv64/sifive-default-fdt-files.patch
 riscv64/use-preboot-unmatched.patch
+riscv64/qemu-skip-fdtdir.patch
 
 n900/bootz_and_raw_initrd.patch
 
