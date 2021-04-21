@@ -1,3 +1,12 @@
+u-boot (2021.01+dfsg-3ubuntu9) hirsute; urgency=medium
+
+  * sifive-unleashed-default-fdt-files.patch: split into unleashed &
+    unmatched separate patches, for ease of upstreaming to meta-sifive and
+    u-boot upstreams. Also this ensures that unleashed target is built
+    with fdtfile= set, as unleashed target unapplies lots of patches.
+
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Wed, 21 Apr 2021 18:05:00 +0100
+
 u-boot (2021.01+dfsg-3ubuntu8) hirsute; urgency=medium
 
   * Skip processing fdtdir on qemu-riscv64_smode target, as it crashes the

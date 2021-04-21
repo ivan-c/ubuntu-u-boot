@@ -14,7 +14,10 @@ test-imagetools-test-fixes
 
 exynos/0001-arm-config-fix-default-console-only-to-specify-the-d.patch
 
+riscv64/sifive-unleashed-default-fdt-files.patch
 riscv64/qemu-riscv64_smode-sifive-fu540-fix-extlinux-define-.patch
+# patches to here, will be used for the fu540 unleashed
+# patches from here, will also be applied for unmatched
 riscv64/sifive-fu540-compressed-booti-support.patch
 riscv64/0001-clk-sifive-fu540-prci-Extract-prci-core-to-common-ba.patch
 riscv64/0002-clk-sifive-fu540-prci-Use-common-name-for-prci-confi.patch
@@ -57,7 +60,7 @@ riscv64/0038-cmd-pwm-Rework-argc-sanity-checking.patch
 riscv64/0039-riscv-sifive-unmatched-enable-PWM.patch
 riscv64/0040-riscv-sifive-unmatched-update-for-rev3-16GB-1866.patch
 riscv64/0041-Fix-CRC32-checksum-for-SiFive-HiFive-EEPROM.patch
-riscv64/sifive-default-fdt-files.patch
+riscv64/sifive-unmatched-default-fdt-files.patch
 riscv64/use-preboot-unmatched.patch
 riscv64/qemu-skip-fdtdir.patch
 
