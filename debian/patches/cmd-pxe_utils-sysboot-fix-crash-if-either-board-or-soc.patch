@@ -1,0 +1,39 @@
+From 716fa96fda172c3cb5020d23208a53f448ef0218 Mon Sep 17 00:00:00 2001
+From: Dimitri John Ledkov <xnox@ubuntu.com>
+Date: Wed, 21 Apr 2021 11:44:34 +0100
+Subject: [PATCH] cmd: pxe_utils: sysboot: fix crash if either board or soc are
+ not set.
+
+If the environment does not have "soc" or "board" set, and fdtdir
+option is specified in extlinux.conf, the bootloader will crash whilst
+dereferencing a null pointer. Add a guard against null soc or
+board. Fixes a crash of qemu-riscv64_smode configuration, which does
+not have CONFIG_SYS_SOC defined.
+
+Signed-off-by: Dimitri John Ledkov <xnox@ubuntu.com>
+---
+ cmd/pxe_utils.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/cmd/pxe_utils.c b/cmd/pxe_utils.c
+index 71c5af4c25..9a30629e26 100644
+--- a/cmd/pxe_utils.c
++++ b/cmd/pxe_utils.c
+@@ -587,6 +587,14 @@ static int label_boot(struct cmd_tbl *cmdtp, struct pxe_label *label)
+ 				f2 = "-";
+ 				f3 = env_get("board");
+ 				f4 = ".dtb";
++				if (!f1) {
++					f1 = "";
++					f2 = "";
++				}
++				if (!f3) {
++					f2 = "";
++					f3 = "";
++				}
+ 			}
+ 
+ 			len = strlen(label->fdtdir);
+-- 
+2.27.0
+
