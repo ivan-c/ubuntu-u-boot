@@ -1,3 +1,14 @@
+u-boot (2021.01+dfsg-3ubuntu9.1) hirsute; urgency=medium
+
+  * Revert "Skip processing fdtdir on qemu-riscv64_smode target, as it crashes the
+    riscv qemu VM."
+  * Apply upstreamed patch "cmd: pxe_utils: sysboot: fix crash if either
+    board or soc are not set." This fixes a crash booting any
+    extlinux.conf with fdtdir specified, and dtbfile not set and
+    "soc"/"board" not set in the environment LP: #1923162
+
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Fri, 14 May 2021 16:54:50 +0100
+
 u-boot (2021.01+dfsg-3ubuntu9) hirsute; urgency=medium
 
   * sifive-unleashed-default-fdt-files.patch: split into unleashed &
