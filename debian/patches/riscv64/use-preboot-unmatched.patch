@@ -1,0 +1,12 @@
+Index: u-boot-2021.01+dfsg/configs/sifive_hifive_unmatched_fu740_defconfig
+===================================================================
+--- u-boot-2021.01+dfsg.orig/configs/sifive_hifive_unmatched_fu740_defconfig
++++ u-boot-2021.01+dfsg/configs/sifive_hifive_unmatched_fu740_defconfig
+@@ -22,6 +22,7 @@ CONFIG_SPL_YMODEM_SUPPORT=y
+ CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+ CONFIG_SPL_CLK=y
+ CONFIG_DM_RESET=y
++CONFIG_USE_PREBOOT=y
+ CONFIG_CMD_PCI=y
+ CONFIG_PCI=y
+ CONFIG_DM_PCI=y

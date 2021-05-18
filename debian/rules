@@ -35,6 +35,8 @@ endif
 # Enable debugging symbols and remove build paths
 export HOSTCFLAGS = -g -ffile-prefix-map=$(CURDIR)=.
 
+export OPENSBI=/usr/lib/riscv64-linux-gnu/opensbi/generic/fw_dynamic.bin
+
 %:
 	dh $@
 
@@ -68,6 +70,9 @@ build-targets: configs/novena-rawsd_defconfig configs/am335x_boneblack_defconfig
 		esac; \
 		case $$platform in \
 			novena-rawsd) targets="$$targets" ;\
+				;; \
+			sifive_fu540) \
+				quilt pop riscv64/sifive-fu540-compressed-booti-support.patch ; \
 				;; \
 			*) targets="$$targets uboot.elf" ;\
 				;; \
@@ -115,6 +120,11 @@ build-targets: configs/novena-rawsd_defconfig configs/am335x_boneblack_defconfig
 		cp $$builddir/.config $$builddir/config.$$platform; \
 		echo $$builddir/config.$$platform /usr/share/doc/$$subpackage/configs/ \
 			>> debian/build/targets.$$subarch; \
+		case $$platform in \
+			sifive_fu540) \
+				quilt push -a ;\
+				;; \
+		esac;\
 	done
 
 TOOLSDIR := debian/build/tools
