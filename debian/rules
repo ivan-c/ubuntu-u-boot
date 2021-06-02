@@ -32,8 +32,9 @@ else
 TARGETSUBARCH = $(patsubst pkg.uboot.subarch.%,%,$(filter pkg.uboot.subarch.%,$(DEB_BUILD_PROFILES)))
 endif
 
+## Disable, as it breaks riscv64 booting
 # Enable debugging symbols and remove build paths
-export HOSTCFLAGS = -g -ffile-prefix-map=$(CURDIR)=.
+#export HOSTCFLAGS = -g -ffile-prefix-map=$(CURDIR)=.
 
 export OPENSBI=/usr/lib/riscv64-linux-gnu/opensbi/generic/fw_dynamic.bin
 

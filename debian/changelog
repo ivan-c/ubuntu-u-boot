@@ -1,3 +1,10 @@
+u-boot (2021.01+dfsg-4ubuntu2) impish; urgency=medium
+
+  * Revert '* debian/rules: Ensure debugging symbols are enabled.' as it
+    breaks riscv64 booting.
+
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Wed, 02 Jun 2021 16:52:03 +0100
+
 u-boot (2021.01+dfsg-4ubuntu1) impish; urgency=medium
 
   * Merge from Debian unstable (LP: #1928777). Remaining changes:
