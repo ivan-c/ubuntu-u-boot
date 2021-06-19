@@ -1,3 +1,42 @@
+u-boot (2021.07~rc4+dfsg-1) experimental; urgency=medium
+
+  [ Nicolas Boulenguez ]
+  * Write only once that rockchip depends on rockchip_make_fit_atf
+    (Closes: #985908)
+  * Refactor pkg.uboot.subarch and pkg.uboot.platform build profiles
+    (Closes: #985911)
+
+  [ Vagrant Cascadian ]
+  * debian/control: Make Build-Depends on libssl-dev only when building
+    tools.
+  * Update for rename of sifive_fu540 to sifive_unleashed
+  * u-boot-sifive: Update documentation for rename of fu540 to unleashed.
+
+  [ Nicolas Boulenguez ]
+  * u-boot-sunxi: embed crust-firmware on supported platforms.
+    (Closes: #985981)
+
+  [ Vagrant Cascadian ]
+  * debian/control: Fix Build-Depends on crust-firmware.
+  * debian/targets.mk: Update usbarmory targets for new versions.
+
+  [ Filip Moc ]
+  * debian/targets.mk: rockchip: add u-boot-tpl.bin
+
+  [ Vagrant Cascadian ]
+  * u-boot-install-rockchip: Allow overriding UBOOT_OFFSET for
+    puma-rk3399.
+  * u-boot-install-rockchip: Allow overriding the loader offset.
+  * [riscv64] u-boot-sifive: Use OpenSBI to build the sifive_unleashed target.
+  * [riscv64] u-boot-sifive: Add sifive_unmatched board.
+  * [riscv64] u-boot-sifive: Add Built-Using for opensbi.
+  * u-boot-sifive: Install unmatched documentation.
+  * u-boot-sunxi, u-boot-rockchip: Move arm-trusted-firmware to Suggests.
+  * debian/control: Update versioned Build-Depends on arm-trusted-firmware
+    to 2.5.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Sat, 19 Jun 2021 15:11:34 -0700
+
 u-boot (2021.04~rc4+dfsg-1) experimental; urgency=medium
 
   [ Vagrant Cascadian ]

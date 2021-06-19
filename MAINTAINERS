@@ -118,7 +118,7 @@ F:	cmd/arm/
 ARM ALTERA SOCFPGA
 M:	Marek Vasut <marex@denx.de>
 M:	Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
-M:	Ley Foon Tan <ley.foon.tan@intel.com>
+M:	Ley Foon Tan <lftan.linux@gmail.com>
 S:	Maintainted
 T:	git https://source.denx.de/u-boot/custodians/u-boot-socfpga.git
 F:	arch/arm/mach-socfpga/
@@ -352,7 +352,7 @@ F:	arch/arm/mach-rmobile/
 
 ARM ROCKCHIP
 M:	Simon Glass <sjg@chromium.org>
-M:	Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
+M:	Philipp Tomsich <philipp.tomsich@vrull.eu>
 M:	Kever Yang <kever.yang@rock-chips.com>
 S:	Maintained
 T:	git https://source.denx.de/u-boot/custodians/u-boot-rockchip.git
@@ -478,6 +478,9 @@ F:	arch/arm/cpu/armv7/sunxi/
 F:	arch/arm/include/asm/arch-sunxi/
 F:	arch/arm/mach-sunxi/
 F:	board/sunxi/
+F:	drivers/clk/sunxi/
+F:	drivers/phy/allwinner/
+F:	drivers/video/sunxi/
 
 ARM TEGRA
 M:	Tom Warren <twarren@nvidia.com>
@@ -670,6 +673,7 @@ F:	common/dfu.c
 F:	common/update.c
 F:	common/usb_storage.c
 F:	doc/api/dfu.rst
+F:	doc/usage/dfu.rst
 F:	drivers/dfu/
 F:	drivers/usb/gadget/
 F:	include/dfu.h
@@ -980,6 +984,7 @@ F:	arch/powerpc/cpu/mpc86xx/
 
 RISC-V
 M:	Rick Chen <rick@andestech.com>
+M:	Leo <ycliang@andestech.com>
 S:	Maintained
 T:	git https://source.denx.de/u-boot/custodians/u-boot-riscv.git
 F:	arch/riscv/
@@ -1060,6 +1065,13 @@ F:	fs/squashfs/
 F:	include/sqfs.h
 F:	cmd/sqfs.c
 F:	test/py/tests/test_fs/test_squashfs/
+
+STACKPROTECTOR
+M:	Joel Peshkin <joel.peshkin@broadcom.com>
+S:	Maintained
+F:	common/stackprot.c
+F:	cmd/stackprot_test.c
+F:	test/py/tests/test_stackprotector.py
 
 TARGET_BCMNS3
 M:	Bharat Gooty <bharat.gooty@broadcom.com>
@@ -1162,6 +1174,18 @@ F:	drivers/video/
 F:	common/lcd*.c
 F:	include/lcd*.h
 F:	include/video*.h
+
+VirtIO
+M:	Bin Meng <bmeng.cn@gmail.com>
+S:	Maintained
+F:	drivers/virtio/
+F:	cmd/virtio.c
+F:	include/config/virtio/
+F:	include/config/virtio.h
+F:	include/config/cmd/virtio.h
+F:	include/virtio*.h
+F:	test/dm/virtio.c
+F:	doc/develop/driver-model/virtio.rst
 
 X86
 M:	Simon Glass <sjg@chromium.org>

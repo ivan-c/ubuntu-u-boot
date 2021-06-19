@@ -1,6 +1,9 @@
 # Target architectures supported by u-boot in Debian.
 # debian/rules includes this Makefile snippet.
 
+# This dependency holds on both arm64 and armhf.
+# https://bugs.debian.org/cgi-bin/bugreport.cgi?att=0;bug=979483;msg=22
+u-boot-rockchip: debian/build/rockchip_make_fit_atf
 debian/build/rockchip_make_fit_atf: arch/arm/mach-rockchip/make_fit_atf.py
 	mkdir -p debian/build
 	sed '1 s,/usr/bin/env python.*,/usr/bin/python3,' \
@@ -57,21 +60,19 @@ ifeq (${DEB_HOST_ARCH},arm64)
   dpkg-gencontrol_args += "-Vu-boot-rockchip:Built-Using=$(shell dpkg-query -Wf \
     '$${source:Package} (= $${source:Version})' arm-trusted-firmware)"
 
-  u-boot-rockchip: debian/build/rockchip_make_fit_atf
-
   # Vagrant Cascadian <vagrant@debian.org>
   u-boot-rockchip_platforms += firefly-rk3399
   firefly-rk3399_assigns := BL31=/usr/lib/arm-trusted-firmware/rk3399/bl31.elf
   firefly-rk3399_targets := arch/arm/dts/rk3399-firefly.dtb idbloader.img \
-    spl/u-boot-spl.bin u-boot-nodtb.bin u-boot.bin u-boot.img u-boot.itb \
-    uboot.elf
+    spl/u-boot-spl.bin tpl/u-boot-tpl.bin u-boot-nodtb.bin u-boot.bin \
+    u-boot.img u-boot.itb uboot.elf
 
   # Vagrant Cascadian <vagrant@debian.org>
   u-boot-rockchip_platforms += pinebook-pro-rk3399
   pinebook-pro-rk3399_assigns := BL31=/usr/lib/arm-trusted-firmware/rk3399/bl31.elf
   pinebook-pro-rk3399_targets := arch/arm/dts/rk3399-pinebook-pro.dtb \
-    idbloader.img spl/u-boot-spl.bin u-boot-nodtb.bin u-boot.bin u-boot.img \
-    u-boot.itb uboot.elf
+    idbloader.img spl/u-boot-spl.bin tpl/u-boot-tpl.bin u-boot-nodtb.bin \
+    u-boot.bin u-boot.img u-boot.itb uboot.elf
 
   # Vagrant Cascadian <vagrant@debian.org>
   u-boot-rockchip_platforms += puma-rk3399
@@ -85,7 +86,8 @@ ifeq (${DEB_HOST_ARCH},arm64)
   rock-pi-4-rk3399_assigns := BL31=/usr/lib/arm-trusted-firmware/rk3399/bl31.elf
   rock-pi-4-rk3399_targets := arch/arm/dts/rk3399-rock-pi-4a.dtb \
     arch/arm/dts/rk3399-rock-pi-4b.dtb idbloader.img spl/u-boot-spl.bin \
-    u-boot-nodtb.bin u-boot.bin u-boot.img u-boot.itb uboot.elf
+    tpl/u-boot-tpl.bin u-boot-nodtb.bin u-boot.bin u-boot.img u-boot.itb \
+    uboot.elf
 
   # Vagrant Cascadian <vagrant@debian.org>
   u-boot-rockchip_platforms += rock64-rk3328
@@ -98,8 +100,8 @@ ifeq (${DEB_HOST_ARCH},arm64)
   u-boot-rockchip_platforms += rockpro64-rk3399
   rockpro64-rk3399_assigns := BL31=/usr/lib/arm-trusted-firmware/rk3399/bl31.elf
   rockpro64-rk3399_targets := arch/arm/dts/rk3399-rockpro64.dtb \
-    idbloader.img spl/u-boot-spl.bin u-boot-nodtb.bin u-boot.bin u-boot.img \
-    u-boot.itb uboot.elf
+    idbloader.img spl/u-boot-spl.bin tpl/u-boot-tpl.bin u-boot-nodtb.bin \
+    u-boot.bin u-boot.img u-boot.itb uboot.elf
 
 # u-boot-rpi
 
@@ -118,7 +120,8 @@ ifeq (${DEB_HOST_ARCH},arm64)
 
 # u-boot-sunxi
 
-  u-boot-sunxi_assigns := SCP=/dev/null
+  u-boot-sunxi_assigns = \
+    SCP=$(or $(wildcard /usr/lib/crust-firmware/$(platform).bin),/dev/null)
 
   dpkg-gencontrol_args += "-Vu-boot-sunxi:Built-Using=$(shell dpkg-query -Wf \
     '$${source:Package} (= $${source:Version})' arm-trusted-firmware)"
@@ -301,7 +304,7 @@ else ifeq (${DEB_HOST_ARCH},armhf)
 
   # Vagrant Cascadian <vagrant@debian.org>
   u-boot-imx_platforms += usbarmory
-  usbarmory_targets := u-boot.imx uboot.elf
+  usbarmory_targets := u-boot-dtb.imx uboot.elf
 
   # Vagrant Cascadian <vagrant@debian.org>
   # Robert Nelson <robertcnelson@gmail.com>
@@ -352,9 +355,6 @@ else ifeq (${DEB_HOST_ARCH},armhf)
 
   # Silent a debhelper warning about an unused substvar.
   dpkg-gencontrol_args += -Vu-boot-rockchip:Built-Using=
-
-  # https://bugs.debian.org/cgi-bin/bugreport.cgi?att=0;bug=979483;msg=22
-  u-boot-rockchip: debian/build/rockchip_make_fit_atf
 
   # Vagrant Cascadian <vagrant@debian.org>, 2GB and 4GB variants
   u-boot-rockchip_platforms += firefly-rk3288
@@ -506,9 +506,18 @@ else ifeq (${DEB_HOST_ARCH},riscv64)
 
 # u-boot-sifive
 
+  dpkg-gencontrol_args += "-Vu-boot-sifive:Built-Using=$(shell dpkg-query -Wf \
+    '$${source:Package} (= $${source:Version})' opensbi)"
+
   # Hector Oron <zumbi@debian.org>
-  u-boot-sifive_platforms += sifive_fu540
-  sifive_fu540_targets := u-boot.bin uboot.elf
+  u-boot-sifive_platforms += sifive_unleashed
+  sifive_unleashed_targets := u-boot.bin uboot.elf spl/u-boot-spl.bin u-boot.itb
+  sifive_unleased_assigns := OPENSBI=/usr/lib/riscv64-linux-gnu/opensbi/generic/fw_dynamic.bin
+
+  # Vagrant Cascadian <vagrant@debian.org>
+  u-boot-sifive_platforms += sifive_unmatched
+  sifive_unmatched_targets := u-boot.bin uboot.elf spl/u-boot-spl.bin u-boot.itb
+  sifive_unmatched_assigns := OPENSBI=/usr/lib/riscv64-linux-gnu/opensbi/generic/fw_dynamic.bin
 
 else ifeq (${DEB_HOST_ARCH},sh4)
 

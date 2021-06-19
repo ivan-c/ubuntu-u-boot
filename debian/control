@@ -4,9 +4,10 @@ Priority: optional
 Maintainer: Vagrant Cascadian <vagrant@debian.org>
 Uploaders: Loïc Minier <lool@debian.org>, Clint Adams <clint@debian.org>
 Build-Depends:
- arm-trusted-firmware (>= 2.4+dfsg) [arm64],
+ arm-trusted-firmware (>= 2.5+dfsg) [arm64],
  bc,
  bison,
+ crust-firmware (>= 0.3-2~) [arm64],
  debhelper-compat (= 13),
  device-tree-compiler,
  flex,
@@ -16,7 +17,8 @@ Build-Depends:
  libc6:armel [armel] <cross !pkg.uboot.notools>,
  libc6:riscv64 [riscv64] <cross !pkg.uboot.notools>,
  libpython3-dev:native [linux-any],
- libssl-dev,
+ libssl-dev <!pkg.uboot.notools>,
+ opensbi (>= 0.9-2~) [riscv64],
  python3:any [linux-any],
  python3-distutils [linux-any],
  python3-pkg-resources [linux-any],
@@ -162,7 +164,8 @@ Architecture: armhf arm64
 Multi-Arch: same
 Built-Using: ${u-boot-sunxi:Built-Using}
 Depends: ${misc:Depends}
-Recommends: arm-trusted-firmware [arm64], u-boot-tools [arm64]
+Recommends: u-boot-tools [arm64]
+Suggests: arm-trusted-firmware [arm64]
 Breaks: u-boot (<< 2014.10~rc2+dfsg1-2~)
 Replaces: u-boot (<< 2014.10~rc2+dfsg1-2~)
 Description: A boot loader for sunxi systems
@@ -215,7 +218,8 @@ Architecture: armhf arm64
 Multi-Arch: same
 Built-Using: ${u-boot-rockchip:Built-Using}
 Depends: ${misc:Depends}
-Recommends: python3, arm-trusted-firmware [arm64], u-boot-tools [arm64]
+Recommends: python3, u-boot-tools [arm64]
+Suggests: arm-trusted-firmware [arm64]
 Description: A boot loader for rockchip systems
  Das U-Boot is a cross-platform bootloader for embedded systems,
  used as the default boot loader by several board vendors.  It is
@@ -249,6 +253,7 @@ Package: u-boot-sifive
 Architecture: riscv64
 Multi-Arch: same
 Depends: ${misc:Depends}
+Built-Using: ${u-boot-sifive:Built-Using}
 Description: A boot loader for SiFive systems
  Das U-Boot is a cross-platform bootloader for embedded systems,
  used as the default boot loader by several board vendors.  It is

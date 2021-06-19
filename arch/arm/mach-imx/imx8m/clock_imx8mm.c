@@ -21,6 +21,14 @@ DECLARE_GLOBAL_DATA_PTR;
 static struct anamix_pll *ana_pll = (struct anamix_pll *)ANATOP_BASE_ADDR;
 
 static u32 get_root_clk(enum clk_root_index clock_id);
+
+#ifdef CONFIG_IMX_HAB
+void hab_caam_clock_enable(unsigned char enable)
+{
+	/* The CAAM clock is always on for iMX8M */
+}
+#endif
+
 void enable_ocotp_clk(unsigned char enable)
 {
 	clock_enable(CCGR_OCOTP, !!enable);
@@ -838,7 +846,7 @@ int set_clk_eqos(enum enet_freq type)
 	return 0;
 }
 
-int imx_eqos_txclk_set_rate(u32 rate)
+int imx_eqos_txclk_set_rate(ulong rate)
 {
 	u32 val;
 	u32 eqos_post_div;

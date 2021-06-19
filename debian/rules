@@ -1,13 +1,5 @@
 #!/usr/bin/make -f
 
-# Compile specific platforms:
-#   dpkg-architecture -aarmhf -c debian/rules novena u-boot-imx ..
-
-# Build local .debs restricted to specific platforms:
-#   DEB_BUILD_PROFILES=pkg.u-boot.notools fakeroot \
-#   dpkg-architecture -aarmhf -c debian/rules binary-arch \
-#   subarchs='u-boot-rockchip ..' u-boot-rockchip_platforms='puma-rk3399 ..'
-
 include /usr/share/dpkg/architecture.mk
 include /usr/share/dpkg/pkg-info.mk
 export DEBIAN_REVISION ?= $(shell echo $(DEB_VERSION) | sed -e 's,.*+dfsg,+dfsg,')
@@ -34,12 +26,28 @@ LDFLAGS := $(patsubst -Wl$(comma)%,%,$(LDFLAGS))
 
 notools := $(filter pkg.uboot.notools,$(DEB_BUILD_PROFILES))
 
-# DEB_BUILD_PROFILES=pkg.uboot.subarch.SUBARCH may
-# limit builds to only certain subarchitectures
-# e.g. pkg.uboot.subarch.rockchip will only build rockchip targets.
-subarchs := $(or $(patsubst pkg.uboot.subarch.%,u-boot-%,\
-                   $(filter pkg.uboot.subarch.%,$(DEB_BUILD_PROFILES))),\
-                 $(shell dh_listpackages --arch --no-package=u-boot-tools))
+subarchs := $(shell dh_listpackages --arch --no-package=u-boot-tools)
+
+# Each .deb P in subarch contains $(P_platforms).
+# These profiles remove values from $(P_platforms) for debugging.
+
+# DEB_BUILD_PROFILES='pkg.uboot.subarch.P1 pkg.uboot.subarch.P2'
+# removes all platforms but in packages u-boot-P1 u-boot-P2.
+only_subarchs := $(patsubst pkg.uboot.subarch.%,u-boot-%,\
+                   $(filter pkg.uboot.subarch.%,$(DEB_BUILD_PROFILES)))
+ifneq (,$(only_subarchs))
+  $(foreach pkg,$(filter-out $(only_subarchs),$(subarchs)),$(eval \
+    $(pkg)_platforms :=))
+endif
+
+# DEB_BUILD_PROFILES='pkg.uboot.platform.P1 pkg.uboot.platform.P2'
+# removes all platforms but P1 P2.
+only_platforms := $(patsubst pkg.uboot.platform.%,%,\
+                    $(filter pkg.uboot.platform.%,$(DEB_BUILD_PROFILES)))
+ifneq (,$(only_platforms))
+  $(foreach pkg,$(subarchs),$(eval \
+    $(pkg)_platforms := $(filter $(only_platforms),$($(pkg)_platforms))))
+endif
 
 # Enable debugging symbols and remove build paths
 export HOSTCFLAGS = -g -ffile-prefix-map=$(CURDIR)=.
@@ -48,7 +56,7 @@ export HOSTCFLAGS = -g -ffile-prefix-map=$(CURDIR)=.
 	dh $@
 
 override_dh_auto_build-indep: u-boot-qemu
-override_dh_auto_build-arch: $(subarchs) debian/build/rockchip_make_fit_atf
+override_dh_auto_build-arch: $(subarchs)
 ifeq ($(notools),)
   override_dh_auto_build-arch: build-tools
 endif
@@ -65,11 +73,6 @@ define build_template
 
   # Qemu platforms set $(platform)_CROSS_COMPILE.
   $(platform):
-# Only build platform if pkg.uboot.platform.* in DEB_BUILD_PROFILES
-# matches or if no pkg.uboot.platform.* are specified
-ifneq (,$(if $(filter pkg.uboot.platform.%,$(DEB_BUILD_PROFILES)),\
-		$(filter pkg.uboot.platform.$(platform),$(DEB_BUILD_PROFILES)),\
-		$(platform)))
 	# debian/rules: building platform: $(platform)
 	mkdir -p debian/build/$(platform)
 
@@ -95,11 +98,6 @@ ifneq (,$(if $(filter pkg.uboot.platform.%,$(DEB_BUILD_PROFILES)),\
 
   install-$(platform):
 	dh_install -p$(package) $(addprefix debian/build/$(platform)/,$($(platform)_targets)) usr/lib/u-boot/$(platform)
-else
-	echo "skipping $(platform), not specified in DEB_BUILD_PROFILES"
-  install-$(platform):
-	echo "skipping $(platform), not specified in DEB_BUILD_PROFILES"
-endif
 
 endef
 $(foreach package, u-boot-qemu $(subarchs),\
