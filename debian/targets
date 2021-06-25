@@ -44,6 +44,9 @@ armhf	imx		mx6qsabrelite	u-boot-dtb.imx
 # Hector Oron <zumbi@debian.org>
 armhf	imx		nitrogen6q	u-boot-dtb.imx
 
+# Shrirang Bagul <shrirang.bagul@canonical.com>
+armhf	imx		nitrogen6q2g	u-boot-dtb.imx
+
 # Vagrant Cascadian <vagrant@debian.org>
 armhf	imx		novena		u-boot.img SPL
 armhf	imx		novena-rawsd SPL
@@ -201,22 +204,22 @@ arm64	qcom		dragonboard410c	u-boot.bin
 arm64	qcom		dragonboard820c	u-boot.bin
 
 # Vagrant Cascadian <vagrant@debian.org>
-arm64  rockchip        firefly-rk3399  /usr/lib/arm-trusted-firmware/rk3399/bl31.elf u-boot.img u-boot.bin u-boot-nodtb.bin spl/u-boot-spl.bin arch/arm/dts/rk3399-firefly.dtb u-boot.itb idbloader.img
+arm64  rockchip        firefly-rk3399  u-boot.img u-boot.bin u-boot-nodtb.bin spl/u-boot-spl.bin arch/arm/dts/rk3399-firefly.dtb u-boot.itb idbloader.img
 
 # Vagrant Cascadian <vagrant@debian.org>
-arm64  rockchip        pinebook-pro-rk3399  /usr/lib/arm-trusted-firmware/rk3399/bl31.elf u-boot.img u-boot.bin u-boot-nodtb.bin spl/u-boot-spl.bin arch/arm/dts/rk3399-pinebook-pro.dtb u-boot.itb idbloader.img
+arm64  rockchip        pinebook-pro-rk3399  u-boot.img u-boot.bin u-boot-nodtb.bin spl/u-boot-spl.bin arch/arm/dts/rk3399-pinebook-pro.dtb u-boot.itb idbloader.img
 
 # Vagrant Cascadian <vagrant@debian.org>
-arm64  rockchip        rockpro64-rk3399  /usr/lib/arm-trusted-firmware/rk3399/bl31.elf u-boot.img u-boot.bin u-boot-nodtb.bin spl/u-boot-spl.bin arch/arm/dts/rk3399-rockpro64.dtb u-boot.itb idbloader.img
+arm64  rockchip        rockpro64-rk3399  u-boot.img u-boot.bin u-boot-nodtb.bin spl/u-boot-spl.bin arch/arm/dts/rk3399-rockpro64.dtb u-boot.itb idbloader.img
 
 # Vagrant Cascadian <vagrant@debian.org>
 arm64  rockchip        rock64-rk3328  /usr/lib/arm-trusted-firmware/rk3328/bl31.elf u-boot.img u-boot.bin u-boot-nodtb.bin spl/u-boot-spl.bin tpl/u-boot-tpl.bin arch/arm/dts/rk3328-rock64.dtb u-boot.itb idbloader.img
 
 # Vagrant Cascadian <vagrant@debian.org>
-arm64  rockchip        puma-rk3399  /usr/lib/arm-trusted-firmware/rk3399/bl31.elf u-boot.img u-boot.bin u-boot-nodtb.bin spl/u-boot-spl.bin arch/arm/dts/rk3399-puma-haikou.dtb u-boot.itb idbloader.img
+arm64  rockchip        puma-rk3399  u-boot.img u-boot.bin u-boot-nodtb.bin spl/u-boot-spl.bin arch/arm/dts/rk3399-puma-haikou.dtb u-boot.itb idbloader.img
 
 # Walter Lozano <walter.lozano@collabora.com>
-arm64  rockchip        rock-pi-4-rk3399 /usr/lib/arm-trusted-firmware/rk3399/bl31.elf u-boot.img u-boot.bin u-boot-nodtb.bin spl/u-boot-spl.bin arch/arm/dts/rk3399-rock-pi-4a.dtb arch/arm/dts/rk3399-rock-pi-4b.dtb u-boot.itb idbloader.img
+arm64  rockchip        rock-pi-4-rk3399 u-boot.img u-boot.bin u-boot-nodtb.bin spl/u-boot-spl.bin arch/arm/dts/rk3399-rock-pi-4a.dtb arch/arm/dts/rk3399-rock-pi-4b.dtb u-boot.itb idbloader.img
 
 # Ryan Finnie <ryan@finnie.org>
 arm64	rpi		rpi_3		u-boot.bin
@@ -243,9 +246,6 @@ arm64	sunxi		nanopi_neo_plus2	/usr/lib/arm-trusted-firmware/sun50i_a64/bl31.bin 
 # Frederic Danis <frederic.danis@collabora.com>
 arm64	sunxi		orangepi_zero_plus2	/usr/lib/arm-trusted-firmware/sun50i_a64/bl31.bin u-boot.bin spl/sunxi-spl.bin u-boot-nodtb.bin arch/arm/dts/sun50i-h5-orangepi-zero-plus2.dtb u-boot-sunxi-with-spl.fit.itb
 
-# harry88@gmx.ph
-arm64	sunxi		orangepi_one_plus	/usr/lib/arm-trusted-firmware/sun50i_h6/bl31.bin u-boot.bin spl/sunxi-spl.bin u-boot-nodtb.bin arch/arm/dts/sun50i-h6-orangepi-one-plus.dtb u-boot-sunxi-with-spl.fit.itb
-
 # Vagrant Cascadian <vagrant@debian.org>
 arm64	sunxi		pine64_plus	/usr/lib/arm-trusted-firmware/sun50i_a64/bl31.bin u-boot.bin spl/sunxi-spl.bin u-boot-nodtb.bin arch/arm/dts/sun50i-a64-pine64-plus.dtb arch/arm/dts/sun50i-a64-pine64.dtb u-boot-sunxi-with-spl.fit.itb
 
@@ -268,7 +268,8 @@ arm64	tegra		p2371-2180	u-boot.bin
 avr32	-		hammerhead	u-boot.img
 
 # Hector Oron <zumbi@debian.org>
-riscv64	sifive	sifive_fu540	u-boot.bin
+riscv64	sifive	sifive_fu540	u-boot.bin spl/u-boot-spl.bin u-boot.itb
+riscv64	sifive	sifive_hifive_unmatched_fu740	u-boot.bin spl/u-boot-spl.bin u-boot.itb
 
 sh4	-		r2dplus		u-boot.bin
 

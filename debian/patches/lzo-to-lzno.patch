@@ -1,0 +1,18 @@
+Author: Dave Jones <dave.jones@canonical.com>
+Description: Remove lzo as a dependency
+ On ubuntu, while gzip is in the main archive, lzop is in universe. In order
+ to avoid having to add lzop to main, and given that only a single
+ configuration is affected, the dra7xx configuration is adjusted to use
+ gzip compression for multi-dtb FIT images over lzo (the default).
+Forwarded: not-needed
+--- a/configs/dra7xx_evm_defconfig
++++ b/configs/dra7xx_evm_defconfig
+@@ -52,6 +52,8 @@
+ CONFIG_SPL_OF_CONTROL=y
+ CONFIG_OF_LIST="dra7-evm dra72-evm dra72-evm-revc dra71-evm dra76-evm"
+ CONFIG_SPL_MULTI_DTB_FIT=y
++CONFIG_SPL_MULTI_DTB_FIT_LZO=n
++CONFIG_SPL_MULTI_DTB_FIT_GZIP=y
+ CONFIG_SPL_MULTI_DTB_FIT_UNCOMPRESS_SZ=0xA000
+ CONFIG_OF_SPL_REMOVE_PROPS="clocks clock-names interrupt-parent"
+ CONFIG_ENV_OVERWRITE=y
