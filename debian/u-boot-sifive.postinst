@@ -1,0 +1,23 @@
+#!/bin/sh
+
+##DEBHELPER##
+
+set -e
+
+case "$1" in
+    configure)
+        target=""
+        if grep -q '^SiFive HiFive Unleashed A00$' /sys/firmware/devicetree/base/model; then
+            target="sifive_fu540"
+        fi
+        if grep -q '^SiFive HiFive Unmatched A00$' /sys/firmware/devicetree/base/model; then
+            target="sifive_hifive_unmatched_fu740"
+        fi
+        if [ -n "$target" ] && [ -e /dev/disk/by-partlabel/loader1 ] && [ -e /dev/disk/by-partlabel/loader2 ]; then
+            dd if=/usr/lib/u-boot/$target/u-boot-spl.bin of=/dev/disk/by-partlabel/loader1
+            dd if=/usr/lib/u-boot/$target/u-boot.itb of=/dev/disk/by-partlabel/loader2
+        fi
+        ;;
+esac
+
+exit 0
