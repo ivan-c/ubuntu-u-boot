@@ -49,8 +49,9 @@ ifneq (,$(only_platforms))
     $(pkg)_platforms := $(filter $(only_platforms),$($(pkg)_platforms))))
 endif
 
+## Disable, as it breaks riscv64 booting
 # Enable debugging symbols and remove build paths
-export HOSTCFLAGS = -g -ffile-prefix-map=$(CURDIR)=.
+#export HOSTCFLAGS = -g -ffile-prefix-map=$(CURDIR)=.
 
 %:
 	dh $@

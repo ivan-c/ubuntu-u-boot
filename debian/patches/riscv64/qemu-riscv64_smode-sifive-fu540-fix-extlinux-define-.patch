@@ -27,11 +27,3 @@ Signed-off-by: David Abdurachmanov <david.abdurachmanov@sifive.com>
  CONFIG_DM_MTD=y
 +CONFIG_USE_PREBOOT=y
 +CONFIG_PREBOOT="setenv fdt_addr ${fdtcontroladdr}; fdt addr ${fdtcontroladdr};"
---- a/configs/sifive_unleashed_defconfig
-+++ b/configs/sifive_unleashed_defconfig
-@@ -27,3 +27,5 @@
- CONFIG_SPL_CLK=y
- CONFIG_DM_MTD=y
- CONFIG_DM_RESET=y
-+CONFIG_USE_PREBOOT=y
-+CONFIG_PREBOOT="setenv fdt_addr ${fdtcontroladdr}; fdt addr ${fdtcontroladdr};"

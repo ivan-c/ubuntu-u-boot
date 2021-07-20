@@ -6,10 +6,10 @@ those changes.
 
 Reported upstream: https://lists.denx.de/pipermail/u-boot/2021-March/443460.html
 
-diff --git a/test/image/test-imagetools.sh b/test/image/test-imagetools.sh
-index 907f46a7b5..e3b341b9e9 100755
---- a/test/image/test-imagetools.sh
-+++ b/test/image/test-imagetools.sh
+Index: u-boot-2021.07~rc4+dfsg/test/image/test-imagetools.sh
+===================================================================
+--- u-boot-2021.07~rc4+dfsg.orig/test/image/test-imagetools.sh
++++ u-boot-2021.07~rc4+dfsg/test/image/test-imagetools.sh
 @@ -204,18 +204,6 @@ main()
  	list_image ${IMAGE_MULTI}
  	assert_equal ${DUMPIMAGE_LIST} ${MKIMAGE_LIST}
