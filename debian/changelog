@@ -1,3 +1,10 @@
+u-boot (2021.07~rc4+dfsg-1ubuntu2) impish; urgency=medium
+
+  * Cherrypick patch from Heinrich Schuchardt (xypron) to fix failure to
+    boot on Unmatched. LP: #1937246
+
+ -- Dimitri John Ledkov <dimitri.ledkov@canonical.com>  Thu, 22 Jul 2021 12:33:49 +0100
+
 u-boot (2021.07~rc4+dfsg-1ubuntu1) impish; urgency=medium
 
   * Merge from Debian Experimental, remaining changes:

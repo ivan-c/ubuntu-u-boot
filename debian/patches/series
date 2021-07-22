@@ -32,3 +32,4 @@ rpi-8gb-pci.patch
 rpi-maxargs.patch
 75efe7dc996ddb9835590b1a8970f19b5c4b1ade.patch
 fe01f41d57b79d9ca94604503a25e55175744d42.patch
+lp1937246.patch
