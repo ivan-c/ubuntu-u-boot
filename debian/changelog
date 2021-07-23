@@ -1,3 +1,10 @@
+u-boot (2021.07+dfsg-0ubuntu1) impish; urgency=medium
+
+  * New upstream release.
+    - Drop 75efe7dc996ddb9835590b1a8970f19b5c4b1ade.patch included upstream.
+
+ -- Dimitri John Ledkov <dimitri.ledkov@canonical.com>  Fri, 23 Jul 2021 12:45:26 +0100
+
 u-boot (2021.07~rc4+dfsg-1ubuntu2) impish; urgency=medium
 
   * Cherrypick patch from Heinrich Schuchardt (xypron) to fix failure to
