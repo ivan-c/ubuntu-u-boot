@@ -17,6 +17,7 @@ Shell commands
    :maxdepth: 1
 
    addrmap
+   askenv
    base
    bootefi
    booti
@@ -34,12 +35,14 @@ Shell commands
    load
    loady
    mbr
-   mmc
    md
+   mmc
+   pinmux
    pstore
    qfw
+   reset
    sbi
+   scp03
    size
    true
-   scp03
-   reset
+   ums
