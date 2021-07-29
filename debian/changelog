@@ -1,3 +1,14 @@
+u-boot (2021.01+dfsg-3ubuntu0~20.04.2) focal; urgency=medium
+
+  * Bump opensbi build-dependency to ensure fixed version is used by u-boot
+    RISC-V images (LP: #1937277)
+
+  [ Dimitri John Ledkov ]
+  * Implement u-boot-sifive.postinst to upgrade u-boot in loader1/loader2
+    partitions upon package upgrades. LP: #1936370
+
+ -- Dave Jones <dave.jones@canonical.com>  Thu, 29 Jul 2021 14:00:10 +0100
+
 u-boot (2021.01+dfsg-3ubuntu0~20.04.1) focal; urgency=medium
 
   * SRU of 2021.01+dfsg-3 from hirsute to enable booting on HiFive Unmatched
