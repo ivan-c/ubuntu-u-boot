@@ -1,3 +1,10 @@
+u-boot (2021.01+dfsg-3ubuntu0~20.04.3) focal; urgency=medium
+
+  * debian/u-boot-sifive.postinst: use correct target names for u-boot
+    2021.01.
+
+ -- Łukasz 'sil2100' Zemczak <lukasz.zemczak@ubuntu.com>  Fri, 30 Jul 2021 16:38:17 +0200
+
 u-boot (2021.01+dfsg-3ubuntu0~20.04.2) focal; urgency=medium
 
   * Bump opensbi build-dependency to ensure fixed version is used by u-boot
