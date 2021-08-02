@@ -1,3 +1,10 @@
+u-boot (2021.07+dfsg-0ubuntu3) impish; urgency=medium
+
+  * debian/u-boot-sifive.postinst: use correct target names for u-boot
+    2021.01. (LP: #1936370)
+
+ -- Brian Murray <brian@ubuntu.com>  Mon, 02 Aug 2021 09:15:07 -0700
+
 u-boot (2021.07+dfsg-0ubuntu2) impish; urgency=medium
 
   * Import meta-sifive patch series.
