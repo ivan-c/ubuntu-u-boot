@@ -8,7 +8,7 @@ Build-Depends:
  arm-trusted-firmware (>= 2.5+dfsg) [arm64],
  bc,
  bison,
-#crust-firmware (>= 0.3-2~) [arm64],
+ crust-firmware (>= 0.3-2~) [arm64],
  debhelper-compat (= 13),
  device-tree-compiler,
  flex,

@@ -1,3 +1,15 @@
+u-boot (2021.07+dfsg-0ubuntu4) impish; urgency=medium
+
+  * sifive boards: re-enable back USE_PREBOOT< it used to be there in
+    2021.01 releases, and I suspect it affects unleashed bootability.
+  * control: add crust-firmware build-dep, it is now available in the
+    archive.
+  * Remove unreferenced fe01f41d57b79d9ca94604503a25e55175744d42.patch,
+    included as riscv64/0013-riscv-sifive-Set-default-fdtfile-names.patch.
+  * Skip removed/incorrect 0ubuntu3 upload.
+
+ -- Dimitri John Ledkov <dimitri.ledkov@canonical.com>  Wed, 04 Aug 2021 11:18:25 +0100
+
 u-boot (2021.07+dfsg-0ubuntu2) impish; urgency=medium
 
   * Import meta-sifive patch series.

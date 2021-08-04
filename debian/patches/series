@@ -44,3 +44,4 @@ riscv64/0012-board-sifive-spl-Set-remote-thermal-of-TMP451-to-85-.patch
 riscv64/0013-riscv-sifive-Set-default-fdtfile-names.patch
 riscv64/lp1937246.patch
 riscv64/qemu-riscv64_smode-sifive-fu540-fix-extlinux-define-.patch
+riscv64/use-preboot.patch

@@ -1,0 +1,30 @@
+Description: sifive: re-enable back USE_PREBOOT
+ re-enable back USE_PREBOOT. it used to be there in 2021.01 releases,
+ and xnox suspects it affects unleashed bootability.
+Author: Dimitri John Ledkov <dimitri.ledkov@canonical.com>
+
+
+Index: u-boot-2021.07+dfsg/configs/sifive_unmatched_defconfig
+===================================================================
+--- u-boot-2021.07+dfsg.orig/configs/sifive_unmatched_defconfig
++++ u-boot-2021.07+dfsg/configs/sifive_unmatched_defconfig
+@@ -14,6 +14,7 @@ CONFIG_RISCV_SMODE=y
+ CONFIG_DISTRO_DEFAULTS=y
+ CONFIG_FIT=y
+ CONFIG_SPL_LOAD_FIT_ADDRESS=0x84000000
++CONFIG_USE_PREBOOT=y
+ CONFIG_DEFAULT_FDT_FILE="sifive/hifive-unmatched-a00.dtb"
+ CONFIG_DISPLAY_CPUINFO=y
+ CONFIG_DISPLAY_BOARDINFO=y
+Index: u-boot-2021.07+dfsg/configs/sifive_unleashed_defconfig
+===================================================================
+--- u-boot-2021.07+dfsg.orig/configs/sifive_unleashed_defconfig
++++ u-boot-2021.07+dfsg/configs/sifive_unleashed_defconfig
+@@ -14,6 +14,7 @@ CONFIG_RISCV_SMODE=y
+ CONFIG_DISTRO_DEFAULTS=y
+ CONFIG_FIT=y
+ CONFIG_SPL_LOAD_FIT_ADDRESS=0x84000000
++CONFIG_USE_PREBOOT=y
+ CONFIG_DEFAULT_FDT_FILE="sifive/hifive-unleashed-a00.dtb"
+ CONFIG_DISPLAY_CPUINFO=y
+ CONFIG_DISPLAY_BOARDINFO=y
