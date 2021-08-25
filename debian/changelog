@@ -1,3 +1,11 @@
+u-boot (2021.07+dfsg-0ubuntu6) impish; urgency=medium
+
+  * Build against opensbi with reboot support on Unmatched
+  * In postinst support Unmatched model name without A00 suffix, as used
+    by meta-sifive kernels and may be contributed upstream in the future.
+
+ -- Dimitri John Ledkov <dimitri.ledkov@canonical.com>  Wed, 25 Aug 2021 17:22:24 +0100
+
 u-boot (2021.07+dfsg-0ubuntu4) impish; urgency=medium
 
   * sifive boards: re-enable back USE_PREBOOT< it used to be there in
