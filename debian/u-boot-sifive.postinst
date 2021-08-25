@@ -13,6 +13,9 @@ case "$1" in
         if grep -q '^SiFive HiFive Unmatched A00$' /sys/firmware/devicetree/base/model; then
             target="sifive_unmatched"
         fi
+        if grep -q '^SiFive HiFive Unmatched$' /sys/firmware/devicetree/base/model; then
+            target="sifive_unmatched"
+        fi
         if [ -n "$target" ] && [ -e /dev/disk/by-partlabel/loader1 ] && [ -e /dev/disk/by-partlabel/loader2 ]; then
             dd if=/usr/lib/u-boot/$target/u-boot-spl.bin of=/dev/disk/by-partlabel/loader1
             dd if=/usr/lib/u-boot/$target/u-boot.itb of=/dev/disk/by-partlabel/loader2
