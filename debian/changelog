@@ -1,3 +1,18 @@
+u-boot (2021.07+dfsg-2) unstable; urgency=medium
+
+  [ Vagrant Cascadian ]
+  * debian/control: Update Standards-Version to 4.6.0, no changes.
+
+  [ Nicolas Boulenguez ]
+  * debian/rules: Replace exports with assignments visible in build logs
+    (Closes: #990202)
+
+  [ Vagrant Cascadian ]
+  * [arm64] u-boot-sunxi: Add sopine_baseboard target. Thanks to
+    amarpreet. (Closes: #992816)
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Wed, 08 Sep 2021 19:58:55 -0700
+
 u-boot (2021.07+dfsg-1) experimental; urgency=medium
 
   * debian/patches: Add patch to fix USB (de)initialization on

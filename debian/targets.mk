@@ -202,6 +202,12 @@ ifeq (${DEB_HOST_ARCH},arm64)
   pinetab_targets := arch/arm/dts/sun50i-a64-pinetab.dtb spl/sunxi-spl.bin \
     u-boot-nodtb.bin u-boot-sunxi-with-spl.fit.itb u-boot.bin uboot.elf
 
+  # amarpreet@minhas.io
+  u-boot-sunxi_platforms += sopine_baseboard
+  sopine_baseboard_assigns := BL31=/usr/lib/arm-trusted-firmware/sun50i_a64/bl31.bin
+  sopine_baseboard_targets := arch/arm/dts/sun50i-a64-sopine-baseboard.dtb spl/sunxi-spl.bin \
+    u-boot-nodtb.bin u-boot-sunxi-with-spl.fit.itb u-boot.bin uboot.elf
+
   # Jonas Smedegaard <dr@jones.dk>
   u-boot-sunxi_platforms += teres_i
   teres_i_assigns := BL31=/usr/lib/arm-trusted-firmware/sun50i_a64/bl31.bin

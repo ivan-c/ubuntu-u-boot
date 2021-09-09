@@ -44,6 +44,7 @@ if [ -z "$TARGET" ] && [ -f "${dtmodel}" ]; then
 		"Pine64+") TARGET="/usr/lib/u-boot/pine64_plus" ;;
 		"Pine64 LTS") TARGET="/usr/lib/u-boot/pine64-lts" ;;
 		"PineRiver Mini X-Plus") TARGET="/usr/lib/u-boot/Mini-X" ;;
+		"SoPine with baseboard") TARGET="/usr/lib/u-boot/sopine_baseboard" ;;
 		"Xunlong Orange Pi Plus / Plus 2") TARGET="/usr/lib/u-boot/orangepi_plus" ;;
 		"Xunlong Orange Pi Zero") TARGET="/usr/lib/u-boot/orangepi_zero" ;;
 		*)

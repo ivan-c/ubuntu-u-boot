@@ -2,7 +2,9 @@
 
 include /usr/share/dpkg/architecture.mk
 include /usr/share/dpkg/pkg-info.mk
-export DEBIAN_REVISION ?= $(shell echo $(DEB_VERSION) | sed -e 's,.*+dfsg,+dfsg,')
+
+DEBIAN_REVISION ?= $(shell echo $(DEB_VERSION) | sed -e 's,.*+dfsg,+dfsg,')
+common_make_args += DEBIAN_REVISION='$(DEBIAN_REVISION)'
 
 include debian/targets.mk
 
@@ -17,6 +19,7 @@ VERBOSE=0
 else
 VERBOSE=1
 endif
+common_make_args += V=$(VERBOSE)
 
 # the upstream build passes LDFLAGS directly to ld instead of calling gcc for
 # linking; so instead of passing -Wl,foo in LDFLAGS as in automake builds, one
@@ -50,7 +53,8 @@ ifneq (,$(only_platforms))
 endif
 
 # Enable debugging symbols and remove build paths
-export HOSTCFLAGS = -g -ffile-prefix-map=$(CURDIR)=.
+HOSTCFLAGS = -g -ffile-prefix-map=$(CURDIR)=.
+common_make_args += HOSTCFLAGS='$(HOSTCFLAGS)'
 
 %:
 	dh $@
@@ -76,12 +80,14 @@ define build_template
 	# debian/rules: building platform: $(platform)
 	mkdir -p debian/build/$(platform)
 
-	dh_auto_build -- V=$(VERBOSE) O=debian/build/$(platform) \
+	dh_auto_build -- $(common_make_args) \
+	  O=debian/build/$(platform) \
 	  CROSS_COMPILE=$(or $($(platform)_CROSS_COMPILE),$(CROSS_COMPILE)) \
 	  $($(package)_assigns) $($(platform)_assigns) \
 	  $(platform)_defconfig
 	sed -i 's,CONFIG_FIT_SIGNATURE=y,# CONFIG_FIT_SIGNATURE is not set,' debian/build/$(platform)/.config
-	dh_auto_build -- V=$(VERBOSE) O=debian/build/$(platform) \
+	dh_auto_build -- $(common_make_args) \
+	  O=debian/build/$(platform) \
 	  CROSS_COMPILE=$(or $($(platform)_CROSS_COMPILE),$(CROSS_COMPILE)) \
 	  $($(package)_assigns) $($(platform)_assigns)
 
@@ -106,10 +112,14 @@ $(foreach package, u-boot-qemu $(subarchs),\
 
 TOOLSDIR := debian/build/tools
 build-tools:
-	dh_auto_build -- V=$(VERBOSE) O=$(TOOLSDIR) CROSS_COMPILE=$(CROSS_COMPILE) tools-only_defconfig
+	dh_auto_build -- $(common_make_args) \
+	  O=$(TOOLSDIR) \
+	  CROSS_COMPILE=$(CROSS_COMPILE) \
+	  tools-only_defconfig
 	cp $(TOOLSDIR)/.config $(TOOLSDIR)/config
 	# board-independent tools
-	dh_auto_build -- V=$(VERBOSE) O=$(TOOLSDIR) \
+	dh_auto_build -- $(common_make_args) \
+		O=$(TOOLSDIR) \
 		CROSS_COMPILE=$(CROSS_COMPILE) \
 		CROSS_BUILD_TOOLS=$(cross_build_tools) \
 		NO_SDL=1 \
