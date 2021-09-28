@@ -1,3 +1,17 @@
+u-boot (2021.10~rc5+dfsg-1) experimental; urgency=medium
+
+  * debian/rules: Fix installation of the platform specific config files.
+  * debian/patches: Remove patches am57xx/omap5_distro_bootcmd and
+    riscv64/riscv-sifive-Set-default-fdtfile-names.patch, applied
+    upstream.
+  * debian/patches: Refresh n900/bootz_and_raw_initrd.
+  * debian/patches: Refresh tools-generic-builds.
+  * debian/control: Build-Depends on libssl-dev:native.
+  * debian/rules: No longer adjust .config file during build.
+  * debian/copyright: Removed board.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Tue, 28 Sep 2021 10:29:12 -0700
+
 u-boot (2021.07+dfsg-2) unstable; urgency=medium
 
   [ Vagrant Cascadian ]

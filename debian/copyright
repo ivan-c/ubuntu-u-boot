@@ -115,17 +115,8 @@ Files:
  drivers/gpio/tca642x.c
  include/splash.h
  include/linux/libfdt.h
- include/configs/controlcenterd.h
  include/configs/mxs.h
  include/tca642x.h
- board/gdsys/p1022/tlb.c
- board/gdsys/p1022/sdhc_boot.c
- board/gdsys/p1022/ddr.c
- board/gdsys/p1022/controlcenterd-id.c
- board/gdsys/p1022/diu.c
- board/gdsys/p1022/controlcenterd-id.h
- board/gdsys/p1022/controlcenterd.c
- board/gdsys/p1022/law.c
  board/gdsys/common/dp501.h
  common/splash.c
  fs/jffs2/compr_lzo.c

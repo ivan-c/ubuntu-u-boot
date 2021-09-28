@@ -85,7 +85,6 @@ define build_template
 	  CROSS_COMPILE=$(or $($(platform)_CROSS_COMPILE),$(CROSS_COMPILE)) \
 	  $($(package)_assigns) $($(platform)_assigns) \
 	  $(platform)_defconfig
-	sed -i 's,CONFIG_FIT_SIGNATURE=y,# CONFIG_FIT_SIGNATURE is not set,' debian/build/$(platform)/.config
 	dh_auto_build -- $(common_make_args) \
 	  O=debian/build/$(platform) \
 	  CROSS_COMPILE=$(or $($(platform)_CROSS_COMPILE),$(CROSS_COMPILE)) \
@@ -136,13 +135,9 @@ override_dh_auto_test-indep:
 override_dh_auto_install:
 
 # override_ would require to test notools, which is unrelated.
-execute_after_dh_install-indep: $(addprefix install-,$(u-boot-qemu_platforms))
-execute_after_dh_install-arch: $(addprefix install-,$(foreach package,$(subarchs),$($(package)_platforms)))
+execute_after_dh_install-indep: $(addprefix install-,$(u-boot-qemu_platforms)) installdocs-u-boot-qemu
+execute_after_dh_install-arch: $(addprefix install-,$(foreach package,$(subarchs),$($(package)_platforms))) $(addprefix installdocs-,$(subarchs))
 
-# override_ would require to test notools, which is unrelated.
-.PHONY: execute_after_dh_installdocs
-execute_after_dh_installdocs-indep: installdocs-u-boot-qemu
-execute_after_dh_installdocs-arch: $(addprefix installdocs-,$(subarchs))
 installdocs-%:
 	mkdir -p debian/build/$*/configs
 	for platform in $($*_platforms); do \
