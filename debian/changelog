@@ -1,3 +1,9 @@
+u-boot (2021.10+dfsg-1) unstable; urgency=medium
+
+  * Upload new upstream version to unstable.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Sat, 09 Oct 2021 21:20:52 -0700
+
 u-boot (2021.10~rc5+dfsg-1) experimental; urgency=medium
 
   * debian/rules: Fix installation of the platform specific config files.
