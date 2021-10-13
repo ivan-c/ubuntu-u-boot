@@ -512,7 +512,7 @@ else ifeq (${DEB_HOST_ARCH},riscv64)
   # Hector Oron <zumbi@debian.org>
   u-boot-sifive_platforms += sifive_unleashed
   sifive_unleashed_targets := u-boot.bin uboot.elf spl/u-boot-spl.bin u-boot.itb
-  sifive_unleased_assigns := OPENSBI=/usr/lib/riscv64-linux-gnu/opensbi/generic/fw_dynamic.bin
+  sifive_unleashed_assigns := OPENSBI=/usr/lib/riscv64-linux-gnu/opensbi/generic/fw_dynamic.bin
 
   # Vagrant Cascadian <vagrant@debian.org>
   u-boot-sifive_platforms += sifive_unmatched

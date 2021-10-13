@@ -1,3 +1,10 @@
+u-boot (2021.07+dfsg-0ubuntu7) impish; urgency=medium
+
+  * Fix Unleashed name typo that resulted in an unbootable image due to
+    missing OpenSBI (LP: #1946913).
+
+ -- William Grant <wgrant@ubuntu.com>  Wed, 13 Oct 2021 14:59:55 +1100
+
 u-boot (2021.07+dfsg-0ubuntu6) impish; urgency=medium
 
   * Build against opensbi with reboot support on Unmatched
