@@ -1,3 +1,14 @@
+u-boot (2021.07+dfsg-0ubuntu8) impish; urgency=medium
+
+  * Add missing trailing \n to arch/arm/mach-stm32mp/cmd_stm32prog/Kconfig.
+    Fixes a rare (but reliable) FTBFS from check-config.sh. In the original
+    case on LP armhf, mach-imx/Kconfig sorted immediately after
+    cmd_stm32prog/Kconfig, causing lines to run together and the sed to not
+    match the "config HAS_CAAM" line, causing the dh_imx6 defconfig to appear
+    invalid.
+
+ -- William Grant <wgrant@ubuntu.com>  Wed, 13 Oct 2021 20:05:23 +1100
+
 u-boot (2021.07+dfsg-0ubuntu7) impish; urgency=medium
 
   * Fix Unleashed name typo that resulted in an unbootable image due to

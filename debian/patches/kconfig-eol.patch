@@ -1,0 +1,17 @@
+Author: William Grant <wgrant@ubuntu.com>
+Description: Add missing newline to the end of cmd_stm32prog/Kconfig
+ This could occasionally cause check-config.sh to erroneously fail, e.g. on
+ armhf when mach-imx/Kconfig happened to sort afterwards and the first line was
+ merged, rendering CONFIG_HAS_CAAM invisible.
+
+Index: u-boot-2021.07+dfsg/arch/arm/mach-stm32mp/cmd_stm32prog/Kconfig
+===================================================================
+--- u-boot-2021.07+dfsg.orig/arch/arm/mach-stm32mp/cmd_stm32prog/Kconfig
++++ u-boot-2021.07+dfsg/arch/arm/mach-stm32mp/cmd_stm32prog/Kconfig
+@@ -31,4 +31,4 @@ config CMD_STM32PROG_SERIAL
+ 	help
+ 		activate the command "stm32prog serial" for STM32MP soc family
+ 		with the tools STM32CubeProgrammer using U-Boot serial device
+-		and UART protocol.
+\ No newline at end of file
++		and UART protocol.
