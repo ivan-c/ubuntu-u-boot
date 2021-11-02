@@ -1,3 +1,9 @@
+u-boot (2021.07+dfsg-0ubuntu9) jammy; urgency=medium
+
+  * No change rebuild with new opensbi snapshot.
+
+ -- Dimitri John Ledkov <dimitri.ledkov@canonical.com>  Tue, 02 Nov 2021 12:41:21 +0000
+
 u-boot (2021.07+dfsg-0ubuntu8) impish; urgency=medium
 
   * Add missing trailing \n to arch/arm/mach-stm32mp/cmd_stm32prog/Kconfig.
