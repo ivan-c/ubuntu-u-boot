@@ -67,6 +67,20 @@ ifeq (${DEB_HOST_ARCH},arm64)
     spl/u-boot-spl.bin tpl/u-boot-tpl.bin u-boot-nodtb.bin u-boot.bin \
     u-boot.img u-boot.itb uboot.elf
 
+  # Steev Klimaszewski <steev@kali.org>
+  u-boot-rockchip_platforms += nanopc-t4-rk3399
+  nanopc-t4-rk3399_assigns := BL3=/usr/lib/arm-trusted-firmware/rk3399/bl31.elf
+  nanopc-t4-rk3399_targets := arch/arm/dts/rk3399-nanopc-t4.dtb \
+    idbloader.img spl/u-boot-spl.bin u-boot-nodtb.bin u-boot.bin u-boot.img \
+    u-boot.itb uboot.elf
+
+  # Steev Klimaszewski <steev@kali.org>
+  u-boot-rockchip_platforms += nanopi-neo4-rk3399
+  nanopi-neo4-rk3399_assigns := BL31=/usr/lib/arm-trusted-firmware/rk3399/bl31.elf
+  nanopi-neo4-rk3399_targets := arch/arm/dts/rk3399-nanopi-neo4.dtb \
+    idbloader.img spl/u-boot-spl.bin u-boot-nodtb.bin u-boot.bin u-boot.img \
+    u-boot.itb uboot.elf
+
   # Vagrant Cascadian <vagrant@debian.org>
   u-boot-rockchip_platforms += pinebook-pro-rk3399
   pinebook-pro-rk3399_assigns := BL31=/usr/lib/arm-trusted-firmware/rk3399/bl31.elf

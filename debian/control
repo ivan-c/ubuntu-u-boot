@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Vagrant Cascadian <vagrant@debian.org>
 Uploaders: Loïc Minier <lool@debian.org>, Clint Adams <clint@debian.org>
 Build-Depends:
- arm-trusted-firmware (>= 2.5+dfsg) [arm64],
+ arm-trusted-firmware (>= 2.6~) [arm64],
  bc,
  bison,
  crust-firmware (>= 0.3-2~) [arm64],
@@ -17,8 +17,9 @@ Build-Depends:
  libc6:armel [armel] <cross !pkg.uboot.notools>,
  libc6:riscv64 [riscv64] <cross !pkg.uboot.notools>,
  libpython3-dev:native [linux-any],
+ libssl-dev,
  libssl-dev:native,
- opensbi (>= 0.9-2~) [riscv64],
+ opensbi (>= 0.9+187.52af6e4-1~) [riscv64],
  python3:any [linux-any],
  python3-distutils [linux-any],
  python3-pkg-resources [linux-any],

@@ -11,14 +11,15 @@
 #include <dm.h>
 #include <asm/sections.h>
 
-void *board_fdt_blob_setup(void)
+void *board_fdt_blob_setup(int *err)
 {
+	*err = 0;
 	if (IS_ENABLED(CONFIG_OF_SEPARATE)) {
 		if (gd->arch.firmware_fdt_addr)
-			return (ulong *)gd->arch.firmware_fdt_addr;
-		else
-			return (ulong *)&_end;
+			return (ulong *)(uintptr_t)gd->arch.firmware_fdt_addr;
 	}
+
+	return (ulong *)&_end;
 }
 
 int board_init(void)

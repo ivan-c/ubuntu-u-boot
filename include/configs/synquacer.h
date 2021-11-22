@@ -6,7 +6,6 @@
 #define __CONFIG_H
 
 /* Timers for fasp(TIMCLK) */
-#define CONFIG_SYS_HZ			1000		/* 1 msec */
 #define CONFIG_SYS_TIMERBASE		0x31080000	/* AP Timer 1 (ARM-SP804) */
 
 /*
@@ -24,8 +23,6 @@
  * Boot info
  */
 #define CONFIG_SYS_INIT_SP_ADDR		(0xe0000000)	/* stack of init proccess */
-#define CONFIG_SYS_MALLOC_LEN		(0x01000000)	/* 16Mbyte size of malloc() */
-#define CONFIG_SYS_LOAD_ADDR		CONFIG_SYS_SDRAM_BASE /* default kernel load address */
 
 /*
  * Hardware drivers support
@@ -36,12 +33,8 @@
 
 /* Serial (pl011)       */
 #define UART_CLK			(62500000)
-#define CONFIG_SERIAL_MULTI
-#define CONFIG_PL011_SERIAL
 #define CONFIG_PL011_CLOCK		UART_CLK
 #define CONFIG_PL01x_PORTS		{(void *)(0x2a400000)}
-
-#define CONFIG_ENV_OVERWRITE		/* ethaddr can be reprogrammed */
 
 /* Support MTD */
 #define CONFIG_SYS_MAX_FLASH_BANKS	1
@@ -50,9 +43,6 @@
 
 #define CONFIG_SYS_MEMTEST_START	(CONFIG_SYS_SDRAM_BASE + (512 * 1024))
 #define CONFIG_SYS_MEMTEST_END		(CONFIG_SYS_SDRAM_BASE + PHYS_SDRAM_SIZE)
-
-#define CONFIG_BAUDRATE			115200
-#define CONFIG_SYS_BAUDRATE_TABLE	{115200, 19200, 38400, 57600, 9600 }
 
 #define CONFIG_SYS_CBSIZE		1024
 #define CONFIG_SYS_MAXARGS		128

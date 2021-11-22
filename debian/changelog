@@ -1,3 +1,21 @@
+u-boot (2022.01~rc2+dfsg-1) experimental; urgency=medium
+
+  [ Helmut Grohne ]
+  * Fix FTCBFS: missing build dependency on libssl-dev (Closes: #996497).
+
+  [ Steev Klimaszewski ]
+  * Add NanoPC T4 support
+  * Add NanoPi NEO4 support
+
+  [ Vagrant Cascadian ]
+  * u-boot-install-rockchip: Align with tabs.
+  * debian/patches: Refresh exynos default console patch.
+  * debian/patches: Remove patches applied upstream.
+  * debian/control: Update versioned build-dependency on opensbi.
+  * debian/control: Update versioned dependency on arm-trusted-firmware.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Sun, 21 Nov 2021 20:05:15 -0800
+
 u-boot (2021.10+dfsg-1) unstable; urgency=medium
 
   * Upload new upstream version to unstable.

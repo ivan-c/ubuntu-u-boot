@@ -419,7 +419,7 @@ int misc_init_r(void)
 	return 0;
 }
 
-static void get_board_rev(void)
+static void get_board_revision(void)
 {
 	ALLOC_CACHE_ALIGN_BUFFER(struct msg_get_board_rev, msg, 1);
 	int ret;
@@ -478,7 +478,7 @@ int board_init(void)
 	hw_watchdog_init();
 #endif
 
-	get_board_rev();
+	get_board_revision();
 
 	gd->bd->bi_boot_params = 0x100;
 
@@ -488,10 +488,14 @@ int board_init(void)
 /*
  * If the firmware passed a device tree use it for U-Boot.
  */
-void *board_fdt_blob_setup(void)
+void *board_fdt_blob_setup(int *err)
 {
-	if (fdt_magic(fw_dtb_pointer) != FDT_MAGIC)
+	*err = 0;
+	if (fdt_magic(fw_dtb_pointer) != FDT_MAGIC) {
+		*err = -ENXIO;
 		return NULL;
+	}
+
 	return (void *)fw_dtb_pointer;
 }
 

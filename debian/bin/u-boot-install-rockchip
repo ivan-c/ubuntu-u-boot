@@ -12,6 +12,12 @@ if [ -z "$TARGET" ] && [ -f "${dtmodel}" ]; then
 		Firefly-RK3399|"Firefly-RK3399 Board")
 			TARGET="/usr/lib/u-boot/firefly-rk3399"
 			;;
+		"FriendlyARM NanoPi NEO4")
+			TARGET="/usr/lib/u-boot/nanopi-neo4-rk3399"
+			;;
+		"FriendlyElec NanoPC-T4")
+			TARGET="/usr/lib/u-boot/nanopc-t4-rk3399"
+			;;
 		"Pine64 Pinebook Pro")
 			TARGET="/usr/lib/u-boot/pinebook-pro-rk3399"
 			;;
